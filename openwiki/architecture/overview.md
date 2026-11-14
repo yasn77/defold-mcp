@@ -1,11 +1,11 @@
 ---
 type: architecture
 title: Architecture overview
-description: defold-mcp is a dual-mode (Live Editor / headless) MCP server for the Defold game engine; how the landed modules (config, game.project editor) layer and where the planned subsystems will sit.
+description: defold-mcp is a dual-mode (Live Editor / headless) MCP server for the Defold game engine; how the landed modules (config, game.project editor, textproto engine) layer and where the planned subsystems will sit.
 tags: [defold, mcp, architecture, overview]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-14T16:49:47.288Z
+    at: 2026-11-14T22:05:56.160Z
 sources:
   - id: openwiki-source-05ccef8d4cf1698187f20464
     resource: repo://pyproject.toml
@@ -15,16 +15,22 @@ sources:
     resource: repo://src/defold_mcp/config.py
   - id: openwiki-source-d57d093dceb0da08744e2de5
     resource: repo://src/defold_mcp/project.py
-generated: { by: "opencode", at: "2026-11-14T16:49:47.288Z" }
+  - id: openwiki-source-c4a7d4413c1e1f9e6ee656b3
+    resource: repo://src/defold_mcp/textproto/__init__.py
+  - id: openwiki-source-920c288fa775427e5500aec9
+    resource: repo://src/defold_mcp/textproto/schemas.py
+  - id: openwiki-source-c7f35c27a3e804b5af2c8277
+    resource: repo://tests/test_textproto_roundtrip.py
+generated: { by: "opencode", at: "2026-11-14T22:05:56.160Z" }
 ---
 
 # Architecture overview
 
-`defold-mcp` is a Python MCP server that gives coding agents a structured, safe way to build, inspect, mutate, compile, test, bundle and live-drive Defold game projects. The repository is at an early stage: only the foundational layers are landed, with the wider subsystems planned.
+`defold-mcp` is a Python MCP server that gives coding agents a structured, safe way to build, inspect, mutate, compile, test, bundle and live-drive Defold game projects. The repository is at an early stage: the foundational layers and the structured-resource core are landed, with the wider subsystems planned.
 
 ## What exists today
 
-Two layers, cleanly separated:
+Three layers, cleanly separated:
 
 1. **`src/defold_mcp/config.py` — constants and environment.** Pure, side-effect-free module owning every magic value the rest of the server will rely on:
    - Artifact sources: `D_DEFOLD_BASE` (`https://d.defold.com`), `GITHUB_RELEASES_BASE`, `ASSET_STORE_JSON_URL`.
@@ -33,19 +39,25 @@ Two layers, cleanly separated:
    - `get_cache_dir()`: resolves the artifact cache (`DEFOLD_MCP_CACHE_DIR` override, else `~/.cache/defold-mcp`).
    - `host_platform_info()`: maps the running OS/machine onto Defold's host target triplets (`x86_64-linux`, `arm64-linux`, `arm64-macos`, `x86_64-macos`, `x86_64-win32`) plus executable suffixes, raising a descriptive `ValueError` for unsupported combinations.
 
-<!-- openwiki: broken internal link [openwiki/architecture/game-project-ini-editor.md] file "openwiki/architecture/game-project-ini-editor.md" does not exist. Fix the href or restore the target, then delete this comment. -->
-2. **`src/defold_mcp/project.py` — the `game.project` model.** The lossless, line-preserving editor for Defold's project file (see [the game.project INI editor page](openwiki/architecture/game-project-ini-editor.md) for its full contract) plus `resolve_project_root()` for locating a project. It imports `COMPILED_SETTING_KEYS` from `config` rather than duplicating it — the `config → project` dependency is the first instance of the intended layering.
+2. **`src/defold_mcp/project.py` — the `game.project` model.** The lossless, line-preserving editor for Defold's project file (see [the game.project INI editor page](game-project-ini-editor.md) for its full contract) plus `resolve_project_root()` for locating a project. It imports `COMPILED_SETTING_KEYS` from `config` rather than duplicating it — the `config → project` dependency is the first instance of the intended layering.
+
+3. **`src/defold_mcp/textproto/` — the structured-resource core.** The Protobuf Text Format engine that makes agent-driven mutation of Defold resource files safe instead of corrupt-prone:
+   - `parser.py` — tolerant textproto parser with recursive decoding of nested `data:` strings (single-escaped in `.go`, double-escaped in `.collection`), `BareIdent` enum marking, and exact uint64 preservation.
+   - `serializer.py` — the canonical byte-exact inverse: math default omission, `.0` float formatting, adjacent-chunk `data:` emission, and the quoting guarantee (plain strings always quoted; only enum tokens unquoted).
+   - `schemas.py` — canonical field-order tables, always-list field sets, embeddability rules and type normalisation (documented as not yet wired into the serializer; the wiring is a hard precondition for the server-wiring task).
+   - `mutations.py` — the `add_component` embedded/referenced mutator with guardrails, and PNG-derived collision shape generation.
+   See [the textproto engine page](textproto-engine.md) and [mutations and collision shapes](mutations-and-collision-shapes.md).
 
 ## Layering rule
 
-Constants and environment resolution live in `config`; anything that models a Defold artifact format or talks to the outside world lives above it. The direction of dependency is strictly downward: `project` depends on `config`; future clients (`editor_client`, `engine_client`, `bridge_client`, `bob_runner`, `test_runner`) and the textproto subsystem will depend on both, and the FastMCP tool layer (`server.py`) will sit on top of everything. No module ever imports from a layer above it.
+Constants and environment resolution live in `config`; anything that models a Defold artifact format or talks to the outside world lives above it. The direction of dependency is strictly downward: `project` and `textproto` depend on `config` (never the reverse, never sideways); future clients (`editor_client`, `engine_client`, `bridge_client`, `bob_runner`, `test_runner`) and the docs index will depend on all three, and the FastMCP tool layer (`server.py`) will sit on top of everything. No module ever imports from a layer above it.
 
 ## Target architecture (planned, not yet implemented)
 
 The server's design goal — clearly marked as forward-looking; none of this is in the tree yet:
 
 - **Twenty MCP tools** (`defold_doctor` … `defold_docs_search`) over FastMCP (stdio by default, StreamableHTTP optional), each accepting an optional `project_root` and resolving it via `resolve_project_root()`.
-- **Dual-mode transparency:** every project-scoped tool probes the Defold Editor's HTTP API (`.internal/editor.port`) when it is open, routing structured resource mutations to undoable `editor.transact()` calls; when no editor is running, the same operations use a deterministic Protobuf Text Format serializer writing directly to disk. Every response reports which backend served it.
+- **Dual-mode transparency:** every project-scoped tool probes the Defold Editor's HTTP API (`.internal/editor.port`) when it is open, routing structured resource mutations to undoable `editor.transact()` calls; when no editor is running, the same operations go through the textproto serializer writing directly to disk. Every response reports which backend served it.
 - **Toolchain management:** versioned downloads of `bob.jar`, `dmengine`, `dmengine_headless`, `builtins.zip`, `ref-doc.zip` and a portable Temurin JDK 25 under the cache directory, plus a SQLite FTS5 index over Defold's `llms/` documentation and the Asset Portal feed.
 - **Clients:** Editor HTTP (commands, previews, `/eval` with the bearer token kept out of model-visible output), Engine Service (TCP logs, binary Protobuf `@resource/reload`, MP4 recording), and the `extension-automation-bridge` v2 (live scene inspection, FIFO input, screenshots).
 - **Headless builds and tests:** `bob.jar` for compile/bundle with structured diagnostics, `dmengine_headless` for deterministic test runs.

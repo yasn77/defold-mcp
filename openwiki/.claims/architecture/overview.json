@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:a5bfa8e3387a8c1b7b723a8fbaa8f0da0cc0891d57f01ee58ac1a13d22e30e02",
+  "pageVersion": "sha256:a627a626c739fae7f0cf197a43c013d585ca86e82007799ea849acb29ae3159b",
   "claims": [
     {
       "id": "claim_e8d9095eb07f49daa4286b0a85aa31d7",
@@ -62,7 +62,7 @@
     },
     {
       "id": "claim_b25ded6e891e4e7a9ea90a77788830d0",
-      "statement": "The src/defold_mcp package currently contains only the two foundation modules (config and project) plus the package marker, with their tests under tests/; the wider server (FastMCP tool wiring, dual-mode editor/headless mutation routing, toolchain downloads, docs index, and the editor/engine/bridge clients) is planned but not yet implemented.",
+      "statement": "The src/defold_mcp package currently contains the three landed layers (config, project, and the textproto package with parser, serializer, schemas and mutations) plus the package marker, with their tests under tests/; the wider server (FastMCP tool wiring, dual-mode editor/headless mutation routing, toolchain downloads, docs index, and the editor/engine/bridge clients) is planned but not yet implemented.",
       "evidence": [
         {
           "resource": "repo://src/defold_mcp/__init__.py",
@@ -75,12 +75,30 @@
         {
           "resource": "repo://src/defold_mcp/project.py",
           "version": "repo-file-v1:sha256:957611a69af70723497c4f5d8a78f2be673bd754915f1208388ea8cd4599f65b"
+        },
+        {
+          "resource": "repo://src/defold_mcp/textproto/__init__.py",
+          "version": "repo-file-v1:sha256:bc6dddd7021668620a9a880113ed75546a10173cd85eb5066be38b68b089e982"
+        }
+      ]
+    },
+    {
+      "id": "claim_944effd10f7f4190a33865067be9a51c",
+      "statement": "The textproto package is the structured-resource core with a byte-exact round-trip contract over verified Defold 1.14.1 fixtures, and its schemas.py field-order tables are documented as intentionally unwired until the server-wiring task serialises its first freshly-created resource.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/schemas.py#L13-L21",
+          "version": "repo-lines-v1:sha256:aa0f6b92bdafd614d3111b4ca591e64fc3dd80b8506fa93eee8a262ac38eb945:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmEwYzIxYWVjMjhlNjYyMGZlYzIyNDU4OWU5YTAyNDY5OWVmM2JlOGVmY2FkZGFhMTZiNDM1M2JlYWIyZTU1ZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmEwYzIxYWVjMjhlNjYyMGZlYzIyNDU4OWU5YTAyNDY5OWVmM2JlOGVmY2FkZGFhMTZiNDM1M2JlYWIyZTU1ZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTViNmU4NzA2YjQzMDQ3ZjJhNmRiNjdmMTMyNjM4NTk1NjA0ZTY3ZjM2OTY2ODc2Y2UwMTU4ZjAwNTNlNmJkMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzE0OTliYTYxNjU2OWFiZTRhZWJhNWE3Nzc5Zjg4YTkxYjAzNTUxNTM2ZTQ0YmM3NDYzNWQyNGNlYzEzZmNlOCJ9"
+        },
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py",
+          "version": "repo-file-v1:sha256:68c07be3afacef5f77847336bc31947b408c42cfea9b51835b8f8280e7778d46"
         }
       ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-14T16:49:47.288Z"
+    "at": "2026-11-14T22:05:56.160Z"
   }
 }

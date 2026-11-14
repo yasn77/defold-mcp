@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:b457f8001e116256940977df62d0855643e82aa85bc548efbdfe5181f976e353",
+  "claims": [
+    {
+      "id": "claim_c04c50c5339e47bbae09070445eb86cf",
+      "statement": "The engine's contract is byte-exact round-tripping: serialize_textproto(parse_textproto(fixture)) == fixture for the verified Defold 1.14.1 fixtures (a full .go, the double-escaped .collection, and a scalar suite), and parse(serialize(tree)) == tree for mutated trees.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/serializer.py#L297-L307",
+          "version": "repo-lines-v1:sha256:6f7963379ff5ca16c9b6166687ffc520b70e51248109b1b1a1c373ada20febb8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ5MmI2ODM1ZDFlNzllYzlhNzU1ZTUzYmE1ZTFhNjFiZDcyM2Q5MDJiNDgwZmZlY2FmYWMyZDE2OTAyNWMwZmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ1NGYwYWU4NDhjNjIxZjVhYzAwZmI1NGM4MDJkMTMxOWUwOGU3YmI1Y2FmZDk3NjAwYzA2NWVlZTQzZTE0NzQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk4MTRlNWVhNDk5YjU2MmU4YTA2NzJjYjA0NTExZjk3ZDY1MDhlMWRjN2EzYjY2ZDhkODA5YjgwMmU1ODFlYWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L330-L384",
+          "version": "repo-lines-v1:sha256:f6ad1ab5dd7347f9f515d918a4d27e5330a38741d325f141483c3f42e52c8c50:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5MDlhNTNhNjE4ZDAyOGUxZDMwMDBjMGE3YWJjZWVjYmU1ZmIzN2Y0ZTUxMWVmZTQ2NjQzZmFkNmU2Njg3MmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYzOTljMGUxMzI3MGVhYjA0ZmY0M2UyY2RjNzU2MjdhZGJjMjZkNGYyY2FkN2Y1Zjc0NWRkN2RiOTZjZjE1OGIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE0OTJlMGNlYWJhODY5M2FhMGNiYTEyMDEyZWUxOWRlYzQzYWM2N2I0YWUyZDkyNzZjZTMyYTBjZjdhMzFiMWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY4MTQ1NGI3MTI5MjUzODMzODg4MDQzYjFkNzUyNjA3MTFhYWE4NGM5Y2U4YTNlNDEwMGI1ZWNkMWVhNmNlNzMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_151e7c579d3b476ca0bf527a99bdc3ae",
+      "statement": "In a .collection, the embedded_instances data value re-serialises with chunk boundaries at each inner escaped-newline position, structural lines owning their chunks, and the inner string's closing quote on its own chunk at the outer escape level — the exact line \"\\\"\\n\" and never the double-escaped form.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/serializer.py#L158-L176",
+          "version": "repo-lines-v1:sha256:fc82b16a1e6326efd1236299b38e42aeece14edfb0baf723260108c6fe7b8656:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY2MGUzODJjMDNkMmVjMzIwZmY0NzMxYjY4Y2UwOWFiOGY5YTdiYTBlNDVkZDliZDNhNjNkM2ZlYWZiNDZmNzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyZTFlZTUyZTAxNWY3YTFiNmZlYWQ1NDIyMzM4MDc4ZWQ5YTNkNWE4ZmQzYjE2MWJlYjljNWU5Y2Q4NTEzY2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ0ZWU5YmRmOGQ3MTEwMjFkYWE5ODNiZjMzMmYwYWQ5OGIzZjc3ZjUwMTU0NzlmM2ZhOThiNGE5NjhlNTU4MTEifQ"
+        },
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L283-L312",
+          "version": "repo-lines-v1:sha256:1481b421498bda20ccd6b04db2e30a74bb23a8c8b13ce0aea36bded964ccc44e:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkMDUwN2FlYzlkMGMxODhkYzNmODZhODcyYTkyZjVjODEyMzFmZjdhMjM4OWQ5NjUwNzI0YjlkMDk4OTBlMWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1NDQzZWZiZDViZGEyN2ZkY2JmZjU5Yzg1NGE0NjJhODc0YzU0YjM1ZWVhMjdiMjhkMTc4ZWMyNmQ1OTMwZmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU1YWI0MmU5NjgzN2NmNDkwYjgyZjNmOTYwYTRkYTMyMDIwNmNjNTVjMGRhNDg1YjBiNzVmYjliODIyNjM3ZTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyY2JmMjI1NWIyZjYzMzFkNzgwYTI3ZTFkOGJiMTQ2NzZmYjgyMjZmOWJiMTBmYmE2MDMwOWJmMThiMDM1NjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b5e5f539275346fda42243ff83f39f05",
+      "statement": "Quotedness is carried by type, not content: the parser wraps bare enum-like tokens in BareIdent(str) and the serializer emits BareIdent unquoted only on an ASCII ident fullmatch, so plain strings (even all-caps ones like a component id 'HUD') always emit quoted and control characters in scalar strings are escaped (\\\\t, \\\\r, \\\\n by name; other chars below 0x20 as \\\\xNN).",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/parser.py#L289-L291",
+          "version": "repo-lines-v1:sha256:7f2e8ffa27948eca11672a8ee866ca9b8f5ea2c524ac9e996419ff14257d3029:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGY5NDc0Yjk5NWMzYWQwNWVlYjYzODQ0MDU5Y2Q3NTc3Njc2M2U0MDRhOThkZmM5NmI3YjlkMWEyYjdiY2FjZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOThhZDBiMDAyNTMyY2M3YjVkOTgxODBkYWJjNzNkNjFhNmNhOGM4OTU0NzU1Yjk2NGY2ZmNkMGU0YmIwZjVlZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjMxNjVmZjEzZTc3MTRmYjQ2MWNlMzE0YTZiOTNiZDBlY2YzMzEwMGNlYTc1OWZkNWI3ZWI2OTNiNTlmZWIxNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODJmNTc3NjhhOTM0ZWM4MTZlMjM5YmVhZDhhODAwOGJhMWMwN2JmYjZkNzJmYzNjMjVmZjM2NjkwNDQzNzgxMCJ9"
+        },
+        {
+          "resource": "repo://src/defold_mcp/textproto/parser.py#L37-L46",
+          "version": "repo-lines-v1:sha256:8dda37e5358cef4ff1799a7b1560cc3bdc9f2f1f4049e265a742e7e664317b99:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmOWZmNTY4NzY1YzdhNjFmMDA5YzBlNTIwOGRmOTA1ZjM4MGJkOWRjNzQ5YjllM2IyZDY1YTc3ZGNkZDMwNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA1YmIyMzUzYzZiYmYzYmI5MmY1ZTFkOTFlYWM1ZWE0ZWQzYWY2NDBiOGM2Y2U0NzI2MGMyNGRlMmJjNGQ1MjAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ1NTk4ZDE1NmU1N2QzNjdlNmRkMGQzZWFiYWMwYzQxNTQzODg0ZmI5M2NkMDU5YjdmZmU4OTlkZDMzZWNmYjEifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/textproto/serializer.py#L134-L157",
+          "version": "repo-lines-v1:sha256:4bbd21e354fad772dcc218fe0679f33b363296cc88e6bcf8b19b42fac520c5e5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI2NjIwOWFiODhlNDFhN2IyM2YzMjg3ZTJhNGRlNTE2YzRiYmU0NTRjYzQxNmQwYTE0MmFlY2M5NTQ2NzQyOWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA4MjY3NmM4ODhjMWE0ZDlmYTc3MmZjZGMzMDJmNzczYmM3MjkwZWViZmY5ZGEzNmEzOWY0NGMzMjExOTgzODUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZhMDdkMTYzN2E3M2M5MjNiYWM3ZTU0NmM5N2ZiY2IwMmY5NGZmMzhlMjE1MzcwYzQ3NDM5NTZkMjZlMjE5MWQifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/textproto/serializer.py#L22-L75",
+          "version": "repo-lines-v1:sha256:6f44508a0e630d833914c5ad2eae50340fd2fd627e6cf627a8eddee15055b567:eyJzZWxlY3RlZExpbmVDb3VudCI6NTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE0YTRjMTIxNDJlNTM3NTc2N2E4MDVlNDYxOWJkODg0NTA5NTIxODFiN2I4MWM4OTRjNTUwYmYyYWRiYzRhN2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI0Yzk5NzJmODZkZTkwZjQxMzZlY2Q2OTgzYmJkYTc5MGY3YWRjNGEwNDlkODc4ZGQ5NTY3MWI2N2RhODg3OTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkzYjRiNmVkMTAyMGYwZjk3ZGMwYWMzZjE4ZjdjYjk3OGZiNzQxMDgyZWE4Y2VlYTdlZTA4OGJjYjBkZGYzNDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE4OGE2NjcyYzc3Y2NmYTM0ZmUzZWMzMTJiMjI0NWMxNjczMzYyZDU2M2ZiNmEwZjk0YjJlNGVlMDQzODAxNDcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d7108e20b6104b5bae959cdcb309b936",
+      "statement": "The parser preserves 64-bit unsigned hash values as exact Python ints, raises TextProtoError (a ValueError) with 1-based line numbers, guards nesting with max_depth, and decode_embedded_data recursively attaches data_ast under embedded_components and embedded_instances up to a configurable depth while leaving non-proto payloads untouched.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/parser.py#L47-L106",
+          "version": "repo-lines-v1:sha256:c941e70908069c7d3e428efd301803d2508ad77daffd85df007dc689ee753603:eyJzZWxlY3RlZExpbmVDb3VudCI6NjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZiN2U4NTJiYmRiYWM1MWJmZmYyZjFhNDRhYWU2ZmQxODI1ZDRlZDdmNTUwYmRiZjM5NDVmNTg4Yjc5MGIzZWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAyYjI1NzhkODVmMDU0N2ZhOTE3ZGE3YjE4ZDIwNzg5OTE4MjlhNTM4MmM3OTEyOGJlMTZmNmYxMDg4ZjdhYjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg3ZmVhNmQyMGU3Y2JmYTM4ODg2NzdiNmEwY2NlN2QyNzk4YWJhYzhlNzg0OGJiN2YwZWRlZDdhMjNkZmVkMTgifQ"
+        },
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L172-L234",
+          "version": "repo-lines-v1:sha256:4cca3d0c3321ac8ea6868a742b0c4f930338ed42007624bbb1e60f3f929c6368:eyJzZWxlY3RlZExpbmVDb3VudCI6NjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk2MGQ0YmY1YWU0YzAzMjg2ZTVmNjU4YjZjNzM3NDViNTAwZTdlNDE2ZWQxNjNhOGY2ZjUwMzYyZWY0MTYxYjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk0ZGQ4YTIwMDMzM2MwZGQ5NDhjMzE2YTdjZWMzNjM2NjY0NjYwZDc3M2QwNWE3MDE0Y2Y5MmVmMTFkNWQ2ZDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdkZmFkYmIyOGM5NzI4ZTZmMzEzYWUwOTAxZTBhZjc1MzdlMmY0Njc1MDVhODI5MWZhMTRkZTBhMWIzYzI3MDMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_20399ca8091b41988599d3bbd94f1adb",
+      "statement": "The serializer omits default math blocks (position/size zero components, scale all-1.0, identity rotation) and emits floats with at least one decimal within [1e-4, 1e16), with scientific notation documented as possible outside that range.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/serializer.py#L106-L204",
+          "version": "repo-lines-v1:sha256:1a0bdb38348bbdfa458dd2485f2da0c92ea17b3bc26211a5edf46e0db7e68026:eyJzZWxlY3RlZExpbmVDb3VudCI6OTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQzNjBkNWJiZDRmZTRkNDA5ZDcwZDVhODhjYTQ3MWU2YWRhOTA0YWIxMzdkNDkyMTU1NGNlYmI5MzdiYTAxNmQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjExZjMxNTAxN2JhYTJiN2U1OTljN2VhYjZlNjYwNjBiNDk4ZTViNmFlMzI5OTA1YTY3MTczZmFjZGQyZjdkYTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQxYmYxMGM3Zjc3MzU4ZWFmZDg0NzM4ZDE2YWM0YjVlYTk0NzZmZmVkMGE4MzgxYjdiZDg0MmZiYjI2ZDFkNGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjlhNTcyODcxN2ZlMWRhNWYzYTk4YzVjZDk1MDI1NTMzODFlNjkzZjJkZGJhNTM2NmVlMDczMDc0NWE4NzA3M2UifQ"
+        },
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L422-L463",
+          "version": "repo-lines-v1:sha256:bd1dbb263c1e0412a94efd55c666dd1da5ef625f083954e20084e0bea75554b6:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc2MDUwM2M0NzlhNmZmYzY0NmFiZjc0ZTdjNmI2NWYyMDZhNTM3ZDI3MmM1NzJhMzNlZTUwY2QyYTJiZjhkMTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM0YmY3NmI5NDkwZjk0M2ZlOGYzOGVmYTM2NWVkMGFmZWIyMzU3NTk3OWUyYmJlOTQwMjExYWU3ZDdjM2ZkNDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNmYTEzOGVmYTdlNDEzNTIzMDMzYzE0NGZmN2ZmOGNkZWQyZDU3NjJkZGIxMmRmYTA2MTMzNTUxZDE5YjgzZWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI5Nzg4NDFjMzY2NjBhYTY3MmFhNjk3YTNhYjRiOTBjNjczMDA4Nzk1ZTJlNjY0NzIzZTY2YzExYmJlZDMwNjcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_27dcac1521a14b26acca2cf5d13a6773",
+      "statement": "schemas.py's field-order tables and ALWAYS_LIST_FIELDS are deliberately unwired — the serializer follows dict insertion order — and carry a documented hard condition that the server-wiring task must wire them before serialising any freshly-created resource.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/schemas.py#L13-L21",
+          "version": "repo-lines-v1:sha256:aa0f6b92bdafd614d3111b4ca591e64fc3dd80b8506fa93eee8a262ac38eb945:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmEwYzIxYWVjMjhlNjYyMGZlYzIyNDU4OWU5YTAyNDY5OWVmM2JlOGVmY2FkZGFhMTZiNDM1M2JlYWIyZTU1ZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmEwYzIxYWVjMjhlNjYyMGZlYzIyNDU4OWU5YTAyNDY5OWVmM2JlOGVmY2FkZGFhMTZiNDM1M2JlYWIyZTU1ZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTViNmU4NzA2YjQzMDQ3ZjJhNmRiNjdmMTMyNjM4NTk1NjA0ZTY3ZjM2OTY2ODc2Y2UwMTU4ZjAwNTNlNmJkMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzE0OTliYTYxNjU2OWFiZTRhZWJhNWE3Nzc5Zjg4YTkxYjAzNTUxNTM2ZTQ0YmM3NDYzNWQyNGNlYzEzZmNlOCJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-14T22:05:56.160Z"
+  }
+}

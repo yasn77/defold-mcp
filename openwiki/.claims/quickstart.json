@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:1e158ec8ce03e81de199d3c3e143a2f398c13c61b55093a7410e1e996feedb4f",
+  "pageVersion": "sha256:39bda0279e055e1e7ef83e77322924ecb36fb52b8916380d73e11c6a57411121",
   "claims": [
     {
       "id": "claim_b0b9f01199ef441ab2d63ce8d85a6200",
@@ -18,7 +18,7 @@
     },
     {
       "id": "claim_c216c2c03bfe43d3ae042a30548f9a4c",
-      "statement": "The default gate ('mise run test') is hermetic — pytest with -m \"not live\" over tests/test_config.py and tests/test_project_ini.py, requiring no network, Defold installation or JVM — while live-marked integration tests are opt-in via 'mise run live'.",
+      "statement": "The default gate ('mise run test') is hermetic — pytest with -m \"not live\" over tests/test_config.py, tests/test_project_ini.py and tests/test_textproto_roundtrip.py, requiring no network, Defold installation or JVM — while live-marked integration tests are opt-in via 'mise run live'.",
       "evidence": [
         {
           "resource": "repo://mise.toml",
@@ -32,7 +32,7 @@
     },
     {
       "id": "claim_3fb8242c97fa41959ff02a2c0a28ac13",
-      "statement": "The codebase is early-stage with two foundation modules (config constants and the game.project editor) plus their tests; the MCP server itself, its tools and clients are planned but not yet implemented, and the defold-mcp console script declared in pyproject.toml has no implementation yet.",
+      "statement": "The codebase is early-stage with three landed layers (config constants, the game.project editor, and the textproto parser/serializer/mutation package) plus their tests; the MCP server itself, its tools and clients are planned but not yet implemented, and the defold-mcp console script declared in pyproject.toml has no implementation yet.",
       "evidence": [
         {
           "resource": "repo://pyproject.toml",
@@ -45,12 +45,16 @@
         {
           "resource": "repo://src/defold_mcp/project.py",
           "version": "repo-file-v1:sha256:957611a69af70723497c4f5d8a78f2be673bd754915f1208388ea8cd4599f65b"
+        },
+        {
+          "resource": "repo://src/defold_mcp/textproto/__init__.py",
+          "version": "repo-file-v1:sha256:bc6dddd7021668620a9a880113ed75546a10173cd85eb5066be38b68b089e982"
         }
       ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-14T16:49:47.288Z"
+    "at": "2026-11-14T22:05:56.160Z"
   }
 }

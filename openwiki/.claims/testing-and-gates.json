@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:32e9e9aec6718a0c3744bbfe081d41b7977c331e3b2e6a7e4f9b28ea595dbfba",
+  "pageVersion": "sha256:d9002be34157de3997add65298442a5520cd51a7247cce2ba3cf36ebed078189",
   "claims": [
     {
       "id": "claim_20c01b8cf15e4ca79ab56290b86eb68d",
@@ -24,7 +24,7 @@
     },
     {
       "id": "claim_e73bffaa1ec140b28bda81998581a5a6",
-      "statement": "The unit gate is hermetic: 24 tests across tests/test_config.py and tests/test_project_ini.py cover config constants, cache-dir resolution, host-platform mapping (with skipif portability guard and a monkeypatched unsupported-pair ValueError test), and the full game.project editor contract (root resolution, compiled-path suffix, dependency forms and rewrites, include_dirs splitting, line preservation, CRLF byte-fidelity, injection guards) without network access or a JVM.",
+      "statement": "The unit gate is hermetic: 70 tests across tests/test_config.py, tests/test_project_ini.py and tests/test_textproto_roundtrip.py cover config constants, cache-dir resolution, host-platform mapping (with skipif portability guard), the full game.project editor contract, and the textproto engine (byte-exact fixture round-trips, BareIdent quoting, math default omission, mutator guardrails, collision-shape generation) without network access or a JVM.",
       "evidence": [
         {
           "resource": "repo://tests/test_config.py",
@@ -33,6 +33,10 @@
         {
           "resource": "repo://tests/test_project_ini.py",
           "version": "repo-file-v1:sha256:573c55635b068a0da87a567771071bc7201b15abe327b74d34cd8385155a4982"
+        },
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py",
+          "version": "repo-file-v1:sha256:68c07be3afacef5f77847336bc31947b408c42cfea9b51835b8f8280e7778d46"
         }
       ]
     },
@@ -45,10 +49,30 @@
           "version": "repo-lines-v1:sha256:391cdb12d0ae2021f89ce914dcc9c2b512bc9e32c5a036e90200ff91d7a85f10:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllNjVjYzZjZDE0Mjg1MjEyYmZhOTg3ZWFiM2M5ZGY3MWYzNjZkOTVjZWI2MWVjMzJmMjgxYTM2OTMzYjkzMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ3ZjdkZDk4ZDU2NzMwYjAzNTRmYjAzMjYzZmE5MmY4NDUzZWExYjYwNjhiYjlkMTU0MjUwNTE4NzdlMzZmZDciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhMTgzZWUwNWZkYmM4ODRiNDJlYTg1ZGEwZmYxZGY4OTc3NzBjYjBlNzg5NTg4ZGQ4Nzg4OTNiMmZlZjE5OGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImExOWUwN2JmMDQwODkyZTgyYjRmY2M0YmVlZDQ4OTAyNWU3MzllMDRlMmJiYmZkNDY1ZDUxMWYxNTU1NjNkZDcifQ"
         }
       ]
+    },
+    {
+      "id": "claim_1cc7f88cd5a54a85b6a284e367b166c1",
+      "statement": "The textproto round-trip group asserts exact fixture-byte equality for a scalar suite, a full .go with referenced and embedded components, and the double-escaped .collection — including the pin that the inner closing-quote line is exactly the outer-level form.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L271-L312",
+          "version": "repo-lines-v1:sha256:c2c98ba8bf85f7629e2deb9edd1ddfb462e4610f26ec68422b3dd18f27fbd423:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1NDQzZWZiZDViZGEyN2ZkY2JmZjU5Yzg1NGE0NjJhODc0YzU0YjM1ZWVhMjdiMjhkMTc4ZWMyNmQ1OTMwZmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3OTkzZTM0Njg0NGRmZWE4N2NhNDlkYjVjMjU2NmYwMDEwNGU1MDRhM2NlMGIyYWM2YmNhMGY4ZWUxYTUyMzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyY2JmMjI1NWIyZjYzMzFkNzgwYTI3ZTFkOGJiMTQ2NzZmYjgyMjZmOWJiMTBmYmE2MDMwOWJmMThiMDM1NjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_eacd68574614403d9ca4221ee3296e54",
+      "statement": "Test style is mixed by design: plain functions for the foundation suites and grouped classes for the textproto Part B groups (TestSerializerRoundTrip, TestMathDefaultOmission, TestGuardrails, TestCollisionFromImage).",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L271-L740",
+          "version": "repo-lines-v1:sha256:0ba01d954042464ec21018983c0375109e8bf83c21e262bc9f6e03cacba088c7:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI0MTJjYTM0NWNjZjc1YmY5YzA4MDZiY2U2OTViZThkZTgwOGI3OTk4NDI1MWE3YTU0ZDIwMmNmNjEwMWRkNDUxIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIzMzljMjQyNjdiMTg0YTFjMWI5M2RlNDllZmY3Y2I5NWQ2YTQ1MDQ2NThkMzdhODhmZDYzMmNkMTBhNzUyNDA3IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJmNzk5M2UzNDY4NDRkZmVhODdjYTQ5ZGI1YzI1NjZmMDAxMDRlNTA0YTNjZTBiMmFjNmJjYTBmOGVlMWE1MjM1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-14T16:49:47.288Z"
+    "at": "2026-11-14T22:05:56.160Z"
   }
 }
