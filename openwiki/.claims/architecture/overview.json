@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:a5bfa8e3387a8c1b7b723a8fbaa8f0da0cc0891d57f01ee58ac1a13d22e30e02",
+  "claims": [
+    {
+      "id": "claim_e8d9095eb07f49daa4286b0a85aa31d7",
+      "statement": "config.py is the side-effect-free constants layer: it owns the artifact source URLs, the hard limits MIN_BOB_JAVA_MAJOR=25, ENGINE_POST_MAX_BYTES=1024 and DEFAULT_ENGINE_PORT=8001, the six-entry ordered COMPILED_SETTING_KEYS tuple, the cache-dir environment override, and the host-platform triplet mapping.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/config.py",
+          "version": "repo-file-v1:sha256:440035b40a0ff1d3d4143458f303952a8b163339d9754a70324be71c55073288"
+        }
+      ]
+    },
+    {
+      "id": "claim_968313ee233341db943e673e890821a5",
+      "statement": "get_cache_dir resolves DEFOLD_MCP_CACHE_DIR when set (falling back to ~/.cache/defold-mcp) and host_platform_info maps the running host onto Defold's platform triplets, raising ValueError listing supported combinations for unknown pairs.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/config.py#L66-L97",
+          "version": "repo-lines-v1:sha256:5dccac2a5b88eac06eead7234727208654cec0bff1eeea48d0bce16866280005:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYyY2UzYTRjZTIxZmNmMDRhMzY3OWViOGY0YzZiMTIzYmQ1Y2MzNjQxZTliZjE4OTJkZWMxNjRmY2ZiMGQ5NjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_89cba0ef680d472ea01db0bd0b598685",
+      "statement": "project.py models game.project as a line-preserving editor and imports COMPILED_SETTING_KEYS from defold_mcp.config, establishing the downward-only dependency layering (project depends on config, never the reverse).",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L10-L14",
+          "version": "repo-lines-v1:sha256:26d8a6b09db813589a3b7eff316bc065db5493379755b1c3651bec170b3cb231:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzcyN2FkZmY1MjRlMDYxNjAyMmVhZGQ4ZjRhZjIxYTA3NzhiMjlmYzRjNzdiZGZlZmQxYWZjZTJjYmY1ZTRiNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGFiODViNmNhNWRkODZiOGU1ZTNmZDFmMjE2YTlhMDNmOWE4OTQyZWNjZjExZDdkNDAwNWVlMmNkYjEwZWVkZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzE3YWJhYjQwNWE1MWQyZjg4MGUzYzVlNGE1MWUyMTAzMzg3NmYxODg1ZTdlNzMzOWY5MGVlYjYzMTNhMjM2ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTA5YWQ2MjkyMjVmZmQ5YjJmOGQxZmRmMzczYzRiN2M0NTQyYmJmOTc4NDg3Y2NhMzQ3NzhmMGQyZDNhYmJkYyJ9"
+        },
+        {
+          "resource": "repo://src/defold_mcp/project.py#L51-L69",
+          "version": "repo-lines-v1:sha256:1ddf68ab4f313d077dbd3175027557acda34921a1756ffc3af7651dc49db005d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFhOGU1YjI1NGQzMTMwN2U1N2I4NjM2NTdiMjQxN2JjY2M4MjI3MDQ4NGJmYjI3NDI2YWRjYmM3NzMxNTFmOTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyYmFhZjY5ODAyMzI3NTU3Y2JhYWEwODUxZjYwODRjMWRhMDRlMjc5NWFlZWI1YTliNTc2ZTk2Y2VlZTFkYjQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk1NTYxMjU0YTY0YTllMWZiY2VlYzcxNzllNWRjOWJjN2JkZWUwZWQwYzZiZTI3NjFiNDBmN2FjNjZiM2YzNjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNmOGViNTQzZGQyZWY4MzdiM2Y1MjhhOGQ3MGJjMThlYzQ1NzEwMGUyMDFhYTM3MjllNjA0MDJkOTUyNzdjNzQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b5e7b01962614172a9af814450142980",
+      "statement": "pyproject.toml declares the console script defold-mcp = \"defold_mcp.__main__:main\" while the __main__ module is not yet implemented; it is the only declared-but-absent symbol, reserved for later server-wiring tasks.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:38b46bf1d1248c02b1d6ab13e3bcfb8433ebfabbfbcc306a9b88b38c4a12514e"
+        },
+        {
+          "resource": "repo://src/defold_mcp/__init__.py",
+          "version": "repo-file-v1:sha256:5e3d506e3254779b75aef97842ba2f7cddb59c2ec350561c7d1339630b59a8bf"
+        }
+      ]
+    },
+    {
+      "id": "claim_b92ba7ba290e4ac99e7dae6454a0dbf9",
+      "statement": "The package targets Python >= 3.14 with runtime dependencies mcp>=1.6.0, httpx>=0.27.0 and pillow>=10.0.0, dev extras pytest and pytest-asyncio, and a hatchling build backend.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:38b46bf1d1248c02b1d6ab13e3bcfb8433ebfabbfbcc306a9b88b38c4a12514e"
+        }
+      ]
+    },
+    {
+      "id": "claim_b25ded6e891e4e7a9ea90a77788830d0",
+      "statement": "The src/defold_mcp package currently contains only the two foundation modules (config and project) plus the package marker, with their tests under tests/; the wider server (FastMCP tool wiring, dual-mode editor/headless mutation routing, toolchain downloads, docs index, and the editor/engine/bridge clients) is planned but not yet implemented.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/__init__.py",
+          "version": "repo-file-v1:sha256:5e3d506e3254779b75aef97842ba2f7cddb59c2ec350561c7d1339630b59a8bf"
+        },
+        {
+          "resource": "repo://src/defold_mcp/config.py",
+          "version": "repo-file-v1:sha256:440035b40a0ff1d3d4143458f303952a8b163339d9754a70324be71c55073288"
+        },
+        {
+          "resource": "repo://src/defold_mcp/project.py",
+          "version": "repo-file-v1:sha256:957611a69af70723497c4f5d8a78f2be673bd754915f1208388ea8cd4599f65b"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-14T16:49:47.288Z"
+  }
+}

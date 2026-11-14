@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:32e9e9aec6718a0c3744bbfe081d41b7977c331e3b2e6a7e4f9b28ea595dbfba",
+  "claims": [
+    {
+      "id": "claim_20c01b8cf15e4ca79ab56290b86eb68d",
+      "statement": "The gate chain is defined in mise.toml: setup recreates the venv idempotently (uv venv --python 3.14 --clear plus editable install with dev extras), test runs pytest with -m \"not live\" and depends on setup, and live runs the live-marked tests explicitly.",
+      "evidence": [
+        {
+          "resource": "repo://mise.toml",
+          "version": "repo-file-v1:sha256:9faf378f5b65c1a8cff4507e6e030edecaab7585c86fbf5da232c93e2432ec0c"
+        }
+      ]
+    },
+    {
+      "id": "claim_55b9ee7d6fb447748ef9fa92d6e93c2c",
+      "statement": "pyproject.toml registers the live marker in [tool.pytest.ini_options] and pins asyncio_default_fixture_loop_scope = \"function\", silencing the pytest-asyncio deprecation warning that fires on every run even with zero async tests.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml#L22-L30",
+          "version": "repo-lines-v1:sha256:f0b905a9c934af5802f97042a9b049e57cdff97b669d1ecdb1419b517c0ea8ed:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGVhYjRlYzYzZGU1MTdkYTRjZDhlNWM4MzA3ZmIyYzc3MzdkMzkxOTBhYjY5ZjMyYTVlOWVmODFlYTQ0MTZkZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjk0MTZlMDlmNzhiYTMxNmMwMzI1NjgyMTNiODU1ZWU3NTZlNDE1NjVkOTE4ZjA5NTE5YzgxZmQ2MjBmNDA2MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzg4NTgxNDliNDM1NmMyYzBlOWUwMWY1MjM0MDA2NjU2OGM4NDVhM2I0NzEzN2Y1MzI3OTI0MzgyZWM4OWQwNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_e73bffaa1ec140b28bda81998581a5a6",
+      "statement": "The unit gate is hermetic: 24 tests across tests/test_config.py and tests/test_project_ini.py cover config constants, cache-dir resolution, host-platform mapping (with skipif portability guard and a monkeypatched unsupported-pair ValueError test), and the full game.project editor contract (root resolution, compiled-path suffix, dependency forms and rewrites, include_dirs splitting, line preservation, CRLF byte-fidelity, injection guards) without network access or a JVM.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_config.py",
+          "version": "repo-file-v1:sha256:5e408bc747766304a482085ba47e90ea61781570603291bc4ef65c7412bff7ea"
+        },
+        {
+          "resource": "repo://tests/test_project_ini.py",
+          "version": "repo-file-v1:sha256:573c55635b068a0da87a567771071bc7201b15abe327b74d34cd8385155a4982"
+        }
+      ]
+    },
+    {
+      "id": "claim_5aba8caf78054152b84f5aad8237ab60",
+      "statement": "Byte-level assertions using write_bytes/read_bytes are used for the CRLF fidelity test on both fixture setup and assertion, because Path.read_text applies universal-newline conversion that would mask newline corruption.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_project_ini.py#L239-L267",
+          "version": "repo-lines-v1:sha256:391cdb12d0ae2021f89ce914dcc9c2b512bc9e32c5a036e90200ff91d7a85f10:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllNjVjYzZjZDE0Mjg1MjEyYmZhOTg3ZWFiM2M5ZGY3MWYzNjZkOTVjZWI2MWVjMzJmMjgxYTM2OTMzYjkzMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ3ZjdkZDk4ZDU2NzMwYjAzNTRmYjAzMjYzZmE5MmY4NDUzZWExYjYwNjhiYjlkMTU0MjUwNTE4NzdlMzZmZDciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhMTgzZWUwNWZkYmM4ODRiNDJlYTg1ZGEwZmYxZGY4OTc3NzBjYjBlNzg5NTg4ZGQ4Nzg4OTNiMmZlZjE5OGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImExOWUwN2JmMDQwODkyZTgyYjRmY2M0YmVlZDQ4OTAyNWU3MzllMDRlMmJiYmZkNDY1ZDUxMWYxNTU1NjNkZDcifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-14T16:49:47.288Z"
+  }
+}

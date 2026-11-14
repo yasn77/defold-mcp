@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "pages": {
+    "/openwiki/architecture/game-project-ini-editor.md": {
+      "pageVersion": "sha256:cd9955508088110165431db47155f697ebf5cf4665f3cbabc68bb8894e52e2b9",
+      "completedBy": "opencode",
+      "completedRunId": "1a587538-cca3-4d7d-a4fe-566e60d1532d",
+      "gitHead": "35bf68daebb75b579005fa70c632d179b768f7d8",
+      "sourceFingerprint": "sha256:c9d9232a9b160e9d2261bcc95bad7d29460773bd49452dea74a7337071facb30"
+    },
+    "/openwiki/architecture/overview.md": {
+      "pageVersion": "sha256:a5bfa8e3387a8c1b7b723a8fbaa8f0da0cc0891d57f01ee58ac1a13d22e30e02",
+      "completedBy": "opencode",
+      "completedRunId": "1a587538-cca3-4d7d-a4fe-566e60d1532d",
+      "gitHead": "35bf68daebb75b579005fa70c632d179b768f7d8",
+      "sourceFingerprint": "sha256:c9d9232a9b160e9d2261bcc95bad7d29460773bd49452dea74a7337071facb30"
+    },
+    "/openwiki/quickstart.md": {
+      "pageVersion": "sha256:1e158ec8ce03e81de199d3c3e143a2f398c13c61b55093a7410e1e996feedb4f",
+      "completedBy": "opencode",
+      "completedRunId": "1a587538-cca3-4d7d-a4fe-566e60d1532d",
+      "gitHead": "35bf68daebb75b579005fa70c632d179b768f7d8",
+      "sourceFingerprint": "sha256:c9d9232a9b160e9d2261bcc95bad7d29460773bd49452dea74a7337071facb30"
+    },
+    "/openwiki/testing-and-gates.md": {
+      "pageVersion": "sha256:32e9e9aec6718a0c3744bbfe081d41b7977c331e3b2e6a7e4f9b28ea595dbfba",
+      "completedBy": "opencode",
+      "completedRunId": "1a587538-cca3-4d7d-a4fe-566e60d1532d",
+      "gitHead": "35bf68daebb75b579005fa70c632d179b768f7d8",
+      "sourceFingerprint": "sha256:c9d9232a9b160e9d2261bcc95bad7d29460773bd49452dea74a7337071facb30"
+    }
+  }
+}
