@@ -33,7 +33,7 @@ from pathlib import Path
 
 import pytest
 
-from defold_mcp import bob_runner, docs_index, server
+from defold_mcp import bob_runner, config, docs_index, server
 from defold_mcp.textproto import (
     decode_embedded_data,
     parse_textproto,
