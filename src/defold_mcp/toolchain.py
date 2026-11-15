@@ -47,6 +47,9 @@ _JAVA_VERSION_RE = re.compile(r'version "(\d+)(?:\.\d+)*')
 # ELF magic: the first bytes of a Linux engine binary.
 _ELF_MAGIC = b"\x7fELF"
 
+# Explicit timeout for artifact downloads so slow mirrors do not hit httpx's 5s default.
+DEFAULT_HTTP_TIMEOUT = httpx.Timeout(connect=10.0, read=120.0, write=30.0, pool=10.0)
+
 
 def _engine_magic(platform_info: dict) -> bytes | None:
     """The magic a cached engine must start with, or ``None`` to skip.
@@ -66,7 +69,11 @@ def _client_or_default(client: httpx.Client | None) -> httpx.Client:
     ``HTTPStatusError`` on the redirect response instead of fetching the
     artifact.
     """
-    return client if client is not None else httpx.Client(follow_redirects=True)
+    return (
+        client
+        if client is not None
+        else httpx.Client(follow_redirects=True, timeout=DEFAULT_HTTP_TIMEOUT)
+    )
 
 
 def _atomic_write_text(path: Path, text: str) -> None:
@@ -365,22 +372,39 @@ def download_artifact(
     owned = client is None
     http = _client_or_default(client)
     try:
-        response = http.get(url)
-        response.raise_for_status()
-        data = response.content
+        try:
+            with http.stream("GET", url) as response:
+                response.raise_for_status()
+                magic_len = len(expected_magic) if expected_magic is not None else 0
+                magic_buf = bytearray()
+                with tmp.open("wb") as handle:
+                    for chunk in response.iter_bytes():
+                        if not chunk:
+                            continue
+                        if magic_len and len(magic_buf) < magic_len:
+                            need = magic_len - len(magic_buf)
+                            magic_buf.extend(chunk[:need])
+                            if (
+                                len(magic_buf) == magic_len
+                                and bytes(magic_buf) != expected_magic
+                            ):
+                                raise ValueError(
+                                    f"Magic bytes mismatch for {url}: expected "
+                                    f"{expected_magic!r}, got {bytes(magic_buf)!r}."
+                                )
+                        handle.write(chunk)
+                if expected_magic is not None and bytes(magic_buf) != expected_magic:
+                    raise ValueError(
+                        f"Magic bytes mismatch for {url}: expected "
+                        f"{expected_magic!r}, got {bytes(magic_buf)!r}."
+                    )
+        except Exception:
+            tmp.unlink(missing_ok=True)
+            raise
     finally:
         if owned:
             http.close()
 
-    if expected_magic is not None:
-        actual = data[: len(expected_magic)]
-        if actual != expected_magic:
-            raise ValueError(
-                f"Magic bytes mismatch for {url}: expected "
-                f"{expected_magic!r}, got {actual!r}."
-            )
-
-    tmp.write_bytes(data)
     os.replace(tmp, dest)
     return dest
 

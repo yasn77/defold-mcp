@@ -501,11 +501,19 @@ class DocsIndex:
         # Follow redirects: every Defold distribution host redirects
         # (``d.defold.com/archive/...`` answers 301), and a bare client
         # would raise on the redirect response instead of fetching.
-        http = client if client is not None else httpx.Client(follow_redirects=True)
+        timeout = httpx.Timeout(connect=10.0, read=120.0, write=30.0, pool=10.0)
+        http = (
+            client
+            if client is not None
+            else httpx.Client(follow_redirects=True, timeout=timeout)
+        )
         try:
-            response = http.get(url)
-            response.raise_for_status()
-            return response.content
+            chunks: list[bytes] = []
+            with http.stream("GET", url) as response:
+                response.raise_for_status()
+                for chunk in response.iter_bytes():
+                    chunks.append(chunk)
+            return b"".join(chunks)
         finally:
             if owned:
                 http.close()

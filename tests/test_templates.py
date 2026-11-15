@@ -227,3 +227,15 @@ def test_3d_collection_mounts_the_script_component(tmp_path):
     embedded = {e["id"]: e for e in tree["embedded_instances"]}
     mounted = {c["id"]: c for c in _as_entries(embedded["camera"]["data_ast"]["components"])}
     assert mounted["script"]["component"] == "/main/main.script"
+
+
+def test_known_library_urls_are_well_formed():
+    assert set(KNOWN_LIBRARY_URLS) == {
+        "deftest",
+        "monarch",
+        "druid",
+        "automation_bridge",
+    }
+    for name, url in KNOWN_LIBRARY_URLS.items():
+        assert url.startswith("https://github.com/"), name
+        assert url.endswith("/archive/refs/heads/master.zip"), name
