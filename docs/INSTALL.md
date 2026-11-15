@@ -12,7 +12,8 @@ the server compiles with `bob.jar` and runs `dmengine_headless`. Every response
 reports which mode served it as `"backend": "editor"` or `"backend": "headless"`.
 
 This guide covers installation, the pre-flight probe, registration for each
-harness, and the timeouts that matter more than anything else here.
+harness, the alternative run modes (`uvx` and a container image), and the
+timeouts that matter more than anything else here.
 
 ## Prerequisites
 
@@ -20,6 +21,8 @@ harness, and the timeouts that matter more than anything else here.
 * **Network access on first use** — the toolchain cache is roughly 428 MB.
 * **No Node.js.** The server is pure Python, which is deliberate: nothing here
   depends on `npm`, and it runs on hosts where Node is unavailable.
+* **Only for the optional run modes** — `uv` (for `uvx`) or Docker/Podman (for
+  the container image). Neither is needed for the two install options below.
 
 ### Option A — mise and uv (recommended)
 
@@ -64,6 +67,189 @@ installed beside your own JDKs rather than replacing them.
 The cache lives in `DEFOLD_MCP_CACHE_DIR`, defaulting to `~/.cache/defold-mcp`.
 Pass it explicitly in every harness config — see the next section.
 
+## Run via `uvx`
+
+`uvx` (short for `uv tool run`) executes a Python console script from a
+throwaway, isolated environment: no checkout, no virtualenv to activate, and
+nothing left behind except uv's package cache. It is the quickest way to try the
+server or to pin a harness to an unreleased revision.
+
+```bash
+uvx defold-mcp --help
+```
+
+That form installs the published package, and is available once `defold-mcp` is
+on PyPI. Until then, or to run a specific revision, name the source with
+`--from`:
+
+```bash
+# the tip of the default branch
+uvx --from git+https://github.com/yasn77/defold-mcp defold-mcp
+
+# a branch, tag or commit — anything after @ belongs to the URL
+uvx --from git+https://github.com/yasn77/defold-mcp@master defold-mcp
+uvx --from git+https://github.com/yasn77/defold-mcp@v0.1.0 defold-mcp
+```
+
+`--from` names the **package** to install; the trailing `defold-mcp` names the
+**command** to run. The two are the same name here, and that two-token form is
+what allows them to differ — `--from httpie http`, for instance. The git forms
+need `git` on the `PATH`, because uv asks it for the source tree.
+
+Two properties are worth knowing before you point a harness at `uvx`:
+
+* **The environment is ephemeral; the cache is not.** Each run resolves `mcp`,
+  `httpx` and `pillow` afresh into a temporary virtualenv (uv keeps the wheels
+  cached, so this is fast after the first run), and the environment is discarded
+  when the server exits. The 428 MB Defold toolchain cache lives outside it and
+  must point somewhere persistent, or every session re-downloads Defold:
+
+  ```bash
+  DEFOLD_MCP_CACHE_DIR="$HOME/.cache/defold-mcp" \
+    uvx --from git+https://github.com/yasn77/defold-mcp defold-mcp
+  ```
+
+  A project-local directory is equally valid, and keeps two Defold versions from
+  fighting over one cache:
+
+  ```bash
+  DEFOLD_MCP_CACHE_DIR="$PWD/.defold-cache" \
+    uvx --from git+https://github.com/yasn77/defold-mcp defold-mcp
+  ```
+
+* **The interpreter is uv's choice.** uv selects (or downloads) a managed CPython
+  that satisfies `requires-python = ">=3.14"`, so a host with only Python 3.12
+  still works. `--python 3.14` pins the decision.
+
+For a harness, use `uvx` itself as the command. Most clients take a single
+executable plus an argument list, which fits `uvx` exactly:
+
+```json
+{
+  "mcpServers": {
+    "defold": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/yasn77/defold-mcp", "defold-mcp"],
+      "env": { "DEFOLD_MCP_CACHE_DIR": "<home>/.cache/defold-mcp" }
+    }
+  }
+}
+```
+
+`uvx` must then be on the harness's `PATH`, and clients spawn servers with a
+filtered environment: use the absolute path to the `uvx` binary (`command -v
+uvx`) if in doubt. Pin the source (`@v0.1.0`, or `--from defold-mcp==0.1.0` once
+published) when you want reproducible harness behaviour; a moving branch means
+every session may run different code.
+
+## Run via container
+
+The repository ships a two-stage `Containerfile` built on Chainguard's Python
+images. The result carries Python, the package and its three dependencies, and
+nothing else: no shell, no package manager, and the server runs as uid 65532
+(`nonroot`). Docker and Podman are both fine; the examples use `docker`.
+
+### Build the image
+
+```bash
+docker build -f Containerfile -t defold-mcp .
+```
+
+```bash
+podman build -f Containerfile -t defold-mcp .
+```
+
+The build fetches the Chainguard base layers and the PyPI dependencies, so it
+needs network access once; the image that results downloads nothing when it
+starts. Only `latest` and `latest-dev` are anonymously pullable from `cgr.dev`,
+which is why the `FROM` lines carry no version suffix: the build stage instead
+asserts `sys.version_info >= (3, 14)`, so a base image that regressed below the
+package's floor fails the build rather than producing an image that cannot import
+the code. Pin both stages by digest (`…@sha256:…`) if you need byte-identical
+rebuilds: nothing pins the current `latest` tags today, so the digest rule is a
+no-op, and only once they are pinned does Renovate's "Container base images"
+group refresh them — in one grouped PR rather than one per stage.
+
+### Serve stdio
+
+```bash
+docker run -i --rm --init \
+  -v defold-mcp-cache:/home/nonroot/.cache/defold-mcp \
+  defold-mcp
+```
+
+Three details are load-bearing:
+
+* **`-i` is mandatory.** Stdio is the transport; without an open stdin the server
+  sees EOF and exits.
+* **`--init` gives the container a real init as PID 1.** A process that is PID 1
+  receives no default signal action, so a bare server would ignore `SIGTERM` and
+  `docker stop` would wait ten seconds before killing it. With `--init`, SIGTERM
+  reaches the server and it shuts down cleanly.
+* **The cache volume must be writable by uid 65532.** A fresh Docker named volume
+  is: the image seeds `/home/nonroot/.cache/defold-mcp` owned by 65532, and Docker
+  copies an image directory's ownership into an empty named volume. A bind mount
+  from your home directory usually is not, and needs `chown 65532:65532` first.
+  For a throwaway session, redirect the cache to a writable path instead:
+
+  ```bash
+  docker run -i --rm --init \
+    -e DEFOLD_MCP_CACHE_DIR=/tmp/defold-mcp-cache \
+    defold-mcp
+  ```
+
+  That is fine for a short session and wasteful across restarts, because the
+  toolchain is re-downloaded each time.
+
+To let the server work on your project, mount it and start there:
+
+```bash
+docker run -i --rm --init \
+  -v "$PWD:/workspace" -w /workspace \
+  -v defold-mcp-cache:/home/nonroot/.cache/defold-mcp \
+  defold-mcp
+```
+
+The mount must be writable by uid 65532 as well: resource mutations, build output
+and bundles are written into the project tree. On Linux, run as yourself with
+`--user "$(id -u):$(id -g)"` and point `DEFOLD_MCP_CACHE_DIR` at a directory that
+uid can write, since `/home/nonroot` belongs to uid 65532 and no longer resolves
+to a writable home.
+
+### Serve StreamableHTTP
+
+```bash
+docker run --rm --init -p 9810:9810 \
+  -v defold-mcp-cache:/home/nonroot/.cache/defold-mcp \
+  defold-mcp --transport streamable-http --host 0.0.0.0 --port 9810
+```
+
+The endpoint is `http://127.0.0.1:9810/mcp`. `--host 0.0.0.0` is required here:
+the default `127.0.0.1` binds the container's own loopback, which the published
+port cannot reach. The transport has no authentication, and the tools write files
+and download artifacts, so publish the port only on a trusted host or behind a
+proxy.
+
+### What the image cannot do
+
+* **No shell, no `pip`, no `apk`.** `docker run --rm defold-mcp /bin/sh` fails by
+  design. Diagnose with the handshake probe, or build the `-dev` variant for a
+  one-off debugging session.
+* **No JVM.** `defold_compile`, `defold_test_run` and `defold_bundle` run
+  `bob.jar`, which needs JDK 25. `defold_setup_toolchain` installs a private
+  Temurin JDK into the cache, so those tools work — but only once the toolchain
+  has been downloaded, which needs network access and a persistent cache.
+* **No virtual X server.** `defold_run(xvfb=true)` needs Xvfb, which the image
+  does not carry. The headless engine and editor-backed screenshots are
+  unaffected.
+
+CI proves the image end to end: the `container` job in
+`.github/workflows/ci.yml` builds it, writes into the default cache directory as
+uid 65532, and runs `scripts/mcp_handshake_test.py` against `docker run -i
+--rm`, so the initialize handshake, the twenty-tool listing, a `defold_doctor`
+call and a clean SIGTERM exit are all verified inside the container on every
+push.
+
 ## The canonical stdio configuration
 
 Every harness below expresses the same thing. This is the reference form:
@@ -82,10 +268,17 @@ Every harness below expresses the same thing. This is the reference form:
 }
 ```
 
-Substitute your own checkout path. The `env` block is not decoration: most
-clients spawn servers with a filtered environment, so an unexported
-`DEFOLD_MCP_CACHE_DIR` would silently send the server to a different cache than
-the one your other tools populated.
+`<repo>` stands for the absolute path of your checkout and `<home>` for your home
+directory — for example `/srv/defold-mcp` and the path `cd ~ && pwd` prints. Both
+values must be absolute: harnesses do not expand `~`, and neither does the
+server, so a `~` in `DEFOLD_MCP_CACHE_DIR` creates a directory literally named
+`~`. The same block works for the other run modes: replace `command` (and `args`)
+with the `uvx` invocation or the `docker run -i --rm --init …` form from the
+sections above.
+
+The `env` block is not decoration: most clients spawn servers with a filtered
+environment, so an unexported `DEFOLD_MCP_CACHE_DIR` would silently send the
+server to a different cache than the one your other tools populated.
 
 The server also accepts `--transport streamable-http --host 127.0.0.1 --port
 9810` for HTTP-capable clients (endpoint `http://127.0.0.1:9810/mcp`), and
@@ -142,7 +335,7 @@ not a server problem — which halves the search space.
 
 ```bash
 claude mcp add defold \
-  -e DEFOLD_MCP_CACHE_DIR=<home>/.cache/defold-mcp \
+  -e DEFOLD_MCP_CACHE_DIR="$HOME/.cache/defold-mcp" \
   -- <repo>/.venv/bin/defold-mcp
 ```
 
@@ -227,7 +420,7 @@ declares its transport:
 
 ```bash
 gemini mcp add -s user \
-  -e DEFOLD_MCP_CACHE_DIR=<home>/.cache/defold-mcp \
+  -e DEFOLD_MCP_CACHE_DIR="$HOME/.cache/defold-mcp" \
   defold <repo>/.venv/bin/defold-mcp
 ```
 
@@ -349,6 +542,11 @@ Tool names may be prefixed by the client (`mcp__defold__defold_doctor`,
 `defold__defold_compile`, `mcp_defold_defold_run`). That is normal; the skill and
 all documentation use the bare names and each harness resolves its own prefix.
 
+For a container registration, run the same three checks and confirm the reported
+`cache_dir` is the mounted volume's path. If it reports a path under `/tmp` or
+`/home/nonroot`, the volume or `DEFOLD_MCP_CACHE_DIR` is missing and every new
+container will re-download the toolchain.
+
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
@@ -356,11 +554,14 @@ all documentation use the bare names and each harness resolves its own prefix.
 | Server does not appear in the client | JSON/TOML syntax error in the config | Re-parse the file (`python -c 'import json,sys; json.load(open(sys.argv[1]))' opencode.json`). A stray comma silently disables every server in the block. |
 | `UnsupportedClassVersionError` from `bob.jar` | Host JDK older than 25 | `defold_setup_toolchain(install_jdk25=true)` installs a private JDK 25 in the cache. |
 | `defold_bundle` or `defold_setup_toolchain` times out | Client's 60 s default | Raise the per-tool timeout to 600–900 s. |
-| Artifacts are re-downloaded every session | Filtered environment drops `DEFOLD_MCP_CACHE_DIR` | Pass the `env` block explicitly. |
+| Artifacts are re-downloaded every session | Filtered environment drops `DEFOLD_MCP_CACHE_DIR` | Pass the `env` block explicitly. Under the container, mount the cache volume. |
 | `defold_docs_search` returns nothing | An interrupted ingest left an empty `docs.db` | Call `defold_setup_toolchain` again; the server detects an empty index and rebuilds it. |
 | Two gates or builds at once corrupt the virtualenv | `mise run test` and `mise run live` both run `uv venv --clear` | Run them **sequentially**, never concurrently. |
 | `defold_preview` reports "editor not running" | It needs a live Editor (`GET /preview/{path}`) | Open the project in the Editor, or use `defold_run` plus `defold_runtime_act(action="screenshot")`. |
 | Interactive `dmengine` fails with an X11/GLX error on a headless host | No display | Builds and tests are fine (`dmengine_headless` needs no display); for screenshots use `defold_run(xvfb=true)` where Xvfb is installed. |
+| The container exits the moment it is started | `docker run` without `-i` | Stdio needs an open stdin: add `-i`. |
+| `docker stop` takes ten seconds, then kills the server | No init, so PID 1 ignores SIGTERM | Run with `--init`. |
+| The container cannot write its cache | The volume or bind mount is owned by another uid | A named volume works as-is; `chown 65532:65532` a bind mount, or run `-e DEFOLD_MCP_CACHE_DIR=/tmp/defold-mcp-cache`. |
 
 Diagnostic habits that save time:
 
@@ -378,3 +579,7 @@ Remove the `defold` entry from the client configuration, delete the skill symlin
 (`rm ~/.config/opencode/skills/defold`), and delete the cache
 (`rm -rf ~/.cache/defold-mcp`). Nothing is installed outside the checkout and the
 cache directory.
+
+For the other run modes: `uvx` leaves only uv's shared package cache
+(`uv cache clean` empties it), and the image is removed with `docker image rm
+defold-mcp` together with its volume (`docker volume rm defold-mcp-cache`).

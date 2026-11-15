@@ -1,10 +1,13 @@
-"""Tests for the GitHub Actions workflows and the release configuration.
+"""Tests for the CI/release configuration, the container image and the docs.
 
-The runner is unavailable here (no Node, so no ``act``), so these tests pin
-the files that GitHub will interpret: every workflow must parse, every action
-must be SHA-pinned with a version comment, the runner labels must be the
-Ubicloud x64 fleet, and the release configuration must agree with the three
-places release-please rewrites the version.
+The runner is unavailable here (no Node, so no ``act``), and no container
+runtime is available either, so these tests pin the files that CI and the
+container build will interpret: every workflow must parse, every action must be
+SHA-pinned with a version comment, the runner labels must be the Ubicloud x64
+fleet, the release configuration must agree with the three places
+release-please rewrites the version, the ``Containerfile`` must stay a
+two-stage Chainguard build, and the committed documentation must carry no local
+paths.
 """
 
 from __future__ import annotations
@@ -27,6 +30,8 @@ RELEASE_CONFIG = REPO_ROOT / ".release-please-config.json"
 RELEASE_MANIFEST = REPO_ROOT / ".release-please-manifest.json"
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
 RENOVATE_CONFIG = REPO_ROOT / "renovate.json"
+CONTAINERFILE = REPO_ROOT / "Containerfile"
+DOCKERIGNORE = REPO_ROOT / ".dockerignore"
 
 # Every workflow parses, including the pre-existing OpenWiki one. Only the two
 # workflows added for the CI/release phase are expected to run on Ubicloud.
@@ -265,8 +270,9 @@ def test_renovate_groups_are_logical() -> None:
 
     actions = groups["GitHub Actions"]
     assert actions["matchManagers"] == ["github-actions"]
-    assert actions["matchUpdateTypes"] == ["minor", "patch"]
-    # Every action here is SHA-pinned; keep the digests refreshed.
+    # Digest updates are grouped too: every action here is SHA-pinned, so the
+    # SHA refreshes must arrive as one PR rather than one per action.
+    assert actions["matchUpdateTypes"] == ["minor", "patch", "digest"]
     assert actions["pinDigests"] is True
 
     assert groups["mise toolchain"]["matchManagers"] == ["mise"]
@@ -302,3 +308,64 @@ def test_renovate_schema_and_extends() -> None:
     assert config["description"]
     assert config["labels"] == ["renovate", "dependencies"]
 
+
+def test_containerfile_exists_and_uses_chainguard() -> None:
+    """The image is a two-stage build on the Chainguard Python images."""
+    text = CONTAINERFILE.read_text(encoding="utf-8")
+
+    assert "FROM cgr.dev/chainguard/python:latest-dev AS build" in text
+    assert "FROM cgr.dev/chainguard/python:latest\n" in text
+
+    # The venv is built in the dev variant and copied into the minimal one.
+    assert re.search(
+        r"^COPY --chown=nonroot:nonroot --from=build /app/venv /app/venv$",
+        text,
+        re.MULTILINE,
+    )
+    assert 'ENV PATH="/app/venv/bin:$PATH"' in text
+    assert 'ENTRYPOINT ["defold-mcp"]' in text
+    assert "USER nonroot" in text
+
+    # The cache directory is seeded in the image so a named volume mounted over
+    # it inherits `nonroot` ownership rather than a root-owned mountpoint the
+    # server cannot write to.
+    assert re.search(
+        r"^COPY --chown=nonroot:nonroot --from=build /app/cache-seed/ "
+        r"/home/nonroot/\.cache/defold-mcp/$",
+        text,
+        re.MULTILINE,
+    )
+
+    # The runtime image ships no shell, so it may hold no RUN instruction.
+    runtime = re.split(
+        r"^FROM cgr\.dev/chainguard/python:latest\s*$",
+        text,
+        maxsplit=1,
+        flags=re.MULTILINE,
+    )[1]
+    assert "RUN " not in runtime, "the minimal image has no shell to run"
+
+    ignored = {
+        line.strip().rstrip("/")
+        for line in DOCKERIGNORE.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    }
+    # A stray .venv would copy a host-architecture interpreter into the build.
+    assert {".venv", ".git", "__pycache__", ".pytest_cache"} <= ignored
+
+
+def test_ci_has_container_job() -> None:
+    """CI builds the image and drives the real probe against its stdio."""
+    document = _load_workflow(CI_WORKFLOW)
+    assert "container" in document["jobs"]
+
+    text = CI_WORKFLOW.read_text(encoding="utf-8")
+    assert re.search(r"docker build\b[^\n]*Containerfile", text)
+    assert "docker run -i --rm" in text
+    # The proof drives the repository's own handshake probe, which asserts the
+    # twenty-tool listing, a doctor call and stdout purity.
+    assert "mcp_handshake_test.py" in text
+    # `defold_doctor` resolves the cache dir, so it must be writable in-image.
+    assert "DEFOLD_MCP_CACHE_DIR" in text
+    # The image seeds that directory; the job proves a real write by uid 65532.
+    assert "--entrypoint /usr/bin/python" in text

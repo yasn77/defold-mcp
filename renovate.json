@@ -33,7 +33,7 @@
     {
       "description": "GitHub Actions runs; every action is SHA-pinned, so keep the digests refreshed too",
       "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "groupName": "GitHub Actions",
       "pinDigests": true
     },
@@ -43,7 +43,7 @@
       "groupName": "mise toolchain"
     },
     {
-      "description": "Containerfile base images; the Chainguard Containerfile lands next phase",
+      "description": "Container base images; the Containerfile's base images",
       "matchManagers": ["dockerfile"],
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "groupName": "Container base images"
