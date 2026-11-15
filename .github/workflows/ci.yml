@@ -87,3 +87,66 @@ jobs:
       # run and a real wasm-web bundle against Defold 1.14.1.
       - name: Run the live Defold smoke
         run: mise run live
+
+  container:
+    name: Container image
+    # The image is a Chainguard-based two-stage build, and the proof is the
+    # repository's own stdio probe driving the containerised binary, so a
+    # broken image or lost tool fails the gate rather than drifting silently
+    # in the Containerfile. Ubicloud runners are GitHub-compatible and run
+    # GitHub's runner images, so the Docker CLI and daemon are preinstalled;
+    # no daemon bootstrap is needed.
+    runs-on: ubicloud-standard-2
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install the pinned toolchain
+        # Only the probe needs an interpreter here; the image brings its own.
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        with:
+          install: true
+
+      # Network at build time only: the dependencies (`mcp`, `httpx`,
+      # `pillow`) and the Chainguard base layers are fetched here, never when
+      # the container starts.
+      - name: Build the image
+        run: docker build --file Containerfile --tag defold-mcp:ci .
+
+      # Proves the seeded cache directory is writable by uid 65532. The default
+      # `DEFOLD_MCP_CACHE_DIR` must survive a real write, because the first
+      # toolchain download lands there; the check needs no shell, only the
+      # image's own interpreter.
+      - name: Prove the default cache directory is writable
+        run: >-
+          docker run --rm --entrypoint /usr/bin/python defold-mcp:ci -c
+          "import os, pathlib; p = pathlib.Path(os.environ['DEFOLD_MCP_CACHE_DIR']);
+          p.mkdir(parents=True, exist_ok=True); (p / 'write-probe').write_text('ok');
+          print('writable', p, 'as uid', os.getuid())"
+
+      # The probe spawns whatever path it is given, so a three-line shim makes
+      # that path `docker run -i --rm`: initialize, the twenty-tool listing, a
+      # `defold_doctor` call, stdout purity, then SIGTERM. `--init` supplies a
+      # real init as PID 1, because PID 1 does not receive default signal
+      # actions and a bare Python PID 1 would ignore the probe's SIGTERM;
+      # tini forwards it and the server exits inside the five-second limit.
+      # The cache dir moves to /tmp so `defold_doctor` never trips over an
+      # unwritable home directory.
+      - name: Probe the containerised server over stdio
+        run: |
+          shim="$RUNNER_TEMP/defold-mcp-container"
+          cat > "$shim" <<'SHIM'
+          #!/bin/sh
+          exec docker run -i --rm --init \
+            --env DEFOLD_MCP_CACHE_DIR=/tmp/defold-mcp-cache \
+            defold-mcp:ci "$@"
+          SHIM
+          chmod +x "$shim"
+          python scripts/mcp_handshake_test.py "$shim"
+
+      # A killed CLI does not necessarily stop its container; make the runner
+      # clean regardless of how the probe ended.
+      - name: Remove any container left behind
+        if: always()
+        run: docker ps --all --quiet --filter ancestor=defold-mcp:ci | xargs --no-run-if-empty docker rm --force
