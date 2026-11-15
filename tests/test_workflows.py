@@ -6,8 +6,8 @@ container build will interpret: every workflow must parse, every action must be
 SHA-pinned with a version comment, the runner labels must be the Ubicloud x64
 fleet, the release configuration must agree with the three places
 release-please rewrites the version, the ``Containerfile`` must stay a
-two-stage Chainguard build, and the committed documentation must carry no local
-paths.
+two-stage Chainguard build, the container build must go through buildx, a
+release must publish the image to GHCR from its own run.
 """
 
 from __future__ import annotations
@@ -26,6 +26,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_DIR = REPO_ROOT / ".github" / "workflows"
 CI_WORKFLOW = WORKFLOW_DIR / "ci.yml"
 RELEASE_WORKFLOW = WORKFLOW_DIR / "release.yml"
+RELEASE_IMAGE_WORKFLOW = WORKFLOW_DIR / "release-image.yml"
+OPENWIKI_WORKFLOW = WORKFLOW_DIR / "openwiki-update.yml"
 RELEASE_CONFIG = REPO_ROOT / ".release-please-config.json"
 RELEASE_MANIFEST = REPO_ROOT / ".release-please-manifest.json"
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
@@ -33,8 +35,8 @@ RENOVATE_CONFIG = REPO_ROOT / "renovate.json"
 CONTAINERFILE = REPO_ROOT / "Containerfile"
 DOCKERIGNORE = REPO_ROOT / ".dockerignore"
 
-# Every workflow parses, including the pre-existing OpenWiki one. Only the two
-# workflows added for the CI/release phase are expected to run on Ubicloud.
+# Every workflow parses. The repository keeps the CI gate and the release, both
+# on the Ubicloud fleet; the image is published by a job inside the release.
 WORKFLOWS = sorted(WORKFLOW_DIR.glob("*.y*ml"))
 NEW_WORKFLOWS = (CI_WORKFLOW, RELEASE_WORKFLOW)
 
@@ -89,6 +91,22 @@ def test_expected_workflows_exist() -> None:
     # Keeps the parametrised tests above from passing vacuously.
     assert CI_WORKFLOW.is_file()
     assert RELEASE_WORKFLOW.is_file()
+
+
+def test_openwiki_update_workflow_removed() -> None:
+    """The wiki refresh is manual: no scheduled workflow may creep back in.
+
+    The user maintains ``openwiki/`` by hand through the OpenWiki lifecycle and
+    asked for the scheduled CI refresh to go, so a reintroduced file — or a
+    stray reference to one from another workflow — fails here rather than
+    resurrecting a job nobody runs.
+    """
+    assert not OPENWIKI_WORKFLOW.exists()
+    text = "\n".join(
+        path.read_text(encoding="utf-8") for path in WORKFLOWS
+    ).lower()
+    assert "openwiki" not in text
+    assert "npm install --global openwiki" not in text
 
 
 @pytest.mark.parametrize("workflow", WORKFLOWS, ids=lambda path: path.name)
@@ -191,8 +209,12 @@ def test_release_workflow_uses_release_please_and_writes() -> None:
         action.startswith("googleapis/release-please-action@")
         for action in actions
     )
-    assert document["permissions"]["contents"] == "write"
-    assert document["permissions"]["pull-requests"] == "write"
+    # Writing is granted per job, so the release PR machinery carries it and
+    # the image job does not inherit it.
+    permissions = document["jobs"]["release-please"]["permissions"]
+    assert permissions["contents"] == "write"
+    assert permissions["pull-requests"] == "write"
+    assert document["permissions"] == {"contents": "read"}
 
 
 def test_release_config_uses_the_python_strategy() -> None:
@@ -354,13 +376,43 @@ def test_containerfile_exists_and_uses_chainguard() -> None:
     assert {".venv", ".git", "__pycache__", ".pytest_cache"} <= ignored
 
 
+def _action_step(
+    document: dict, prefix: str, job: str | None = None
+) -> dict:
+    """Return the one step using an action whose reference starts ``prefix``."""
+    steps = (
+        document["jobs"][job].get("steps", []) if job else _steps(document)
+    )
+    matches = [
+        step for step in steps if str(step.get("uses", "")).startswith(prefix)
+    ]
+    assert len(matches) == 1, f"{prefix}: {len(matches)} matching steps"
+    return matches[0]
+
+
 def test_ci_has_container_job() -> None:
-    """CI builds the image and drives the real probe against its stdio."""
+    """CI builds the image with buildx and drives the real probe against it."""
     document = _load_workflow(CI_WORKFLOW)
     assert "container" in document["jobs"]
 
+    # Buildx is the builder; build-push-action is the build. A shell
+    # `docker build` would bypass the action's outputs and inputs.
+    buildx = _action_step(document, "docker/setup-buildx-action@")
+    assert buildx["uses"].count("@") == 1
+
+    build = _action_step(document, "docker/build-push-action@")["with"]
+    assert build["context"] == "."
+    assert build["file"] == "Containerfile"
+    # `push: false` keeps the tag local, and `load: true` puts the image in the
+    # daemon so the following `docker run` probe can drive it.
+    assert build["push"] is False
+    assert build["load"] is True
+    assert build["tags"] == "defold-mcp:ci"
+
     text = CI_WORKFLOW.read_text(encoding="utf-8")
-    assert re.search(r"docker build\b[^\n]*Containerfile", text)
+    assert not re.search(r"^\s*run:\s*docker build\b", text, re.MULTILINE), (
+        "the container job must build through docker/build-push-action"
+    )
     assert "docker run -i --rm" in text
     # The proof drives the repository's own handshake probe, which asserts the
     # twenty-tool listing, a doctor call and stdout purity.
@@ -369,3 +421,91 @@ def test_ci_has_container_job() -> None:
     assert "DEFOLD_MCP_CACHE_DIR" in text
     # The image seeds that directory; the job proves a real write by uid 65532.
     assert "--entrypoint /usr/bin/python" in text
+
+
+def test_release_image_workflow_is_gone() -> None:
+    """No separate tag-triggered workflow: it could never fire.
+
+    release-please creates the ``vX.Y.Z`` tag through the GitHub API with
+    ``GITHUB_TOKEN``, and GitHub suppresses workflow runs that token raises, so
+    a ``push: tags`` workflow would be correct but permanently dormant.
+    Publishing lives in the release run instead; a reintroduced file fails here.
+    """
+    assert not RELEASE_IMAGE_WORKFLOW.exists()
+    text = "\n".join(
+        path.read_text(encoding="utf-8") for path in WORKFLOWS
+    ).lower()
+    assert "release-image" not in text
+
+
+def test_release_workflow_publishes_the_image_in_the_release_run() -> None:
+    """The release run pushes the image with the token it already has."""
+    document = _load_workflow(RELEASE_WORKFLOW)
+
+    # Still one trigger: a push to master. Publishing hangs off that run rather
+    # than a new trigger, which is what makes `GITHUB_TOKEN` sufficient.
+    assert document["on"] == {"push": {"branches": ["master"]}}
+    assert "pull_request" not in document["on"]
+
+    release = document["jobs"]["release-please"]
+    publish = document["jobs"]["publish-image"]
+
+    # release-please creates the tag with the workflow token; the only
+    # downstream consumer is a job in this same run, so no PAT is needed.
+    assert release["permissions"] == {
+        "contents": "write",
+        "issues": "write",
+        "pull-requests": "write",
+    }
+    # Job outputs are the only way a `needs`-dependent job reads step outputs.
+    outputs = release["outputs"]
+    assert outputs["releases_created"] == (
+        "${{ steps.release.outputs.releases_created }}"
+    )
+    assert outputs["version"] == "${{ steps.release.outputs.version }}"
+    assert outputs["tag_name"] == "${{ steps.release.outputs.tag_name }}"
+
+    assert publish["needs"] == ["release-please"]
+    # A run that only opened or refreshed the release PR has nothing to ship.
+    # The full expression is pinned: `latest` is a literal raw tag that never
+    # empties, so an inverted operator would push it from non-release runs and
+    # no other assertion here would notice.
+    assert publish["if"] == (
+        "${{ needs.release-please.outputs.releases_created == 'true' }}"
+    )
+    assert publish["permissions"] == {
+        "contents": "read",
+        "packages": "write",
+    }
+
+    _action_step(document, "actions/checkout@", job="publish-image")
+    _action_step(document, "docker/setup-buildx-action@", job="publish-image")
+
+    login = _action_step(
+        document, "docker/login-action@", job="publish-image"
+    )["with"]
+    assert login["registry"] == "ghcr.io"
+    assert login["username"] == "${{ github.actor }}"
+    assert login["password"] == "${{ secrets.GITHUB_TOKEN }}"
+
+    metadata = _action_step(
+        document, "docker/metadata-action@", job="publish-image"
+    )["with"]
+    assert metadata["images"] == "ghcr.io/${{ github.repository }}"
+    tags = metadata["tags"]
+    # The run is a branch push, so no tag ref exists for `semver` or `ref` to
+    # read: the versions come from release-please's root-component outputs.
+    assert "type=raw,value=${{ needs.release-please.outputs.version }}" in tags
+    assert "type=raw,value=${{ needs.release-please.outputs.tag_name }}" in tags
+    assert "type=raw,value=latest" in tags
+    assert "github.ref" not in tags
+
+    build = _action_step(
+        document, "docker/build-push-action@", job="publish-image"
+    )["with"]
+    assert build["context"] == "."
+    assert build["file"] == "Containerfile"
+    assert build["push"] is True
+    assert build["tags"] == "${{ steps.metadata.outputs.tags }}"
+    # The published image carries the OCI labels metadata-action derives.
+    assert build["labels"] == "${{ steps.metadata.outputs.labels }}"
