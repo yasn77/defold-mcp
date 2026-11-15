@@ -56,10 +56,29 @@ def test_game_project_title_and_bootstrap(tmp_path):
     assert project.get("project", "title") == '"TestQuest"'
     assert project.get("bootstrap", "main_collection") == "/main/main.collectionc"
     assert project.get("bootstrap", "render") == "/builtins/render/default.renderc"
+    # Left unset: ``/builtins/scripts/debug_init.script`` does not ship with
+    # the engine, and naming a missing resource fails the bob build.
+    assert project.get("bootstrap", "debug_init_script") is None
+    # Required by bob: its default (``/input/game.input_binding``) only
+    # exists in projects the Editor scaffolded.
     assert (
-        project.get("bootstrap", "debug_init_script")
-        == "/builtins/scripts/debug_init.scriptc"
+        project.get("input", "game_binding")
+        == "/builtins/input/all.input_bindingc"
     )
+
+
+def test_game_project_has_no_comment_lines(tmp_path):
+    # bob's game.project parser rejects any line that is not a section
+    # header, a ``key = value`` pair or blank: a comment line aborts the
+    # build with "Could not parse".
+    for profile in PROFILES:
+        root = _render(tmp_path, profile)
+        text = (root / "game.project").read_text(encoding="utf-8")
+        for line in text.splitlines():
+            stripped = line.strip()
+            assert (
+                not stripped or stripped.startswith("[") or "=" in stripped
+            ), f"{profile}: bob cannot parse {line!r}"
 
 
 @pytest.mark.parametrize("profile", ["2d_pixel", "2d_hd", "minimal"])

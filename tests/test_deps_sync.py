@@ -17,7 +17,7 @@ from pathlib import Path
 import httpx
 import pytest
 
-from defold_mcp import config, deps, toolchain
+from defold_mcp import config, deps, docs_index, toolchain
 from defold_mcp.project import GameProject
 
 STABLE_SHA1 = "ee283d4dad9fa451dd6399d83602e1dc25133681"
@@ -40,7 +40,11 @@ def make_zip(entries: dict[str, bytes | None]) -> bytes:
 
 
 def make_jdk_tar() -> bytes:
-    """Build an in-memory Adoptium-style tar.gz with a single top dir."""
+    """Build an in-memory Adoptium-style tar.gz with a single top dir.
+
+    ``bin/java`` carries mode 0o755, as in the real Adoptium archive: the
+    extractor must preserve it or the JDK is unusable.
+    """
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
         for name, data in {
@@ -49,6 +53,7 @@ def make_jdk_tar() -> bytes:
         }.items():
             info = tarfile.TarInfo(name)
             info.size = len(data)
+            info.mode = 0o755 if name.endswith("/bin/java") else 0o644
             tf.addfile(info, io.BytesIO(data))
     return buf.getvalue()
 
@@ -137,19 +142,97 @@ def test_resolve_version_stable_parses_and_caches(cache_dir, mock_transport):
 def test_resolve_version_pinned_spec(cache_dir, mock_transport):
     url = "https://d.defold.com/1.14.1/info.json"
 
-    # 404 falls back to version-keyed mode with sha1 None.
+    # 404 with no matching channel falls back to version-keyed mode with
+    # sha1 None; the degraded result is never cached. The channel probes
+    # are attempted first (see the matching-channel test below).
     client, transport = mock_transport({url: httpx.Response(404)})
     result = toolchain.resolve_version("1.14.1", client=client)
     assert result == {"version": "1.14.1", "sha1": None}
-    assert transport.calls == [url]
+    assert transport.calls[0] == url
+    assert not (cache_dir / "versions.json").exists()
 
-    # A 200 resolves the sha1 (fresh client, fallback is not cached).
+    # A 200 resolves the sha1 (fresh client).
     client2, transport2 = mock_transport(
         {url: httpx.Response(200, json=STABLE_INFO)}
     )
     result2 = toolchain.resolve_version("1.14.1", client=client2)
     assert result2 == STABLE_INFO
     assert transport2.calls == [url]
+
+
+def test_resolve_version_pinned_spec_adopts_the_matching_channel(
+    cache_dir, mock_transport
+):
+    # d.defold.com serves CHANNELS, not pinned dotted versions: the pinned
+    # URL 404s even for a released version. The matching channel's sha1 is
+    # adopted so engines (which have no version-keyed GitHub fallback)
+    # resolve through the /archive/<sha1>/ URLs.
+    pinned_url = "https://d.defold.com/1.14.1/info.json"
+    client, transport = mock_transport(
+        {
+            pinned_url: httpx.Response(404),
+            "https://d.defold.com/stable/info.json": httpx.Response(
+                200, json=STABLE_INFO
+            ),
+        }
+    )
+
+    result = toolchain.resolve_version("1.14.1", client=client)
+    assert result == STABLE_INFO
+    assert transport.calls[0] == pinned_url
+
+    # The adopted resolution is cached under the pinned spec: no more
+    # requests on the next call.
+    calls = len(transport.calls)
+    assert toolchain.resolve_version("1.14.1", client=client) == STABLE_INFO
+    assert len(transport.calls) == calls
+
+
+def test_resolve_version_pinned_spec_ignores_a_mismatched_channel(
+    cache_dir, mock_transport
+):
+    # A channel carrying a DIFFERENT version must not satisfy the pin.
+    pinned_url = "https://d.defold.com/1.14.1/info.json"
+    client, _ = mock_transport(
+        {
+            pinned_url: httpx.Response(404),
+            "https://d.defold.com/stable/info.json": httpx.Response(
+                200, json={"version": "1.15.0", "sha1": "other"}
+            ),
+        }
+    )
+
+    assert toolchain.resolve_version("1.14.1", client=client) == {
+        "version": "1.14.1",
+        "sha1": None,
+    }
+
+
+def test_resolve_version_pinned_spec_prefers_stable_over_beta(
+    cache_dir, mock_transport
+):
+    # A version can be live on more than one channel with DIFFERENT sha1s
+    # (1.14.1 was reported by both ``beta`` and ``stable``). A pinned
+    # version means the released build, so ``stable`` is probed first and
+    # its sha1 wins; ``beta`` is never consulted.
+    pinned_url = "https://d.defold.com/1.14.1/info.json"
+    beta_url = "https://d.defold.com/beta/info.json"
+    stable_url = "https://d.defold.com/stable/info.json"
+    client, transport = mock_transport(
+        {
+            pinned_url: httpx.Response(404),
+            beta_url: httpx.Response(
+                200, json={"version": "1.14.1", "sha1": "beta-sha1"}
+            ),
+            stable_url: httpx.Response(200, json=STABLE_INFO),
+        }
+    )
+
+    result = toolchain.resolve_version("1.14.1", client=client)
+
+    assert result == STABLE_INFO
+    assert result["sha1"] == STABLE_SHA1
+    assert transport.calls == [pinned_url, stable_url]
 
 
 def test_resolve_version_channel_non200_raises(cache_dir, mock_transport):
@@ -279,6 +362,68 @@ def test_download_artifact_magic_check(tmp_path, mock_transport):
             bad_url, tmp_path / "bad.jar", client=client2, expected_magic=b"PK"
         )
     assert not (tmp_path / "bad.jar").exists()
+
+
+def test_download_artifact_reuses_a_cached_artifact(tmp_path, mock_transport):
+    # Re-resolving the toolchain happens on every compile/test/bundle call;
+    # an already-downloaded artifact must not be re-fetched.
+    url = "https://example.com/bob.jar"
+    client, transport = mock_transport(
+        {url: httpx.Response(200, content=b"PK\x03\x04bob")}
+    )
+    dest = tmp_path / "out" / "bob.jar"
+
+    toolchain.download_artifact(url, dest, client=client, expected_magic=b"PK")
+    assert len(transport.calls) == 1
+
+    toolchain.download_artifact(url, dest, client=client, expected_magic=b"PK")
+    assert len(transport.calls) == 1, "the cached artifact was re-downloaded"
+    assert dest.read_bytes() == b"PK\x03\x04bob"
+
+
+def test_download_artifact_redownloads_a_corrupt_cache_entry(
+    tmp_path, mock_transport
+):
+    url = "https://example.com/bob.jar"
+    client, transport = mock_transport(
+        {url: httpx.Response(200, content=b"PK\x03\x04bob")}
+    )
+    dest = tmp_path / "bob.jar"
+    dest.write_bytes(b"MZnot-a-zip")
+
+    toolchain.download_artifact(url, dest, client=client, expected_magic=b"PK")
+    assert len(transport.calls) == 1
+    assert dest.read_bytes() == b"PK\x03\x04bob"
+
+
+def test_default_http_clients_follow_redirects(monkeypatch):
+    # Every Defold distribution host redirects (d.defold.com/archive 301,
+    # GitHub release assets 302, the Adoptium API 307); a bare client would
+    # raise on the redirect response instead of fetching the artifact.
+    seen: list[dict] = []
+
+    class _NoopResponse:
+        content = b""
+
+        def raise_for_status(self) -> None:
+            pass
+
+    class _NoopClient:
+        def close(self) -> None:
+            pass
+
+        def get(self, url):  # noqa: ANN001, ANN201 - stub
+            return _NoopResponse()
+
+    def _factory(**kwargs):
+        seen.append(kwargs)
+        return _NoopClient()
+
+    monkeypatch.setattr(httpx, "Client", _factory)
+
+    toolchain._client_or_default(None)
+    docs_index.DocsIndex._get_bytes("https://example.com/x", client=None)
+    assert seen == [{"follow_redirects": True}, {"follow_redirects": True}]
 
 
 # -- extract_zip -----------------------------------------------------------------
@@ -445,6 +590,46 @@ def test_install_jdk25_idempotent_and_mocked(cache_dir, mock_transport):
     assert transport.calls == [url]
 
 
+def test_extract_jdk_tar_preserves_the_executable_bit(tmp_path):
+    # Extraction writes file contents only; without the archive's mode bits
+    # ``bin/java`` lands 0o644 and cannot be run.
+    if os.name != "posix":
+        pytest.skip("POSIX permission bits only")
+    archive = tmp_path / "jdk.tar.gz"
+    archive.write_bytes(make_jdk_tar())
+    target = tmp_path / "jdk-25"
+
+    toolchain._extract_jdk_archive(archive, target)
+
+    java = target / "bin" / "java"
+    assert java.is_file()
+    assert os.access(java, os.X_OK), "bin/java lost its executable bit"
+    assert stat.S_IMODE(java.stat().st_mode) == 0o755
+    # A non-executable member keeps its own (non-executable) bits.
+    assert stat.S_IMODE((target / "release").stat().st_mode) == 0o644
+
+
+def test_install_jdk25_repairs_a_non_executable_jdk(cache_dir, mock_transport):
+    # A cache left by the older extraction bug has a 0o644 ``bin/java``;
+    # install_jdk25 must not treat that as a usable JDK.
+    if os.name != "posix":
+        pytest.skip("POSIX permission bits only")
+    broken = cache_dir / "jdk-25" / "bin"
+    broken.mkdir(parents=True)
+    java = broken / "java"
+    java.write_text("#!/bin/sh\necho fake\n")
+    java.chmod(0o644)
+
+    url = toolchain.adoptium_jdk_url()
+    client, transport = mock_transport({url: httpx.Response(200, content=make_jdk_tar())})
+
+    path = toolchain.install_jdk25(client=client)
+
+    assert path == cache_dir / "jdk-25"
+    assert transport.calls == [url], "the broken JDK was not re-installed"
+    assert os.access(path / "bin" / "java", os.X_OK)
+
+
 def _make_jdk_tar(entries: dict[str, bytes]) -> bytes:
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
@@ -547,11 +732,13 @@ def test_ensure_toolchain_mocked(cache_dir, mock_transport):
             200, json=STABLE_INFO
         ),
         f"{base}/bob/bob.jar": httpx.Response(200, content=b"PK\x03\x04bob"),
+        # The engines carry their real host magic: on Linux the cached
+        # artifact is re-verified as an ELF binary on reuse.
         f"{base}/engine/{platform_name}/dmengine": httpx.Response(
-            200, content=b"ELFengine"
+            200, content=b"\x7fELFengine"
         ),
         f"{base}/engine/{platform_name}/dmengine_headless": httpx.Response(
-            200, content=b"ELFheadless"
+            200, content=b"\x7fELFheadless"
         ),
         f"{base}/engine/share/builtins.zip": httpx.Response(
             200, content=make_zip({"manifests/android/android.manifest": b"m\n"})
@@ -568,8 +755,8 @@ def test_ensure_toolchain_mocked(cache_dir, mock_transport):
 
     engine_dir = cache_dir / "defold-1.14.1"
     assert (engine_dir / "bob.jar").read_bytes() == b"PK\x03\x04bob"
-    assert (engine_dir / "dmengine").read_bytes() == b"ELFengine"
-    assert (engine_dir / "dmengine_headless").read_bytes() == b"ELFheadless"
+    assert (engine_dir / "dmengine").read_bytes() == b"\x7fELFengine"
+    assert (engine_dir / "dmengine_headless").read_bytes() == b"\x7fELFheadless"
     assert (cache_dir / "builtins.zip").exists()
     assert (cache_dir / "ref-doc.zip").exists()
     if os.name == "posix":
@@ -583,3 +770,41 @@ def test_ensure_toolchain_mocked(cache_dir, mock_transport):
     assert result["dmengine_headless"] == str(engine_dir / "dmengine_headless")
     assert result["builtins_zip"] == str(cache_dir / "builtins.zip")
     assert result["ref_doc_zip"] == str(cache_dir / "ref-doc.zip")
+
+
+def test_ensure_toolchain_redownloads_a_corrupt_cached_engine(
+    cache_dir, mock_transport
+):
+    # bob.jar/builtins/ref-doc re-verify their magic on reuse; an engine
+    # that is not the host's binary format must not be trusted either.
+    platform_info = config.host_platform_info()
+    if platform_info["os"] != "Linux":
+        pytest.skip("engine magic is only checked on Linux")
+    base = f"https://d.defold.com/archive/{STABLE_SHA1}"
+    platform_name = platform_info["platform"]
+    headless_url = f"{base}/engine/{platform_name}/dmengine_headless"
+    responses = {
+        "https://d.defold.com/stable/info.json": httpx.Response(
+            200, json=STABLE_INFO
+        ),
+        f"{base}/bob/bob.jar": httpx.Response(200, content=b"PK\x03\x04bob"),
+        headless_url: httpx.Response(200, content=b"\x7fELFheadless"),
+        f"{base}/engine/share/builtins.zip": httpx.Response(
+            200, content=make_zip({"manifests/android/android.manifest": b"m\n"})
+        ),
+        f"{base}/engine/share/ref-doc.zip": httpx.Response(
+            200, content=make_zip({"doc/index.html": b"<html>\n"})
+        ),
+    }
+    client, transport = mock_transport(responses)
+
+    # A cached engine that is not an ELF binary (a truncated download, an
+    # HTML error page) must be re-fetched rather than trusted.
+    engine_dir = cache_dir / "defold-1.14.1"
+    engine_dir.mkdir(parents=True)
+    (engine_dir / "dmengine_headless").write_bytes(b"<html>not an engine")
+
+    toolchain.ensure_toolchain("stable", client=client)
+
+    assert (engine_dir / "dmengine_headless").read_bytes() == b"\x7fELFheadless"
+    assert headless_url in transport.calls, "the corrupt engine was not re-fetched"

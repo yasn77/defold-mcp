@@ -417,12 +417,15 @@ def _op_add_embedded_instance(
 def _op_add_subcollection(
     tree: dict, op: dict, extension: str | None
 ) -> None:
-    collection = _single_line(op["collection"], "collection")
-    if collection.endswith(".collection"):
-        collection += "c"
+    # ``collection_instances.collection`` carries the SOURCE path
+    # (``/hierarchy/sub1.collection``), never the compiled one: bob's
+    # CollectionBuilder resolves it with ``project.getResource`` and does
+    # not map ``.collectionc`` back to its source, so appending ``c`` makes
+    # every build fail with "the collection ... can't be found" (verified
+    # against Defold 1.14.1).
     entry: dict = {
         "id": _single_line(op["id"], "id"),
-        "collection": collection,
+        "collection": _single_line(op["collection"], "collection"),
     }
     block = _math(op, "position")
     if block is not None:
