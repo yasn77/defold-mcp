@@ -4,15 +4,14 @@ on:
   push:
     branches: [master]
 
-# release-please writes the release PR, the tag, the GitHub release and the
-# changelog, so this workflow is the only one with write access.
+# Least privilege by default: each job grants the scopes it needs and nothing
+# inherits the others'. A job-level `permissions` block replaces this one
+# wholesale, so every job states its own set in full.
 permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+  contents: read
 
 # Releases must be serialised, never cancelled: an interrupted run can leave
-# the release PR half-updated.
+# the release PR half-updated or the image unpublished.
 concurrency:
   group: release-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
@@ -22,6 +21,17 @@ jobs:
     name: Release please
     runs-on: ubicloud-standard-2
     timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    # A dependent job reads step outputs only through job outputs. The package
+    # path is the root component (`.`), so the action exposes the un-prefixed
+    # names rather than `<path>--<name>` ones.
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      version: ${{ steps.release.outputs.version }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       # No checkout: the action works through the GitHub API. On every push to
       # master it either opens/refreshes the release PR (bumping
@@ -34,19 +44,62 @@ jobs:
         with:
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
-          # `token` is left at its default, the workflow's `GITHUB_TOKEN`.
-          # Releases and release PRs it creates do not trigger other workflows
-          # (GitHub suppresses the recursion), so a later publishing phase
-          # needs a PAT in that input instead.
+          # `token` stays at its default, `secrets.GITHUB_TOKEN`. It creates
+          # the `vX.Y.Z` tag through the API, and GitHub suppresses workflow
+          # runs that token raises — but the job below is a job in this same
+          # run, not a new trigger, so the suppression does not apply and no
+          # PAT is needed.
 
-      # Publishing (PyPI, a container image) belongs to a later phase. Wire it
-      # as a second job gated on the conventional action outputs, for example:
-      #
-      #   publish:
-      #     needs: release-please
-      #     if: ${{ needs.release-please.outputs.releases_created == 'true' }}
-      #     ...
-      #
-      # `steps.release.outputs.paths_released` is a JSON array of the paths
-      # released in this run, and `steps.release.outputs.prs_created` /
-      # `steps.release.outputs.pr` describe the release PR.
+  publish-image:
+    name: Publish the image
+    needs: [release-please]
+    # A run that only opened or refreshed the release PR has nothing to ship,
+    # and `needs.*.outputs` would be empty rather than absent.
+    if: ${{ needs.release-please.outputs.releases_created == 'true' }}
+    runs-on: ubicloud-standard-2
+    timeout-minutes: 20
+    permissions:
+      # Read the tree the image is built from, and write the package.
+      contents: read
+      packages: write
+    steps:
+      # The pushed commit is the release commit: release-please tags the commit
+      # its run was triggered by, which is this same SHA.
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      # `GITHUB_TOKEN` is enough for the registry: `packages: write` on this job
+      # is what authorises the push. metadata-action lowercases the image name,
+      # so the repository's own case cannot break the GHCR path.
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # The trigger is a branch push, so there is no tag ref for `semver` or
+      # `ref` to read; `type=raw` takes the value verbatim and needs no ref.
+      # `version` is the bare `X.Y.Z` and `tag_name` the `vX.Y.Z`, so the
+      # registry carries both spellings beside `latest`.
+      - name: Derive the image tags
+        id: metadata
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=${{ needs.release-please.outputs.version }}
+            type=raw,value=${{ needs.release-please.outputs.tag_name }}
+            type=raw,value=latest
+
+      - name: Build and push the image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: Containerfile
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
