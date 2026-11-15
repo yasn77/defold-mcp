@@ -11,6 +11,7 @@
 - [MCP server and the twenty tools](mcp-server.md) - The MCPServer tool layer — twenty defold_* tools, root resolution, the escaping-aware 25k response cap, dialect-safe editor routing, containment and the process registries.
 - [Mutations and collision shapes](mutations-and-collision-shapes.md) - The textproto mutation layer — add_component's embedded/referenced split with guardrails, and PNG-derived box and convex-hull collision shape generation.
 - [Architecture overview](overview.md) - defold-mcp is a dual-mode (Live Editor / headless) MCP server for the Defold game engine; how the landed subsystems (config, game.project editor, textproto engine, toolchain manager, deps syncer, docs index) layer and where the planned pieces will sit.
+- [The agent skill and installation](skill-and-installation.md) - The portable defold skill package (SKILL.md with the 53-char trigger description plus four reference guides) and the harness registration, handshake probe and timeout guidance.
 - [Templates and the mutations registry](templates-and-mutations.md) - The four project scaffolding profiles with the Defold licence attribution module, and the 14-op textproto mutation registry feeding defold_mutate_resource.
 - [Textproto engine](textproto-engine.md)
 - [Toolchain manager and JDK handling](toolchain-and-jdk.md) - Defold version resolution with TTL caching, atomic verified artifact downloads, first-qualifying JDK 25 discovery, and the hardened Adoptium JDK installer.

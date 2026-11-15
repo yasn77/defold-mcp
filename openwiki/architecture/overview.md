@@ -5,10 +5,16 @@ description: defold-mcp is a dual-mode (Live Editor / headless) MCP server for t
 tags: [defold, mcp, architecture, overview]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T14:41:05.547Z
+    at: 2026-11-15T15:05:00.624Z
 sources:
+  - id: openwiki-source-1141fa420136f17e342feb42
+    resource: repo://docs/INSTALL.md
   - id: openwiki-source-05ccef8d4cf1698187f20464
     resource: repo://pyproject.toml
+  - id: openwiki-source-1bdb44b30bcf598303c0cbc4
+    resource: repo://scripts/mcp_handshake_test.py
+  - id: openwiki-source-e86976ecdb1a581288e2f627
+    resource: repo://skill/defold/SKILL.md
   - id: openwiki-source-f85d2e0cee2fe665bce2ac21
     resource: repo://src/defold_mcp/__init__.py
   - id: openwiki-source-e97c31ef8fcfbd50708b634f
@@ -25,11 +31,9 @@ sources:
     resource: repo://src/defold_mcp/textproto/serializer.py
   - id: openwiki-source-18a04b4bf25ad2fe02e760b4
     resource: repo://src/defold_mcp/toolchain.py
-  - id: openwiki-source-ec5f3515eba7d123ca68e770
-    resource: repo://tests/test_mcp_stdio_e2e.py
   - id: openwiki-source-c7f35c27a3e804b5af2c8277
     resource: repo://tests/test_textproto_roundtrip.py
-generated: { by: "opencode", at: "2026-11-15T14:41:05.547Z" }
+generated: { by: "opencode", at: "2026-11-15T15:05:00.624Z" }
 ---
 
 # Architecture overview
@@ -66,10 +70,15 @@ generated: { by: "opencode", at: "2026-11-15T14:41:05.547Z" }
 
 Constants and environment resolution live in `config`; artifact-format models live above it; download/version state lives in `toolchain` and `deps`; search state in `docs_index`. Dependencies flow strictly downward: `project`, `textproto`, `toolchain`, `deps`, `docs_index`, `editor_client`, `bob_runner` and `test_runner` may import `config` (and `deps`/runners import `toolchain`), never sideways into each other's internals and never upward. The FastMCP/MCPServer tool layer (`server.py`) has landed and orchestrates all subsystems behind the twenty `defold_*` tools. No module imports from a layer above it.
 
-## Remaining work
+## Post-run items
 
-- **The portable agent skill** (`skill/defold/SKILL.md` + `references/`) and harness registration (`docs/INSTALL.md`) — the final phase.
-- Everything else in the original target architecture is landed and live-verified (see [live toolchain notes](live-toolchain-notes.md)).
+The commissioned plan is fully delivered. Open follow-ups (all documented, none blocking):
+
+- The `[html5] scale_mode/heap_size/retry_count` settings are parse-proven only — live verification of the section membership (vs the canonical `[display] scale_mode`) may warrant a template correction.
+- `docs/INSTALL.md`'s vendor-timeout specifics (Claude Code's `MCP_TOOL_TIMEOUT`, Codex's `*_timeout_sec` keys) rest on executor live-docs checks.
+- Future live work: real `test_end` events in the smoke, mac/Windows engine magic on reuse, the Box2D 8-vs-16 vertex question, embedded `.particlefx` legality.
+
+The [agent skill and installation page](skill-and-installation.md) covers the final deliverables.
 
 ## Target architecture (planned, not yet implemented)
 

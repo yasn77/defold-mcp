@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:0a80664a2aa6a0221789755642444b6af646176c8762632de9d5a6c0bf4b290b",
+  "pageVersion": "sha256:1952e3bd960b1a30cabeab1bdc3d67918e614917a01bc6f1d024b4d6c5e3199b",
   "claims": [
     {
       "id": "claim_e8d9095eb07f49daa4286b0a85aa31d7",
@@ -62,19 +62,19 @@
     },
     {
       "id": "claim_b25ded6e891e4e7a9ea90a77788830d0",
-      "statement": "The src/defold_mcp package contains twelve landed pieces (config constants, the game.project editor, the textproto package with the 14-op registry, the toolchain manager, the deps syncer, the docs FTS index, the Editor HTTP client, the bob/test runners, the engine service client, the automation bridge client, the twenty-tool MCP server with __main__, and the project templates) plus the package marker — all live-verified against real Defold 1.14.1; the remaining work is the portable agent skill and harness registration.",
+      "statement": "The commissioned plan is fully delivered: the src/defold_mcp package contains twelve landed pieces (config, project, textproto with the 14-op registry, toolchain, deps, docs index, editor/engine/bridge clients, runners, the twenty-tool server, templates) plus the package marker, and the repo additionally ships the portable agent skill (SKILL.md + four references), the sanitised-env handshake probe and the per-harness install guide — all live-verified against real Defold 1.14.1.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/__init__.py",
-          "version": "repo-file-v1:sha256:5e3d506e3254779b75aef97842ba2f7cddb59c2ec350561c7d1339630b59a8bf"
+          "resource": "repo://docs/INSTALL.md",
+          "version": "repo-file-v1:sha256:25f9b3744309cbf9ac2770a06d455b7693f04d25049c9d799acda94c02b3f245"
         },
         {
-          "resource": "repo://src/defold_mcp/server.py",
-          "version": "repo-file-v1:sha256:e77c991726fe59373473557e8ef2e765cbd34d858a9b84a5d6cb20c8b2811ccf"
+          "resource": "repo://scripts/mcp_handshake_test.py",
+          "version": "repo-file-v1:sha256:e0fcfe0d71f08a136f2e2922c90785145c7a6fb1c918bdac91773be2bc1f4627"
         },
         {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py",
-          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
+          "resource": "repo://skill/defold/SKILL.md",
+          "version": "repo-file-v1:sha256:0ea4ce9f5d06a878667e414c9a021ca552a4d0ce9aba5e782f0d8d6c08163f8d"
         }
       ]
     },
@@ -117,6 +117,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T14:41:05.547Z"
+    "at": "2026-11-15T15:05:00.624Z"
   }
 }
