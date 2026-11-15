@@ -13,6 +13,7 @@ documentation must carry no local paths.
 
 from __future__ import annotations
 
+import fnmatch
 import json
 import re
 import tomllib
@@ -79,6 +80,23 @@ def _steps(document: dict) -> list[dict]:
 def _runs(step: dict) -> str:
     """Return the command a step runs, tolerating multi-line blocks."""
     return str(step.get("run", "")).strip()
+
+
+def _dockerignore_patterns() -> list[str]:
+    """Return the active ``.dockerignore`` patterns, comments removed.
+
+    Each pattern is normalised the way Docker reads it: surrounding
+    whitespace, a leading ``./`` and a trailing ``/`` carry no meaning.
+    """
+    patterns: list[str] = []
+    for line in DOCKERIGNORE.read_text(encoding="utf-8").splitlines():
+        pattern = line.strip()
+        if not pattern or pattern.startswith("#"):
+            continue
+        if pattern.startswith("./"):
+            pattern = pattern[2:]
+        patterns.append(pattern.rstrip("/"))
+    return patterns
 
 
 @pytest.mark.parametrize("workflow", WORKFLOWS, ids=lambda path: path.name)
@@ -368,13 +386,34 @@ def test_containerfile_exists_and_uses_chainguard() -> None:
     )[1]
     assert "RUN " not in runtime, "the minimal image has no shell to run"
 
-    ignored = {
-        line.strip().rstrip("/")
-        for line in DOCKERIGNORE.read_text(encoding="utf-8").splitlines()
-        if line.strip() and not line.strip().startswith("#")
-    }
+    ignored = set(_dockerignore_patterns())
     # A stray .venv would copy a host-architecture interpreter into the build.
     assert {".venv", ".git", "__pycache__", ".pytest_cache"} <= ignored
+
+
+def test_dockerignore_keeps_the_skill_source_in_the_build_context() -> None:
+    """The wheel force-includes ``skill/defold``, so the context must carry it.
+
+    ``pyproject.toml`` maps ``skill/defold`` into the package and hatchling
+    reads that source from the build context, so excluding ``skill/`` fails the
+    wheel build with "Forced include not found: /app/skill/defold" before the
+    image is ever produced. The pattern set is pinned here so the source cannot
+    be dropped again without failing the gate.
+    """
+    assert DOCKERIGNORE.is_file()
+    patterns = _dockerignore_patterns()
+
+    # Match the leading segment as Docker would: "skill", "skill/", "skill/**",
+    # "sk*" and a bare "*" all take the wheel's source back out of the context.
+    offenders = [
+        pattern
+        for pattern in patterns
+        if fnmatch.fnmatchcase("skill", pattern.split("/", 1)[0])
+    ]
+    assert not offenders, offenders
+
+    # The de-cluttered context still drops the trees the wheel never reads.
+    assert {"tests", "docs", "openwiki", ".github"} <= set(patterns)
 
 
 def _action_step(
