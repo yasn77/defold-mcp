@@ -32,16 +32,41 @@ _VERSION_SPEC_RE = re.compile(r"^\d+\.\d+\.\d+$")
 # Channel specs served by d.defold.com.
 _CHANNEL_SPECS = frozenset({"stable", "beta", "alpha"})
 
+# Probe order when matching a pinned version against the channels. A dotted
+# version can be live on more than one channel (``beta`` and ``stable`` both
+# reported 1.14.1 with *different* build sha1s), and a pinned version means
+# the released build, so ``stable`` is preferred over ``beta`` over ``alpha``.
+_CHANNEL_PREFERENCE = ("stable", "beta", "alpha")
+
 # Resolution cache time-to-live, in seconds.
 _VERSION_TTL_SECONDS = 3600
 
 # Matches both `openjdk version "21.0.12.1"` and `java version "25"` forms.
 _JAVA_VERSION_RE = re.compile(r'version "(\d+)(?:\.\d+)*')
 
+# ELF magic: the first bytes of a Linux engine binary.
+_ELF_MAGIC = b"\x7fELF"
+
+
+def _engine_magic(platform_info: dict) -> bytes | None:
+    """The magic a cached engine must start with, or ``None`` to skip.
+
+    Only Linux has a cheap, stable signature (ELF); on other hosts the
+    engine is trusted on reuse, exactly as before.
+    """
+    return _ELF_MAGIC if platform_info["os"] == "Linux" else None
+
 
 def _client_or_default(client: httpx.Client | None) -> httpx.Client:
-    """Return the injected client, or a default one (caller must close)."""
-    return client if client is not None else httpx.Client()
+    """Return the injected client, or a default one (caller must close).
+
+    The default client follows redirects: every Defold distribution host
+    redirects (``d.defold.com/archive/...`` answers 301, GitHub release
+    assets 302, the Adoptium API 307), and a bare client would raise
+    ``HTTPStatusError`` on the redirect response instead of fetching the
+    artifact.
+    """
+    return client if client is not None else httpx.Client(follow_redirects=True)
 
 
 def _atomic_write_text(path: Path, text: str) -> None:
@@ -69,6 +94,49 @@ def _save_version_cache(cache_dir: Path, cache: dict) -> None:
     _atomic_write_text(cache_dir / "versions.json", json.dumps(cache, indent=2))
 
 
+def _cache_version(cache_dir: Path, spec: str, result: dict) -> None:
+    """Record a resolved spec in ``versions.json`` with a fresh timestamp."""
+    cache = _load_version_cache(cache_dir)
+    cache[spec] = {**result, "fetched_at": time.time()}
+    _save_version_cache(cache_dir, cache)
+
+
+def _match_channel_version(spec: str, http: httpx.Client) -> dict | None:
+    """Return the channel resolution whose version equals ``spec``.
+
+    ``d.defold.com`` serves CHANNELS, not pinned dotted versions: the
+    pinned URL ``/1.14.1/info.json`` is a 404 while ``/stable/info.json``
+    reports version ``1.14.1`` with its build sha1. The channel specs are
+    probed in :data:`_CHANNEL_PREFERENCE` order (a version can be live on
+    more than one channel with *different* sha1s, and a pinned version
+    means the released build) and the first one whose ``info.json`` reports
+    the pinned version *with* a sha1 wins.
+
+    Returns ``{"version": spec, "sha1": <channel sha1>}``, or ``None`` when
+    no channel carries the pin, so the caller can fall back to
+    GitHub-release mode. Probes never raise: a transport error, a non-200
+    or a malformed body simply moves on to the next channel.
+    """
+    for channel in _CHANNEL_PREFERENCE:
+        try:
+            probe = http.get(f"{config.D_DEFOLD_BASE}/{channel}/info.json")
+        except httpx.HTTPError:
+            continue
+        if probe.status_code != 200:
+            continue
+        try:
+            info = probe.json()
+        except ValueError:
+            continue
+        if (
+            isinstance(info, dict)
+            and str(info.get("version")) == spec
+            and info.get("sha1")
+        ):
+            return {"version": spec, "sha1": info["sha1"]}
+    return None
+
+
 def resolve_version(
     spec: str = "stable",
     *,
@@ -80,8 +148,16 @@ def resolve_version(
     Channel specs hit ``https://d.defold.com/{channel}/info.json``; dotted
     version specs hit ``https://d.defold.com/{version}/info.json``. Results
     are cached in ``<cache>/versions.json`` keyed by spec with a one-hour
-    TTL; ``force=True`` bypasses the cache. A 404 for a pinned spec falls
-    back to version-keyed mode (``sha1`` is ``None``) and is not cached.
+    TTL; ``force=True`` bypasses the cache.
+
+    A 404 for a pinned spec does not necessarily mean "unknown build":
+    ``d.defold.com`` only serves channels, so the pinned URL 404s even for
+    a released version. The channels are then probed and, when one reports
+    the pinned version, its sha1 is adopted (and cached) so every artifact
+    — engines included, which have no version-keyed GitHub fallback —
+    resolves through the ``/archive/<sha1>/`` URLs. Only when no channel
+    matches does the resolver fall back to version-keyed GitHub-release
+    mode with ``sha1`` ``None``; that degraded result is not cached.
     """
     if spec not in _CHANNEL_SPECS and not _VERSION_SPEC_RE.match(spec):
         raise ValueError(
@@ -106,27 +182,28 @@ def resolve_version(
     http = _client_or_default(client)
     try:
         response = http.get(url)
-    finally:
-        if owned:
-            http.close()
-    if response.status_code != 200:
+        if response.status_code == 200:
+            info = response.json()
+            version = info.get("version")
+            if version is None:
+                raise ValueError(f"No 'version' field in info.json at {url}.")
+            result = {"version": str(version), "sha1": info.get("sha1")}
+            _cache_version(cache_dir, spec, result)
+            return result
         if _VERSION_SPEC_RE.match(spec) and response.status_code == 404:
-            # Pinned spec unknown to d.defold.com: GitHub-release mode.
+            matched = _match_channel_version(spec, http)
+            if matched is not None:
+                _cache_version(cache_dir, spec, matched)
+                return matched
+            # No channel carries this pin: GitHub-release mode (sha1 None).
             return {"version": spec, "sha1": None}
         raise ValueError(
             f"Failed to resolve {spec!r}: {url} returned "
             f"HTTP {response.status_code}."
         )
-
-    info = response.json()
-    version = info.get("version")
-    if version is None:
-        raise ValueError(f"No 'version' field in info.json at {url}.")
-    result = {"version": str(version), "sha1": info.get("sha1")}
-    cache = _load_version_cache(cache_dir)
-    cache[spec] = {**result, "fetched_at": time.time()}
-    _save_version_cache(cache_dir, cache)
-    return result
+    finally:
+        if owned:
+            http.close()
 
 
 # -- Java discovery -------------------------------------------------------------
@@ -262,11 +339,26 @@ def download_artifact(
 ) -> Path:
     """Download ``url`` to ``dest`` atomically (``.tmp`` then ``os.replace``).
 
-    When ``expected_magic`` is given, the first bytes of the downloaded
-    file must match it; a mismatch raises ``ValueError`` naming the
-    expected and actual bytes, and the partial file is removed.
+    Cached artifacts are reused: ``dest`` is written atomically, so a file
+    that exists there is always a complete download, and re-resolving the
+    toolchain (every ``defold_compile``/``defold_test_run``/``defold_bundle``
+    call does) must not re-fetch hundreds of megabytes. When
+    ``expected_magic`` is given the cached file's leading bytes are
+    re-checked, so a corrupt or truncated cache entry is re-downloaded
+    instead of trusted.
+
+    When ``expected_magic`` is given and the download does not start with
+    it, ``ValueError`` names the expected and actual bytes and the partial
+    file is removed.
     """
     dest = Path(dest)
+    if dest.is_file() and dest.stat().st_size > 0:
+        if expected_magic is None:
+            return dest
+        with dest.open("rb") as handle:
+            if handle.read(len(expected_magic)) == expected_magic:
+                return dest
+
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_name(dest.name + ".tmp")
 
@@ -336,6 +428,26 @@ def _reject_unsafe_members(names: list[str], dest: Path) -> None:
             )
 
 
+def _apply_mode(path: Path, mode: int) -> None:
+    """Apply an archive member's permission bits to an extracted file.
+
+    Extraction writes file contents only, so without this an executable such
+    as the JDK's ``bin/java`` lands with the process umask's permissions
+    (``0o644``) and cannot be run. POSIX only; setuid/setgid/sticky bits are
+    never carried over, and a member that records no permissions (a zip made
+    on Windows) leaves the file as created.
+    """
+    if os.name != "posix":
+        return
+    permissions = stat.S_IMODE(mode) & 0o777
+    if not permissions:
+        return
+    try:
+        os.chmod(path, permissions)
+    except OSError:  # pragma: no cover - exotic filesystems
+        pass
+
+
 def _extract_jdk_archive(archive: Path, target: Path) -> None:
     """Extract a JDK archive into ``target``, stripping a single root.
 
@@ -344,7 +456,9 @@ def _extract_jdk_archive(archive: Path, target: Path) -> None:
     more than one top-level directory are extracted verbatim. Member
     names are validated before anything is written (absolute paths and
     ``..`` components are rejected). Symlink members are skipped:
-    Adoptium JDK layouts are all regular files.
+    Adoptium JDK layouts are all regular files. Each regular file keeps the
+    archive's permission bits (see :func:`_apply_mode`), so ``bin/java``
+    stays executable.
     """
     if archive.suffix == ".zip":
         with zipfile.ZipFile(archive) as zf:
@@ -372,6 +486,7 @@ def _extract_jdk_archive(archive: Path, target: Path) -> None:
                     out.parent.mkdir(parents=True, exist_ok=True)
                     with zf.open(member) as src, out.open("wb") as dst:
                         shutil.copyfileobj(src, dst)
+                    _apply_mode(out, member.external_attr >> 16)
     else:
         with tarfile.open(archive, "r:gz") as tf:
             members = tf.getmembers()
@@ -400,6 +515,7 @@ def _extract_jdk_archive(archive: Path, target: Path) -> None:
                             continue
                         with extracted as src, out.open("wb") as dst:
                             shutil.copyfileobj(src, dst)
+                        _apply_mode(out, member.mode)
 
 
 def _check_jdk_layout(target: Path, exe_suffix: str) -> None:
@@ -415,13 +531,17 @@ def install_jdk25(*, client: httpx.Client | None = None) -> Path:
     """Download and extract Temurin JDK 25 into ``<cache>/jdk-25``.
 
     Idempotent: returns immediately when ``<cache>/jdk-25/bin/java``
-    already exists. Extraction, member-name validation and the single-root
-    strip are performed by :func:`_extract_jdk_archive`; an archive whose
-    layout does not produce ``bin/java`` fails the final check.
+    already exists *and is executable* — a JDK left non-executable by an
+    older extraction bug is re-installed rather than silently kept.
+    Extraction, member-name validation, the single-root strip and
+    permission preservation are performed by :func:`_extract_jdk_archive`;
+    an archive whose layout does not produce ``bin/java`` fails the final
+    check.
     """
     target = config.get_cache_dir() / "jdk-25"
     exe_suffix = ".exe" if os.name == "nt" else ""
-    if (target / "bin" / f"java{exe_suffix}").is_file():
+    java = target / "bin" / f"java{exe_suffix}"
+    if java.is_file() and (os.name != "posix" or os.access(java, os.X_OK)):
         return target
 
     url = adoptium_jdk_url()
@@ -535,6 +655,7 @@ def ensure_toolchain(
         _artifact_url(f"engine/{platform_info['platform']}/{platform_info['headless_exe']}"),
         headless,
         client=client,
+        expected_magic=_engine_magic(platform_info),
     )
     result["dmengine_headless"] = str(headless)
 
@@ -544,6 +665,7 @@ def ensure_toolchain(
             _artifact_url(f"engine/{platform_info['platform']}/dmengine{platform_info['exe_suffix']}"),
             engine,
             client=client,
+            expected_magic=_engine_magic(platform_info),
         )
         result["dmengine"] = str(engine)
 

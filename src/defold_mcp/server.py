@@ -37,6 +37,7 @@ import logging
 import os
 import re
 import shutil
+import sqlite3
 import subprocess
 import threading
 import time
@@ -71,6 +72,9 @@ logger = logging.getLogger("defold_mcp.server")
 
 #: Hard ceiling on a single tool response, in characters.
 MAX_RESPONSE_CHARS = 25_000
+
+#: Trailing output kept when a build fails before a tool can summarise it.
+_DIAGNOSTIC_TAIL_CHARS = 2_000
 
 _TRUNCATION_HINT = (
     "Response truncated at 25,000 characters; narrow the query or use "
@@ -448,13 +452,68 @@ def defold_setup_toolchain(
     result = toolchain.ensure_toolchain(spec, install_jdk25=install_jdk25)
     db_path = get_cache_dir() / "docs.db"
     docs: dict | None = None
-    if not db_path.is_file():
+    if _docs_db_needs_build(db_path):
         docs = _build_docs_db(spec)
     return _respond({"ok": True, "spec": spec, "docs": docs, **result})
 
 
+def _is_sqlite_database(db_path: Path) -> bool:
+    """Whether ``db_path`` is an openable SQLite database.
+
+    The file is probed with a direct connection rather than through
+    :class:`~defold_mcp.docs_index.DocsIndex`: that constructor runs DDL and
+    cannot close a connection it never returns, so a malformed file would
+    leave one open (a ``ResourceWarning`` on finalisation).
+    """
+    try:
+        connection = sqlite3.connect(db_path)
+    except sqlite3.Error:
+        return False
+    try:
+        connection.execute("SELECT count(*) FROM sqlite_master").fetchone()
+    except sqlite3.DatabaseError:
+        return False
+    finally:
+        connection.close()
+    return True
+
+
+def _docs_db_needs_build(db_path: Path) -> bool:
+    """Whether the offline documentation index must be (re)built.
+
+    A missing index needs building; so does one that exists but holds no
+    documents — an interrupted ingest leaves an empty FTS table behind,
+    and treating that as "already built" would make every later search
+    return nothing, permanently. A file that is not a usable SQLite
+    database (garbage or truncated bytes) also needs rebuilding, rather
+    than raising out of the setup call.
+    """
+    if not db_path.is_file():
+        return True
+    if not _is_sqlite_database(db_path):
+        return True
+    index = docs_index.DocsIndex(str(db_path))
+    try:
+        return not index.stats()
+    except sqlite3.DatabaseError:
+        return True
+    finally:
+        index.close()
+
+
+def _discard_unusable_db(db_path: Path) -> None:
+    """Remove ``db_path`` when it exists but is not an openable database.
+
+    :func:`_docs_db_needs_build` reports such a file as needing a rebuild;
+    the rebuild itself can only start once the unusable file is gone.
+    """
+    if db_path.is_file() and not _is_sqlite_database(db_path):
+        db_path.unlink(missing_ok=True)
+
+
 def _build_docs_db(spec: str) -> dict:
     """Build the FTS5 documentation index from the network (live only)."""
+    _discard_unusable_db(get_cache_dir() / "docs.db")
     index = docs_index.DocsIndex(str(get_cache_dir() / "docs.db"))
     try:
         counts: dict[str, Any] = {}
@@ -735,6 +794,7 @@ def defold_compile(
     editor = editor_client.probe_editor(root)
 
     started = time.monotonic()
+    tail: dict = {}
     if editor is not None:
         outcome = editor.compile()
         diagnostics = outcome.get("issues", [])
@@ -745,15 +805,29 @@ def defold_compile(
         diagnostics = result.diagnostics
         ok = result.ok
         backend = "headless"
+        tail = _failure_tail(result)
 
     return _respond(
         {
             "ok": ok,
             "duration_ms": int((time.monotonic() - started) * 1000),
             "diagnostics": diagnostics,
+            **tail,
         },
         backend=backend,
     )
+
+
+def _failure_tail(result: "bob_runner.BobResult") -> dict:
+    """The raw bob output tail, but only when the run failed.
+
+    A hard ``SEVERE`` failure can leave ``diagnostics`` empty, so the raw
+    output is the only thing an agent consumer can self-correct from; a
+    successful run keeps its response small.
+    """
+    if result.ok:
+        return {}
+    return {"stdout_tail": result.stdout[-_DIAGNOSTIC_TAIL_CHARS:]}
 
 
 def defold_bundle(
@@ -794,6 +868,7 @@ def defold_bundle(
             "diagnostics": result.diagnostics,
             "build_report": result.build_report,
             "artifacts": _build_artifacts(root),
+            **_failure_tail(result),
         },
         backend="headless",
     )
@@ -1047,16 +1122,35 @@ def defold_test_run(
     project_root: str | None = None,
     timeout_s: float = 60.0,
 ) -> str:
-    """Run a test collection in ``dmengine_headless`` and summarise the results."""
+    """Build a test collection as the entry point, run it, and summarise the results."""
     root = _resolve_root(project_root)
+    build = test_runner.build_test_collection(root, test_collection)
+    if not build.ok:
+        # The collection never became the archive's bootstrap, so running
+        # the engine would exit 1 with no diagnostics: report the build.
+        return _respond(
+            {
+                "ok": False,
+                "error": "the test collection could not be built",
+                "exit_code": build.exit_code,
+                "diagnostics": build.diagnostics,
+                "stdout_tail": build.stdout[-_DIAGNOSTIC_TAIL_CHARS:],
+            },
+            backend="headless",
+        )
+
     summary = test_runner.run_headless_tests(
         root, test_collection, timeout_s=timeout_s
     )
     return _respond(
         {
             "ok": summary["ok"],
+            "run": summary["run"],
+            "status": summary["status"],
             "passed": summary["passed"],
             "failed": summary["failed"],
+            "exit_code": summary["exit_code"],
+            "rejected_events": summary["rejected_events"],
             "tests": summary["tests"],
             "stdout_tail": summary.get("stdout_tail", ""),
         },

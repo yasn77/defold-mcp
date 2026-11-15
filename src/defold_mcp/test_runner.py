@@ -6,21 +6,30 @@ To run a TEST collection instead of the bootstrap one, the config override
 ``bootstrap.main_collection=<path>`` is passed. ``game.project`` on disk is
 NEVER mutated — overrides go exclusively through ``--config`` flags.
 
-Deferred: the plan's alternative route (a temporary ``--settings`` file
-handed to bob) is not implemented; the ``--config`` route is used only.
+The collection must also be the archive's BOOTSTRAP collection, which a
+``--config`` override alone cannot achieve: the engine exits 1 with no
+output when the collection is absent from the archive, and a collection
+pulled in as a subcollection is flattened into its parent and never
+archived separately. :func:`build_test_collection` therefore builds the
+project through bob's ``--settings`` (a settings file applied on top of
+``game.project``, so the project file is still untouched) with the test
+collection as the entry point; the ``--config`` override then simply
+restates it.
 
 Test events
 -----------
-The engine prints ``TEST `` events on stdout: one JSON object per line
-after the literal prefix ``TEST ``. The first event carrying a ``run``
-id fixes the run id; events with a DIFFERENT run id, or with NO run id
-once one is fixed (or differing from ``expected_run`` when given), are
-rejected — counted under ``rejected_events`` and never folded into the
-summary. ``test_end`` events carry per-test status;
-``suite_end`` carries the totals. DefTest (the community test framework)
-instead prints text summaries such as ``Success: 4 passed, 0 failed``;
-those are used only when no ``TEST`` events appear at all (TEST events
-take precedence).
+The engine routes a script's ``print()`` output through its log, so every
+line carries a ``<LEVEL>:<DOMAIN>: `` prefix (``DEBUG:SCRIPT: TEST {...}``).
+One such prefix is stripped before matching. After that, the engine prints
+``TEST `` events on stdout: one JSON object per line after the literal
+prefix ``TEST ``. The first event carrying a ``run`` id fixes the run id;
+events with a DIFFERENT run id, or with NO run id once one is fixed (or
+differing from ``expected_run`` when given), are rejected — counted under
+``rejected_events`` and never folded into the summary. ``test_end`` events
+carry per-test status; ``suite_end`` carries the totals. DefTest (the
+community test framework) instead prints text summaries such as
+``Success: 4 passed, 0 failed``; those are used only when no ``TEST``
+events appear at all (TEST events take precedence).
 
 Timeouts
 --------
@@ -37,19 +46,35 @@ signalling is needed.
 
 import json
 import re
+import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 from typing import Any
 
-from defold_mcp import toolchain
+from defold_mcp import bob_runner, toolchain
 
 # One JSON object per line after the literal ``TEST `` prefix.
 _TEST_EVENT_RE = re.compile(r"^TEST\s+(\{.*\})\s*$")
+
+# The engine's log prefix on every line it writes, e.g. ``DEBUG:SCRIPT: ``.
+_ENGINE_LOG_PREFIX_RE = re.compile(
+    r"^(?:DEBUG|INFO|WARNING|ERROR|FATAL):[A-Za-z0-9_]+:\s*"
+)
 
 # DefTest text summaries (tolerant: matched on the stripped line).
 _DEFT_RE = re.compile(r"^(Success|Failure): (\d+) passed, (\d+) failed")
 
 _STDOUT_TAIL_CHARS = 2000
+
+#: ``[bootstrap]`` override handed to bob so the test collection becomes the
+#: archive's entry point.
+_BOOTSTRAP_SETTINGS = "[bootstrap]\nmain_collection = {collection}\n"
+
+
+def _strip_engine_log_prefix(line: str) -> str:
+    """Remove one engine log prefix (``DEBUG:SCRIPT: ``) from ``line``."""
+    return _ENGINE_LOG_PREFIX_RE.sub("", line, count=1)
 
 
 def _to_text(value: "str | bytes | None") -> str:
@@ -116,7 +141,9 @@ def parse_test_stream(
     text_status: "str | None" = None
 
     for raw_line in output.splitlines():
-        line = raw_line.rstrip()
+        # The engine prefixes every line it writes with ``LEVEL:DOMAIN: ``;
+        # strip it so a script's ``print()`` payload is matched.
+        line = _strip_engine_log_prefix(raw_line.rstrip())
         match = _TEST_EVENT_RE.match(line)
         if match:
             try:
@@ -195,6 +222,51 @@ def _resolve_engine(engine: "str | Path | None", spec: str, client: Any) -> str:
     return str(path)
 
 
+def build_test_collection(
+    project_root: "str | Path",
+    test_collection: str,
+    *,
+    spec: str = "stable",
+    client: Any = None,
+    timeout_s: float = 600,
+) -> "bob_runner.BobResult":
+    """Build ``project_root`` with ``test_collection`` as the entry point.
+
+    The collection must be the archive's BOOTSTRAP collection, not merely a
+    compiled file: the engine exits 1 without a message when the collection
+    is missing from the archive, and a collection pulled in as a
+    subcollection is flattened into its parent by ``CollectionBuilder`` and
+    never archived separately (both verified against Defold 1.14.1).
+
+    bob's ``--settings`` applies a settings file on top of ``game.project``,
+    so a temporary override makes the collection the entry point WITHOUT
+    editing ``game.project`` on disk. bob also treats the settings file's
+    directory as a content root, so the file goes in its own private temp
+    directory: a file in the project root is reported as a duplicate
+    resource path, and one directly in ``/tmp`` breaks bob's filesystem
+    walk (both verified against Defold 1.14.1). The directory is removed
+    again.
+    """
+    compiled = _compiled_collection_path(test_collection)
+    settings_dir = Path(tempfile.mkdtemp(prefix="defold-mcp-test-"))
+    try:
+        settings_path = settings_dir / "test.settings"
+        settings_path.write_text(
+            _BOOTSTRAP_SETTINGS.format(collection=compiled), encoding="utf-8"
+        )
+        return bob_runner.run_bob(
+            project_root,
+            ["build"],
+            spec=spec,
+            variant="debug",
+            settings=settings_path,
+            client=client,
+            timeout_s=timeout_s,
+        )
+    finally:
+        shutil.rmtree(settings_dir, ignore_errors=True)
+
+
 def run_headless_tests(
     project_root: "str | Path",
     test_collection: str,
@@ -212,7 +284,9 @@ def run_headless_tests(
     collection path is converted to its compiled ``.collectionc`` form and
     passed via ``--config=bootstrap.main_collection=...``; ``game.project``
     is never modified. Extra ``config_overrides`` become further
-    ``--config=k=v`` flags.
+    ``--config=k=v`` flags. The collection must already be the archive's
+    bootstrap collection — call :func:`build_test_collection` first — since
+    the override alone cannot reach a collection the archive lacks.
 
     Returns the :func:`parse_test_stream` summary plus ``"ok"`` (exit code
     0 and no failures) and ``"exit_code"``. A timeout raises

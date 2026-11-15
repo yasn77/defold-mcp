@@ -498,7 +498,10 @@ class DocsIndex:
     @staticmethod
     def _get_bytes(url: str, *, client: httpx.Client | None) -> bytes:
         owned = client is None
-        http = client if client is not None else httpx.Client()
+        # Follow redirects: every Defold distribution host redirects
+        # (``d.defold.com/archive/...`` answers 301), and a bare client
+        # would raise on the redirect response instead of fetching.
+        http = client if client is not None else httpx.Client(follow_redirects=True)
         try:
             response = http.get(url)
             response.raise_for_status()

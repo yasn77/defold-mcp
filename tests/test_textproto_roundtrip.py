@@ -271,7 +271,7 @@ instances {
 }
 collection_instances {
   id: "sub"
-  collection: "/sub/level.collectionc"
+  collection: "/sub/level.collection"
   position {
     x: 0.0
     y: 0.0
@@ -845,7 +845,15 @@ class TestApplyOperations:
 
     # -- add_subcollection --------------------------------------------------
 
-    def test_add_subcollection_enforces_c_suffix(self):
+    def test_add_subcollection_keeps_the_source_path(self):
+        """``collection_instances.collection`` takes the SOURCE path.
+
+        bob's ``CollectionBuilder`` resolves it with ``project.getResource``
+        and never maps a ``.collectionc`` path back to its source, so
+        appending ``c`` makes every headless build fail with "the collection
+        ... can't be found" (verified against Defold 1.14.1, whose own test
+        resources write ``collection: "/hierarchy/sub1.collection"``).
+        """
         tree = apply_operations(
             {},
             [
@@ -853,30 +861,18 @@ class TestApplyOperations:
                     "op": "add_subcollection",
                     "id": "room",
                     "collection": "/main/room.collection",
+                    "position": {"x": 10.0, "y": 0.0},
                 }
             ],
             extension=".collection",
         )
         assert tree["collection_instances"] == [
-            {"id": "room", "collection": "/main/room.collectionc"}
+            {
+                "id": "room",
+                "collection": "/main/room.collection",
+                "position": {"x": 10.0, "y": 0.0},
+            }
         ]
-
-    def test_add_subcollection_c_suffix_is_idempotent(self):
-        tree = apply_operations(
-            {},
-            [
-                {
-                    "op": "add_subcollection",
-                    "id": "room",
-                    "collection": "/main/room.collectionc",
-                }
-            ],
-            extension=".collection",
-        )
-        assert (
-            tree["collection_instances"][0]["collection"]
-            == "/main/room.collectionc"
-        )
 
     # -- add_component ------------------------------------------------------
 

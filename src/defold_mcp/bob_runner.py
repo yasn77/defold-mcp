@@ -6,11 +6,13 @@ with the PROJECT DIRECTORY as the working directory. Commands:
 
 Diagnostic parsing
 ------------------
-bob prints diagnostics interleaved with JVM noise on stdout. Two forms are
+bob prints diagnostics interleaved with JVM noise on stdout. Three forms are
 recognised (line-based):
 
 * ``ERROR <resource>:<line>: <message>`` / ``WARNING <resource>:<line>: <message>``
 * ``ERROR: <resource>:<line>: <message>`` / ``WARNING: <resource>:<line>: <message>``
+* ``SEVERE  <message>`` — bob's log4j-style hard failure, reported as an
+  error diagnostic with ``resource`` and ``line`` ``None``
 
 The line number is 1-based as reported by bob; a diagnostic without a line
 number (e.g. ``WARNING /main/main.collection: unable to parse``) yields
@@ -52,6 +54,12 @@ from defold_mcp import config, toolchain
 _DIAG_RE = re.compile(
     r"^(?P<sev>ERROR|WARNING):? (?P<resource>.+?)(?::(?P<line>\d+))?: (?P<message>.+)$"
 )
+
+# bob's log4j-style hard failures: ``SEVERE  <message>`` with no resource
+# and no line. These carry the only description of a failure that aborts
+# the build before any ``ERROR <resource>:<line>:`` diagnostic is printed
+# (an unparseable ``game.project``, a collection that cannot be found).
+_SEVERE_RE = re.compile(r"^SEVERE\s+(?P<message>.+)$")
 
 # JDK 25 JVM noise that must never surface as a diagnostic.
 _JVM_NOISE_RES = (
@@ -104,6 +112,13 @@ class BobResult:
 def parse_bob_diagnostics(output: str) -> list[dict]:
     """Extract ``{severity, resource, line, message}`` diagnostics from bob output.
 
+    Two forms are recognised:
+
+    * ``ERROR <resource>:<line>: <message>`` / ``WARNING ...`` (the colon
+      after the level is optional)
+    * ``SEVERE  <message>`` — bob's log4j-style hard failure, reported as
+      ``severity="error"`` with ``resource`` and ``line`` ``None``
+
     ``severity`` is ``"error"`` or ``"warning"``; ``line`` is the 1-based
     line number reported by bob, or ``None`` when the diagnostic carries no
     line; ``message`` is the trailing text with surrounding whitespace
@@ -113,6 +128,17 @@ def parse_bob_diagnostics(output: str) -> list[dict]:
     diagnostics: list[dict] = []
     for line in output.splitlines():
         if any(noise.match(line) for noise in _JVM_NOISE_RES):
+            continue
+        severe = _SEVERE_RE.match(line)
+        if severe:
+            diagnostics.append(
+                {
+                    "severity": "error",
+                    "resource": None,
+                    "line": None,
+                    "message": severe["message"].strip(),
+                }
+            )
             continue
         match = _DIAG_RE.match(line)
         if not match:
@@ -215,8 +241,13 @@ def _build_argv(
     bundle_format: "str | None",
     architectures: "list[str] | str | None",
     resource_cache: bool,
+    settings: "str | Path | None",
 ) -> list[str]:
     argv = [java, "-jar", bob_jar, *commands]
+    if settings is not None:
+        # A settings file is applied on top of game.project, so it can
+        # redirect the bootstrap collection without editing the project.
+        argv += ["--settings", str(settings)]
     if resource_cache:
         argv += ["--resource-cache-local", str(config.get_cache_dir() / "resource-cache")]
     if platform is not None:
@@ -248,6 +279,7 @@ def run_bob(
     bundle_format: "str | None" = None,
     architectures: "list[str] | str | None" = None,
     resource_cache: bool = True,
+    settings: "str | Path | None" = None,
     java: "str | Path | None" = None,
     bob_jar: "str | Path | None" = None,
     client: Any = None,
@@ -259,7 +291,9 @@ def run_bob(
     resolved via :func:`defold_mcp.toolchain.java_executable` (a clear
     ``RuntimeError`` naming the JDK 25 requirement is raised when nothing
     qualifies) and :func:`defold_mcp.toolchain.ensure_toolchain` for the
-    spec's ``bob.jar``.
+    spec's ``bob.jar``. ``settings`` is a game-project settings file passed
+    with ``--settings``: bob applies it on top of ``game.project``, so a
+    build can be redirected without editing the project.
 
     ``ok`` is ``True`` when the exit code is 0 AND no ERROR diagnostics
     were parsed (warnings keep ``ok`` True). When ``build_report_path`` is
@@ -279,6 +313,7 @@ def run_bob(
         bundle_format=bundle_format,
         architectures=architectures,
         resource_cache=resource_cache,
+        settings=settings,
     )
     try:
         proc = subprocess.run(

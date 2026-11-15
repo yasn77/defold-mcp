@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from defold_mcp import bob_runner, test_runner
+from defold_mcp import bob_runner, docs_index, server, test_runner
 
 
 # -- helpers -------------------------------------------------------------------
@@ -93,6 +93,39 @@ def test_parse_diagnostics_colon_prefix_tolerated():
     ]
 
 
+def test_parse_bob_diagnostics_severe_lines_are_errors():
+    # bob aborts with log4j-style ``SEVERE  <message>`` lines that carry no
+    # resource and no line; without them a hard failure (a project file it
+    # cannot parse, a collection it cannot find) yields no diagnostics at
+    # all, so an agent consumer has nothing to act on.
+    diagnostics = bob_runner.parse_bob_diagnostics(
+        "SEVERE  Missing input.game_binding\n"
+        "ERROR /main/player.script:12: '=' expected near 'x'\n"
+    )
+    assert diagnostics[0] == {
+        "severity": "error",
+        "resource": None,
+        "line": None,
+        "message": "Missing input.game_binding",
+    }
+    assert diagnostics[1]["severity"] == "error"
+    assert diagnostics[1]["resource"] == "/main/player.script"
+
+
+def test_parse_bob_diagnostics_severe_matches_without_a_resource():
+    diagnostics = bob_runner.parse_bob_diagnostics(
+        "SEVERE  the collection '/test/math_test.collectionc' can't be found \n"
+    )
+    assert len(diagnostics) == 1
+    assert diagnostics[0]["severity"] == "error"
+    assert diagnostics[0]["resource"] is None
+    assert diagnostics[0]["line"] is None
+    assert (
+        diagnostics[0]["message"]
+        == "the collection '/test/math_test.collectionc' can't be found"
+    )
+
+
 # -- summarize_build_report -----------------------------------------------------
 
 
@@ -164,6 +197,45 @@ def test_run_bob_command_construction(project, cache_dir, tmp_path):
     assert result.diagnostics == []
     assert result.build_report == {"total_size": 7, "resources": [{"path": "/a.png", "size": 7}]}
     assert (project / "game.project").read_text() == "[project]\ntitle = T\n"
+
+
+def test_run_bob_passes_a_settings_file(project, cache_dir, tmp_path):
+    args_file = tmp_path / "bob_args.txt"
+    java = make_fake_exe(
+        tmp_path / "java",
+        f'for a in "$@"; do printf "%s\\n" "$a"; done > {args_file}',
+    )
+    bob_jar = tmp_path / "bob.jar"
+    bob_jar.write_bytes(b"PK-fake")
+    settings = tmp_path / "test.settings"
+    settings.write_text("[bootstrap]\nmain_collection = /t/a.collectionc\n")
+
+    bob_runner.run_bob(
+        project,
+        ["build"],
+        java=str(java),
+        bob_jar=str(bob_jar),
+        settings=settings,
+    )
+
+    args = args_file.read_text().splitlines()
+    assert args[2] == "build"
+    i = args.index("--settings")
+    assert args[i + 1] == str(settings)
+
+
+def test_run_bob_omits_settings_when_not_given(project, cache_dir, tmp_path):
+    args_file = tmp_path / "bob_args.txt"
+    java = make_fake_exe(
+        tmp_path / "java",
+        f'for a in "$@"; do printf "%s\\n" "$a"; done > {args_file}',
+    )
+    bob_jar = tmp_path / "bob.jar"
+    bob_jar.write_bytes(b"PK-fake")
+
+    bob_runner.run_bob(project, ["build"], java=str(java), bob_jar=str(bob_jar))
+
+    assert "--settings" not in args_file.read_text().splitlines()
 
 
 def test_run_bob_diagnostics_parsed(project, cache_dir, tmp_path):
@@ -330,6 +402,47 @@ def test_compiled_collection_path_forms():
     assert test_runner._compiled_collection_path("/t/a") == "/t/a"
 
 
+def test_build_test_collection_uses_a_settings_override(project, cache_dir, monkeypatch):
+    """The test collection must become the archive's bootstrap collection.
+
+    A ``--config`` override at engine start cannot reach a collection the
+    archive lacks, and a subcollection is flattened into its parent, so the
+    build itself has to be redirected — via ``--settings``, which bob
+    applies on top of ``game.project`` without editing it.
+    """
+    captured: dict = {}
+
+    def fake_run_bob(root, commands, **kwargs):
+        captured["root"] = Path(root)
+        captured["commands"] = commands
+        captured["kwargs"] = kwargs
+        settings = Path(kwargs["settings"])
+        captured["settings_path"] = settings
+        captured["settings_text"] = settings.read_text(encoding="utf-8")
+        captured["project_text"] = (Path(root) / "game.project").read_text(
+            encoding="utf-8"
+        )
+        return bob_runner.BobResult(ok=True, exit_code=0)
+
+    monkeypatch.setattr(test_runner.bob_runner, "run_bob", fake_run_bob)
+
+    result = test_runner.build_test_collection(
+        project, "/test/math_test.collection"
+    )
+
+    assert result.ok is True
+    assert captured["commands"] == ["build"]
+    assert captured["kwargs"]["variant"] == "debug"
+    assert captured["settings_text"] == (
+        "[bootstrap]\nmain_collection = /test/math_test.collectionc\n"
+    )
+    # game.project is untouched, and the settings file is outside the
+    # project and removed again.
+    assert captured["project_text"] == "[project]\ntitle = T\n"
+    assert not captured["settings_path"].is_relative_to(captured["root"])
+    assert not captured["settings_path"].exists()
+
+
 def test_parse_test_stream_derives_totals_without_suite_end():
     output = (
         'TEST {"run": "r1", "event": "test_end", "name": "a", "status": "pass"}\n'
@@ -344,6 +457,46 @@ def test_parse_test_stream_derives_totals_without_suite_end():
 def test_parse_test_stream_stdout_tail_truncated_to_2000():
     summary = test_runner.parse_test_stream("x" * 5000)
     assert len(summary["stdout_tail"]) == 2000
+
+
+def test_parse_test_stream_tolerates_the_engine_log_prefix():
+    # The engine routes a script's print() through its log, so every line
+    # carries a ``DEBUG:SCRIPT: `` prefix (verified against Defold 1.14.1).
+    output = (
+        "INFO:ENGINE: Defold Engine 1.14.1 (ee283d4)\n"
+        'DEBUG:SCRIPT: TEST {"run": "smoke1", "event": "suite_end", '
+        '"status": "pass", "passed": 2, "failed": 0}\n'
+        "INFO:INPUT: Gamepad 0 'null_device' using raw fallback\n"
+    )
+    summary = test_runner.parse_test_stream(output)
+    assert summary["run"] == "smoke1"
+    assert summary["passed"] == 2
+    assert summary["failed"] == 0
+    assert summary["status"] == "pass"
+
+
+def test_parse_test_stream_tolerates_the_prefix_on_deftest_summaries():
+    output = (
+        "DEBUG:SCRIPT: Running tests\n"
+        "DEBUG:SCRIPT: Success: 4 passed, 0 failed\n"
+    )
+    summary = test_runner.parse_test_stream(output)
+    assert summary["passed"] == 4
+    assert summary["failed"] == 0
+    assert summary["status"] == "pass"
+
+
+def test_strip_engine_log_prefix_leaves_plain_lines_alone():
+    assert test_runner._strip_engine_log_prefix("TEST {}") == "TEST {}"
+    assert (
+        test_runner._strip_engine_log_prefix('DEBUG:SCRIPT: TEST {}')
+        == "TEST {}"
+    )
+    # Only ONE prefix is removed.
+    assert (
+        test_runner._strip_engine_log_prefix("DEBUG:SCRIPT: INFO:X: y")
+        == "INFO:X: y"
+    )
 
 
 # -- run_headless_tests -----------------------------------------------------------
@@ -430,3 +583,101 @@ def test_run_headless_tests_timeout_kills(project, cache_dir, tmp_path):
     assert elapsed < 5
     assert "starting" in excinfo.value.partial_output
     assert_no_process("sleep 300")
+
+
+# -- build failures reach the tool responses ------------------------------------
+
+
+def _no_editor(monkeypatch) -> None:
+    """Make the Editor probe report "not running" without a network call."""
+    monkeypatch.setattr(
+        server.editor_client, "probe_editor", lambda *a, **k: None
+    )
+
+
+def _stub_run_bob(monkeypatch, result: bob_runner.BobResult) -> None:
+    monkeypatch.setattr(server.bob_runner, "run_bob", lambda *a, **k: result)
+
+
+def test_compile_failure_response_carries_the_raw_bob_output(project, monkeypatch):
+    # A SEVERE-only failure leaves ``diagnostics`` empty; the raw output is
+    # then the only thing an agent consumer can self-correct from.
+    _no_editor(monkeypatch)
+    _stub_run_bob(
+        monkeypatch,
+        bob_runner.BobResult(
+            ok=False,
+            exit_code=1,
+            diagnostics=[],
+            stdout="SEVERE  the collection can't be found\n",
+        ),
+    )
+
+    data = json.loads(server.defold_compile(project_root=str(project)))
+
+    assert data["ok"] is False
+    assert data["diagnostics"] == []
+    assert data["stdout_tail"] == "SEVERE  the collection can't be found\n"
+
+
+def test_compile_success_omits_the_raw_bob_output(project, monkeypatch):
+    _no_editor(monkeypatch)
+    _stub_run_bob(
+        monkeypatch,
+        bob_runner.BobResult(
+            ok=True, exit_code=0, diagnostics=[], stdout="100% Working\n"
+        ),
+    )
+
+    data = json.loads(server.defold_compile(project_root=str(project)))
+
+    assert data["ok"] is True
+    assert "stdout_tail" not in data
+
+
+def test_bundle_failure_response_carries_the_raw_bob_output(project, monkeypatch):
+    _no_editor(monkeypatch)
+    _stub_run_bob(
+        monkeypatch,
+        bob_runner.BobResult(
+            ok=False,
+            exit_code=1,
+            diagnostics=[],
+            stdout="SEVERE  bundling failed\n",
+        ),
+    )
+
+    data = json.loads(server.defold_bundle("wasm-web", project_root=str(project)))
+
+    assert data["ok"] is False
+    assert data["stdout_tail"] == "SEVERE  bundling failed\n"
+
+
+# -- documentation index robustness --------------------------------------------
+
+
+def test_docs_db_needs_build_when_the_file_is_not_a_database(tmp_path):
+    # A malformed docs.db must trigger the rebuild the function exists to
+    # perform, rather than raising out of defold_setup_toolchain.
+    db_path = tmp_path / "docs.db"
+    db_path.write_bytes(b"not a sqlite database at all")
+
+    assert server._docs_db_needs_build(db_path) is True
+
+
+def test_discard_unusable_db_removes_a_non_database(tmp_path):
+    db_path = tmp_path / "docs.db"
+    db_path.write_bytes(b"not a sqlite database at all")
+
+    server._discard_unusable_db(db_path)
+
+    assert not db_path.exists()
+
+
+def test_discard_unusable_db_keeps_a_valid_database(tmp_path):
+    db_path = tmp_path / "docs.db"
+    docs_index.DocsIndex(str(db_path)).close()
+
+    server._discard_unusable_db(db_path)
+
+    assert db_path.is_file()

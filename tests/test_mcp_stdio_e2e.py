@@ -24,6 +24,7 @@ line (see ``mcp/server/stdio.py``).
 import json
 import os
 import select
+import shutil
 import subprocess
 import threading
 import time
@@ -32,7 +33,7 @@ from pathlib import Path
 
 import pytest
 
-from defold_mcp import server
+from defold_mcp import bob_runner, docs_index, server
 from defold_mcp.textproto import (
     decode_embedded_data,
     parse_textproto,
@@ -127,14 +128,18 @@ class StdioClient:
 
     # -- JSON-RPC ----------------------------------------------------------
 
-    def request(self, method: str, params: dict | None = None) -> dict:
+    def request(
+        self, method: str, params: dict | None = None, *, timeout: float | None = None
+    ) -> dict:
         self._next_id += 1
         request_id = self._next_id
         message: dict = {"jsonrpc": "2.0", "id": request_id, "method": method}
         if params is not None:
             message["params"] = params
         self._write(message)
-        deadline = time.monotonic() + self._timeout
+        deadline = time.monotonic() + (
+            self._timeout if timeout is None else timeout
+        )
         while True:
             reply = self._read_message(deadline)
             if reply.get("id") == request_id:
@@ -153,9 +158,11 @@ class StdioClient:
             message["params"] = params
         self._write(message)
 
-    def call_tool(self, name: str, arguments: dict) -> dict:
+    def call_tool(
+        self, name: str, arguments: dict, *, timeout: float | None = None
+    ) -> dict:
         return self.request(
-            "tools/call", {"name": name, "arguments": arguments}
+            "tools/call", {"name": name, "arguments": arguments}, timeout=timeout
         )
 
     # -- shutdown ----------------------------------------------------------
@@ -685,3 +692,350 @@ def test_defold_stop_without_a_run_omits_backend(tmp_path):
     data = json.loads(server.defold_stop(project_root=str(root)))
     assert data["ok"] is False
     assert "backend" not in data
+
+
+# -- documentation index self-healing (live-phase finding) ------------------
+
+
+def test_docs_db_needs_build_when_missing(tmp_path):
+    assert server._docs_db_needs_build(tmp_path / "docs.db") is True
+
+
+def test_docs_db_needs_build_when_populated(tmp_path):
+    db_path = tmp_path / "docs.db"
+    index = docs_index.DocsIndex(str(db_path))
+    try:
+        index.ingest_manual("intro", "Intro", "body text")
+    finally:
+        index.close()
+    assert server._docs_db_needs_build(db_path) is False
+
+
+def test_docs_db_needs_build_when_empty(tmp_path):
+    # An interrupted ingest leaves a valid-but-empty FTS table; treating it
+    # as "already built" would make every later search return nothing.
+    db_path = tmp_path / "docs.db"
+    docs_index.DocsIndex(str(db_path)).close()
+    assert server._docs_db_needs_build(db_path) is True
+
+
+# -- test-run summary passthrough (live-phase finding) ---------------------
+
+
+def test_test_run_surfaces_run_id_and_exit_code(tmp_path, monkeypatch):
+    root = _scaffold(tmp_path, "test-run-proj")
+    monkeypatch.setattr(
+        server.test_runner,
+        "build_test_collection",
+        lambda *a, **k: bob_runner.BobResult(ok=True, exit_code=0),
+    )
+    monkeypatch.setattr(
+        server.test_runner,
+        "run_headless_tests",
+        lambda *a, **k: {
+            "ok": True,
+            "run": "smoke1",
+            "status": "pass",
+            "passed": 2,
+            "failed": 0,
+            "tests": [],
+            "rejected_events": 0,
+            "stdout_tail": "TEST {...}",
+            "exit_code": 0,
+        },
+    )
+
+    data = json.loads(
+        server.defold_test_run(
+            "/test/math_test.collection", project_root=str(root)
+        )
+    )
+    assert data["ok"] is True
+    assert data["run"] == "smoke1"
+    assert data["status"] == "pass"
+    assert data["passed"] == 2
+    assert data["failed"] == 0
+    assert data["exit_code"] == 0
+
+
+def test_test_run_builds_the_collection_before_running_it(tmp_path, monkeypatch):
+    root = _scaffold(tmp_path, "test-build-proj")
+    order: list[str] = []
+
+    def fake_build(*args, **kwargs):
+        order.append("build")
+        return bob_runner.BobResult(ok=True, exit_code=0)
+
+    def fake_run(*args, **kwargs):
+        order.append("run")
+        return {
+            "ok": True,
+            "run": "r1",
+            "status": "pass",
+            "passed": 1,
+            "failed": 0,
+            "tests": [],
+            "rejected_events": 0,
+            "stdout_tail": "",
+            "exit_code": 0,
+        }
+
+    monkeypatch.setattr(server.test_runner, "build_test_collection", fake_build)
+    monkeypatch.setattr(server.test_runner, "run_headless_tests", fake_run)
+
+    json.loads(
+        server.defold_test_run("/test/t.collection", project_root=str(root))
+    )
+    assert order == ["build", "run"]
+
+
+def test_test_run_reports_a_failed_build_without_running_the_engine(
+    tmp_path, monkeypatch
+):
+    root = _scaffold(tmp_path, "test-build-fail")
+    monkeypatch.setattr(
+        server.test_runner,
+        "build_test_collection",
+        lambda *a, **k: bob_runner.BobResult(
+            ok=False,
+            exit_code=1,
+            diagnostics=[
+                {
+                    "severity": "error",
+                    "resource": "/test/t.collection",
+                    "line": None,
+                    "message": "the collection can't be found",
+                }
+            ],
+            stdout="SEVERE  the collection can't be found\n",
+        ),
+    )
+    ran: list[int] = []
+    monkeypatch.setattr(
+        server.test_runner, "run_headless_tests", lambda *a, **k: ran.append(1)
+    )
+
+    data = json.loads(
+        server.defold_test_run("/test/t.collection", project_root=str(root))
+    )
+    assert data["ok"] is False
+    assert data["diagnostics"], data
+    assert ran == [], "the engine must not run when the build failed"
+
+
+# ---------------------------------------------------------------------------
+# Part C: live smoke test against the real Defold 1.14.1 toolchain
+# ---------------------------------------------------------------------------
+
+#: Scratch project for the live run (allowed temp location, wiped per run).
+LIVE_SCRATCH = Path("/tmp/opencode/defold-mcp-live-smoke")
+
+#: Per-call ceiling for the live run: the toolchain download is ~500 MB and
+#: the two real builds take minutes on a cold cache.
+LIVE_TIMEOUT = 1_800.0
+
+#: The script the engine runs: emits one TEST ``suite_end`` event and asks
+#: the engine to exit cleanly.
+LIVE_RUNNER_SCRIPT = (
+    "function init(self)\n"
+    '    print(\'TEST {"run": "smoke1", "event": "suite_end", '
+    '"status": "pass", "passed": 2, "failed": 0}\')\n'
+    '    msg.post("@system:", "exit", { code = 0 })\n'
+    "end\n"
+)
+
+
+def _live_call(
+    client: StdioClient,
+    name: str,
+    arguments: dict,
+    *,
+    timeout: float = LIVE_TIMEOUT,
+) -> dict:
+    """Call a live tool with a generous per-call timeout."""
+    return _tool_json(client.call_tool(name, arguments, timeout=timeout))
+
+
+@pytest.mark.live
+def test_live_defold_1_14_1_build_and_headless_test(client: StdioClient) -> None:
+    """Drive the real server against the real Defold 1.14.1 toolchain.
+
+    Nothing is mocked: the toolchain (Temurin JDK 25, ``bob.jar``, the
+    headless engine, builtins and the pinned ref-doc) is downloaded, the
+    FTS documentation index is ingested from the network, a project is
+    scaffolded, a reachable test collection is compiled by ``bob``, run in
+    ``dmengine_headless`` and finally bundled for ``wasm-web``.
+    """
+    client.request("initialize", INITIALIZE_PARAMS)
+    client.notify("notifications/initialized")
+
+    # 1. Toolchain: JDK 25, bob.jar, headless engine, builtins, ref-doc and
+    #    the documentation index.
+    setup = _live_call(
+        client,
+        "defold_setup_toolchain",
+        {"spec": "1.14.1", "install_jdk25": True},
+    )
+    assert setup["ok"] is True
+    assert setup["version"] == "1.14.1"
+    assert setup["sha1"], "the pinned spec must resolve to a build sha1"
+
+    bob_jar = Path(setup["bob_jar"])
+    assert bob_jar.is_file()
+    assert bob_jar.read_bytes()[:2] == b"PK", "bob.jar is not a zip"
+    headless = Path(setup["dmengine_headless"])
+    assert headless.is_file()
+    assert os.access(headless, os.X_OK), "the headless engine is not executable"
+    assert Path(setup["builtins_zip"]).is_file()
+    assert Path(setup["ref_doc_zip"]).is_file()
+    assert Path(setup["engine_dir"]).is_dir()
+
+    doctor = _live_call(client, "defold_doctor", {})
+    assert doctor["java"]["ok"] is True, doctor["java"]
+    assert doctor["java"]["major"] == 25, doctor["java"]
+    assert doctor["docs"], "the documentation index is empty after setup"
+    assert "lua_api" in doctor["docs"], doctor["docs"]
+
+    # 2. The real ref-doc reached the FTS index.
+    search = _live_call(
+        client,
+        "defold_docs_search",
+        {"action": "search", "query": "go.animate", "scope": "lua_api"},
+    )
+    assert any(
+        hit["doc_id"] == "lua_api:go.animate" for hit in search["results"]
+    ), search["results"][:5]
+
+    doc = _live_call(
+        client,
+        "defold_docs_search",
+        {"action": "get", "doc_id": "lua_api:go.animate"},
+    )
+    assert "go.animate(" in doc["content"], doc["content"][:400]
+
+    # 3. Scaffold the project and add a test collection bob can reach.
+    if LIVE_SCRATCH.exists():
+        shutil.rmtree(LIVE_SCRATCH)
+    LIVE_SCRATCH.parent.mkdir(parents=True, exist_ok=True)
+
+    init = _live_call(
+        client,
+        "defold_project_init",
+        {
+            "project_root": str(LIVE_SCRATCH),
+            "profile": "2d_pixel",
+            "title": "SmokeQuest",
+        },
+    )
+    assert init["ok"] is True
+    assert (LIVE_SCRATCH / "game.project").is_file()
+
+    runner = LIVE_SCRATCH / "test" / "runner.script"
+    runner.parent.mkdir(parents=True, exist_ok=True)
+    runner.write_text(LIVE_RUNNER_SCRIPT, encoding="utf-8")
+
+    # The script component is REFERENCED (scripts cannot be embedded), so
+    # the collection carries ``component: "/test/runner.script"``.
+    collection = _live_call(
+        client,
+        "defold_mutate_resource",
+        {
+            "project_root": str(LIVE_SCRATCH),
+            "resource_path": "/test/math_test.collection",
+            "operations": [
+                {
+                    "op": "set_property",
+                    "parent": "",
+                    "key": "name",
+                    "value": "math_test",
+                },
+                {
+                    "op": "add_embedded_instance",
+                    "id": "test_runner",
+                    "components": [
+                        {"id": "script", "component": "/test/runner.script"}
+                    ],
+                },
+            ],
+        },
+    )
+    assert collection["ok"] is True
+    _assert_round_trips(LIVE_SCRATCH / "test" / "math_test.collection")
+
+    # bob compiles only the graph reachable from the bootstrap collection,
+    # so the test collection must be instanced into ``main.collection`` as
+    # a subcollection or it is never compiled.
+    subcollection = _live_call(
+        client,
+        "defold_mutate_resource",
+        {
+            "project_root": str(LIVE_SCRATCH),
+            "resource_path": "/main/main.collection",
+            "operations": [
+                {
+                    "op": "add_subcollection",
+                    "id": "test",
+                    "collection": "/test/math_test.collection",
+                    "position": {"x": 0.0, "y": 0.0},
+                }
+            ],
+        },
+    )
+    assert subcollection["ok"] is True
+    main_text = (LIVE_SCRATCH / "main" / "main.collection").read_text(
+        encoding="utf-8"
+    )
+    # ``collection_instances.collection`` carries the SOURCE path; a
+    # ``.collectionc`` path fails bob with "the collection ... can't be
+    # found" (verified against Defold 1.14.1).
+    assert "/test/math_test.collection" in main_text, main_text
+    assert "/test/math_test.collectionc" not in main_text, main_text
+    _assert_round_trips(LIVE_SCRATCH / "main" / "main.collection")
+
+    # 4. A real ``bob build`` under JDK 25.
+    compile_result = _live_call(
+        client,
+        "defold_compile",
+        {"project_root": str(LIVE_SCRATCH), "variant": "debug"},
+    )
+    assert compile_result["ok"] is True, compile_result["diagnostics"]
+    assert compile_result["diagnostics"] == [], compile_result["diagnostics"]
+
+    compiled = list((LIVE_SCRATCH / "build").rglob("math_test.collectionc"))
+    assert compiled, "the test collection was never compiled"
+
+    # 5. A real headless test run.
+    test_result = _live_call(
+        client,
+        "defold_test_run",
+        {
+            "test_collection": "/test/math_test.collection",
+            "project_root": str(LIVE_SCRATCH),
+            "timeout_s": 60,
+        },
+        timeout=300.0,
+    )
+    assert test_result["ok"] is True, test_result
+    assert test_result["run"] == "smoke1", test_result
+    assert test_result["passed"] == 2, test_result
+    assert test_result["failed"] == 0, test_result
+    assert test_result["exit_code"] == 0, test_result
+
+    # 6. A real wasm-web bundle.
+    bundle = _live_call(
+        client,
+        "defold_bundle",
+        {
+            "platform": "wasm-web",
+            "variant": "release",
+            "project_root": str(LIVE_SCRATCH),
+        },
+    )
+    assert bundle["ok"] is True, bundle["diagnostics"]
+
+    build_dir = LIVE_SCRATCH / "build"
+    assert list(build_dir.rglob("index.html")), "no index.html in the bundle"
+    wasm = [p for p in build_dir.rglob("*.wasm") if p.stat().st_size > 0]
+    assert wasm, "no non-empty .wasm in the bundle"
+    arcd = [p for p in build_dir.rglob("game.arcd") if p.stat().st_size > 0]
+    assert arcd, "no non-empty game.arcd in the bundle"
