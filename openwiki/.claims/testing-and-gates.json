@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:38f027d23d7ca8f7129434c94a46458aaf003f0f028231c995e66e075c6a9c29",
+  "pageVersion": "sha256:a1da51f658220cd8084c48e7b9bd193ea73f6e3c251e126b731afc0eab71ea90",
   "claims": [
     {
       "id": "claim_20c01b8cf15e4ca79ab56290b86eb68d",
@@ -24,15 +24,15 @@
     },
     {
       "id": "claim_e73bffaa1ec140b28bda81998581a5a6",
-      "statement": "The unit gate is hermetic: 152 tests across the seven suite files cover config constants, the game.project editor contract, the textproto engine, the toolchain and deps modules, the docs FTS index, the Editor HTTP client (probe/routes/retries/lua_quote/token hygiene incl. exception-chain scrubbing) and the bob/test runners (diagnostics, reports, fake-executable argv tests, timeout kills) without network access or a JVM.",
+      "statement": "The unit gate is hermetic: 183 tests across the nine suite files cover config, the game.project editor, the textproto engine, toolchain/deps, the docs index, the Editor client, the bob/test runners, the engine service client (wire vectors, TCP mock server, eviction-safe pagination, recording protocol) and the automation bridge (DLIB unwrapping, leases, input flows, screenshots) without network access beyond loopback or a JVM.",
       "evidence": [
         {
-          "resource": "repo://tests/test_bob_diagnostics.py",
-          "version": "repo-file-v1:sha256:514a138169c04568e4e4a57ffbd9e32e0235918224ed3eb66af0ff2107d240f2"
+          "resource": "repo://tests/test_bridge_v2.py",
+          "version": "repo-file-v1:sha256:fd83e2413449130de58f26c960fb7ace78f23c5e03d9ca06898435963324bd97"
         },
         {
-          "resource": "repo://tests/test_editor_client.py",
-          "version": "repo-file-v1:sha256:c4367d092f4f8a299dc3dfbdcfaa952fe1ba013666cf223a3989a7587ca254f8"
+          "resource": "repo://tests/test_engine_protobuf.py",
+          "version": "repo-file-v1:sha256:98e7bcd4e32ea4dfbe7950942fb46d67b6c4958e3678416e63a340daaec2a1e4"
         }
       ]
     },
@@ -97,6 +97,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T02:39:02.076Z"
+    "at": "2026-11-15T04:08:33.115Z"
   }
 }

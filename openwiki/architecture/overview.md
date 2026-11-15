@@ -5,38 +5,36 @@ description: defold-mcp is a dual-mode (Live Editor / headless) MCP server for t
 tags: [defold, mcp, architecture, overview]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T02:39:02.076Z
+    at: 2026-11-15T04:08:33.115Z
 sources:
   - id: openwiki-source-05ccef8d4cf1698187f20464
     resource: repo://pyproject.toml
   - id: openwiki-source-f85d2e0cee2fe665bce2ac21
     resource: repo://src/defold_mcp/__init__.py
-  - id: openwiki-source-59b94445da06839fcf0abbbe
-    resource: repo://src/defold_mcp/bob_runner.py
+  - id: openwiki-source-da0424a3f86dd91d4c4987ee
+    resource: repo://src/defold_mcp/bridge_client.py
   - id: openwiki-source-e97c31ef8fcfbd50708b634f
     resource: repo://src/defold_mcp/config.py
   - id: openwiki-source-0ba4ffedd14b8a1eef3a8986
     resource: repo://src/defold_mcp/deps.py
   - id: openwiki-source-96c224729593bfb78f3b9a49
     resource: repo://src/defold_mcp/docs_index.py
-  - id: openwiki-source-3c978bb71c1869c84b6a4726
-    resource: repo://src/defold_mcp/editor_client.py
+  - id: openwiki-source-9c7f7467cc94676edbe8c203
+    resource: repo://src/defold_mcp/engine_client.py
   - id: openwiki-source-d57d093dceb0da08744e2de5
     resource: repo://src/defold_mcp/project.py
-  - id: openwiki-source-60018a68c712ae4c069cbdcc
-    resource: repo://src/defold_mcp/test_runner.py
   - id: openwiki-source-920c288fa775427e5500aec9
     resource: repo://src/defold_mcp/textproto/schemas.py
   - id: openwiki-source-18a04b4bf25ad2fe02e760b4
     resource: repo://src/defold_mcp/toolchain.py
   - id: openwiki-source-c7f35c27a3e804b5af2c8277
     resource: repo://tests/test_textproto_roundtrip.py
-generated: { by: "opencode", at: "2026-11-15T02:39:02.076Z" }
+generated: { by: "opencode", at: "2026-11-15T04:08:33.115Z" }
 ---
 
 # Architecture overview
 
-`defold-mcp` is a Python MCP server that gives coding agents a structured, safe way to build, inspect, mutate, compile, test, bundle and live-drive Defold game projects. Eight subsystems are landed; the MCP server surface itself is next.
+`defold-mcp` is a Python MCP server that gives coding agents a structured, safe way to build, inspect, mutate, compile, test, bundle and live-drive Defold game projects. Ten subsystems are landed; only the MCP tool wiring, the project templates and the live smoke phase remain.
 
 ## What exists today
 
@@ -56,15 +54,19 @@ generated: { by: "opencode", at: "2026-11-15T02:39:02.076Z" }
 
 8. **`src/defold_mcp/bob_runner.py` + `test_runner.py` — the headless runners.** `bob.jar` builds with structured diagnostics and build reports, and `dmengine_headless` test runs with `TEST`-event parsing and guaranteed timeout kills — `game.project` never mutated. See [bob and headless test runners](bob-and-test-runners.md).
 
+9. **`src/defold_mcp/engine_client.py` — the engine service client.** The running-debug-engine protocol stack: binary Protobuf hot-reload and `@system` messages under the 1024-byte cap, the TCP log collector with eviction-safe absolute offsets, and the MP4 recording protocol. See [the engine client page](engine-client.md).
+
+10. **`src/defold_mcp/bridge_client.py` — the automation bridge client.** The `extension-automation-bridge` v2 client: DLIB 500 unwrapping into structured errors, FIFO lease auto-renewal, guard-carrying input actions and screenshot capture with sha256 validation. See [the automation bridge client page](bridge-client.md).
+
 ## Layering rule
 
-Constants and environment resolution live in `config`; artifact-format models live above it; download/version state lives in `toolchain` and `deps`; search state in `docs_index`. Dependencies flow strictly downward: `project`, `textproto`, `toolchain`, `deps`, `docs_index`, `editor_client`, `bob_runner` and `test_runner` may import `config` (and `deps`/runners import `toolchain`), never sideways into each other's internals and never upward. The FastMCP tool layer (`server.py`, not yet written) will sit on top of everything and own the remaining clients (`engine_client`, `bridge_client`). No module imports from a layer above it.
+Constants and environment resolution live in `config`; artifact-format models live above it; download/version state lives in `toolchain` and `deps`; search state in `docs_index`. Dependencies flow strictly downward: `project`, `textproto`, `toolchain`, `deps`, `docs_index`, `editor_client`, `bob_runner` and `test_runner` may import `config` (and `deps`/runners import `toolchain`), never sideways into each other's internals and never upward. All ten subsystems now sit below the FastMCP tool layer (`server.py`, not yet written), which will orchestrate them and expose the twenty `defold_*` tools. No module imports from a layer above it.
 
 ## Target architecture (planned, not yet implemented)
 
 - **Twenty MCP tools** (`defold_doctor` … `defold_docs_search`) over FastMCP (stdio by default, StreamableHTTP optional), each accepting an optional `project_root` resolved via `resolve_project_root()`.
 - **Dual-mode transparency:** with the Defold Editor open (`.internal/editor.port`), structured mutations route to undoable `editor.transact()` calls and builds to the Editor's own `bob`; headless, the same operations use the textproto serializer and the cached CLI toolchain. Every response reports its backend.
-- **Remaining clients:** Engine Service (TCP logs, binary Protobuf `@resource/reload`, MP4 recording) and `extension-automation-bridge` v2 (live scene, FIFO input, screenshots) — the Editor HTTP client and the bob/test runners are landed.
+- All commissioned clients are landed (Editor HTTP, Engine Service, automation bridge). Remaining work: the FastMCP tool layer, project templates and the live smoke phase.
 
 ## Package and entrypoints
 

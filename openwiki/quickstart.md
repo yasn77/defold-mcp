@@ -5,24 +5,24 @@ description: Get oriented in defold-mcp in five minutes — what the project is,
 tags: [defold, mcp, quickstart, onboarding]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T02:39:02.076Z
+    at: 2026-11-15T04:08:33.115Z
 sources:
   - id: openwiki-source-72b5d686f860ea86c8592080
     resource: repo://mise.toml
   - id: openwiki-source-05ccef8d4cf1698187f20464
     resource: repo://pyproject.toml
-  - id: openwiki-source-59b94445da06839fcf0abbbe
-    resource: repo://src/defold_mcp/bob_runner.py
-  - id: openwiki-source-3c978bb71c1869c84b6a4726
-    resource: repo://src/defold_mcp/editor_client.py
-generated: { by: "opencode", at: "2026-11-15T02:39:02.076Z" }
+  - id: openwiki-source-da0424a3f86dd91d4c4987ee
+    resource: repo://src/defold_mcp/bridge_client.py
+  - id: openwiki-source-9c7f7467cc94676edbe8c203
+    resource: repo://src/defold_mcp/engine_client.py
+generated: { by: "opencode", at: "2026-11-15T04:08:33.115Z" }
 ---
 
 # Quickstart
 
 `defold-mcp` is a Python MCP server (plus a portable agent skill) for the [Defold](https://defold.com) game engine: it gives coding agents structured tools to scaffold, inspect, mutate, compile, test, bundle and live-drive Defold game projects across 2D and 3D genres — safely around Defold's many file-format traps.
 
-The repository is mid-build: eight subsystems are landed (`config`, the `game.project` editor, the `textproto` engine, the toolchain manager, the `.deps/` syncer, the docs FTS index, the Editor HTTP client and the bob/test runners) with their tests; the MCP server surface itself is next.
+The repository is mid-build: ten subsystems are landed — everything from `config` through the live-runtime clients — with their tests; only the MCP tool wiring, project templates and the live smoke phase remain.
 
 ## Prerequisites
 
@@ -42,7 +42,7 @@ mise run test         # creates .venv, installs the package editable, runs the s
 
 | Command | What it does |
 |---|---|
-| `mise run test` | The default gate: 152 unit tests, hermetic (no network, no JVM, seconds). |
+| `mise run test` | The default gate: 183 unit tests, hermetic (no network, no JVM, seconds). |
 | `mise run live` | The live-marked integration tests (real Defold downloads; minutes). |
 | `mise run setup` | Just rebuild `.venv` and reinstall (rarely needed directly). |
 | `.venv/bin/pytest tests/ -v` | Plain pytest when you want verbose single-file runs. |
@@ -57,6 +57,8 @@ mise run test         # creates .venv, installs the package editable, runs the s
 - `src/defold_mcp/docs_index.py` — the SQLite FTS5 index over Defold's docs corpus and the Asset Portal feed. See [the documentation FTS index page](architecture/docs-index.md).
 - `src/defold_mcp/editor_client.py` — the Live-Editor HTTP client (probe-based discovery, command/preview routes, the token-isolated `/eval` bridge). See [the Editor client page](architecture/editor-client.md).
 - `src/defold_mcp/bob_runner.py` + `test_runner.py` — headless builds and test runs (structured bob diagnostics, `TEST`-event parsing, guaranteed timeout kills). See [bob and headless test runners](architecture/bob-and-test-runners.md).
+- `src/defold_mcp/engine_client.py` — the running-engine protocol stack (binary Protobuf hot-reload, TCP logs, MP4 recording). See [the engine client page](architecture/engine-client.md).
+- `src/defold_mcp/bridge_client.py` — the automation bridge client (live scene, FIFO input, screenshots). See [the automation bridge client page](architecture/bridge-client.md).
 - `tests/` — one file per module. The suite is the specification of the modules above, including the verified Defold 1.14.1 fixture bytes for the round-trip contract.
 - `pyproject.toml` — package metadata, the `defold-mcp` console-script entrypoint (not yet implemented — see the [architecture overview](architecture/overview.md) for what is planned) and the pytest configuration (the `live` marker split and the asyncio fixture-loop pin).
 

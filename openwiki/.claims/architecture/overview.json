@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:707a84c0dd22c1e7df72c354685339d76b5848aa4d6ae3e1ca90e794a89fe743",
+  "pageVersion": "sha256:2fbaeb6a487db2d512cdd8947012182617a9e3f182a92e1a4ce50955b67c4e0e",
   "claims": [
     {
       "id": "claim_e8d9095eb07f49daa4286b0a85aa31d7",
@@ -62,23 +62,19 @@
     },
     {
       "id": "claim_b25ded6e891e4e7a9ea90a77788830d0",
-      "statement": "The src/defold_mcp package currently contains eight landed subsystems (config constants, the game.project editor, the textproto package, the toolchain manager, the deps syncer, the docs FTS index, the Editor HTTP client, and the bob/headless test runners) plus the package marker, with their tests under tests/; the wider server (FastMCP tool wiring, dual-mode editor/headless mutation routing, the engine service client and the automation bridge client) is planned but not yet implemented.",
+      "statement": "The src/defold_mcp package currently contains ten landed subsystems (config constants, the game.project editor, the textproto package, the toolchain manager, the deps syncer, the docs FTS index, the Editor HTTP client, the bob/test runners, the engine service client and the automation bridge client) plus the package marker, with their tests under tests/; the remaining work is the FastMCP tool wiring, project templates and the live smoke phase.",
       "evidence": [
         {
           "resource": "repo://src/defold_mcp/__init__.py",
           "version": "repo-file-v1:sha256:5e3d506e3254779b75aef97842ba2f7cddb59c2ec350561c7d1339630b59a8bf"
         },
         {
-          "resource": "repo://src/defold_mcp/bob_runner.py",
-          "version": "repo-file-v1:sha256:f3a7609b9fd890605b2c11988c06d705db437f35083a8b051d5805c1d63c9ba5"
+          "resource": "repo://src/defold_mcp/bridge_client.py",
+          "version": "repo-file-v1:sha256:32c4c8af13a31cfef3c9c57cfa4c29a97e18e8d2156d7480cda7f1ed8beb8867"
         },
         {
-          "resource": "repo://src/defold_mcp/editor_client.py",
-          "version": "repo-file-v1:sha256:01f56554bd7f21e10177bc0684d1cfcca643416b8e210f6b49445ef414f94ab4"
-        },
-        {
-          "resource": "repo://src/defold_mcp/test_runner.py",
-          "version": "repo-file-v1:sha256:f72df3a9501925db300a4264acedd47caed8c9aab39570393f3834d9a8d88cdd"
+          "resource": "repo://src/defold_mcp/engine_client.py",
+          "version": "repo-file-v1:sha256:b0593b4d6a93af337de15c482f6781d482d1ae010256d5eb62f7792fdcd7b5d1"
         }
       ]
     },
@@ -117,6 +113,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T02:39:02.076Z"
+    "at": "2026-11-15T04:08:33.115Z"
   }
 }

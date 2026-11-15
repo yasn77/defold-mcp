@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:d518f8ebf440e7886793da656707768098bf6e54203762b64d5064fd2432bc0c",
+  "claims": [
+    {
+      "id": "claim_6b4f0daaded94793b3809fd59c9ba609",
+      "statement": "The wire format is byte-exact: compiled_resource_path applies the atlas/tilesource-to-texturesetc, image-to-texturec and append-c mappings idempotently, encode_reload produces the exact repeated-field-1 bytes, @system int32 messages use tag 0x08 plus varint (negatives deliberately rejected), reboot string args use tags 0x0a through 0x32, and a single chunking primitive batches reload bodies under the 1024-byte cap with order preservation.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/engine_client.py#L80-L182",
+          "version": "repo-lines-v1:sha256:9deacaf7bbcabc6ddc52d6f6af5957d57a5760907319845fb42f674c3d4b8887:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAzLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJkYTNmMTg1MGNlNjliZTY1YjFlMjYwMGUwNDRiMGM4MmNkM2EwZDUxY2ExZjdhMDdmNDkzMjlmZmUxMDkyNTgxIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI5ZDQ1ZDNjMzc4NWVlNWUzMWZmNjhlNzNkMzBhYTI0MWMyYmQwOTY4NjIxZTIxYzVjNzI2MjRlOTgzOTI4Y2U2IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI3MDljYmM1MzhhZjljZDk3NTk4MTdmN2QzODkwZTkyOTEzYjBhZTVmMDRlYWFhZDhjMDE1ZWYwNzA2MmI5YTEwIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI0NjA2NWEzOWNhNzg5MzdlYWM4ODY0ZmJkOWQ0NmJiZmU2Mzg3YzM2MDFhMmQyZmM1MTE2NmE0YmNjNDczMDdhIn0"
+        },
+        {
+          "resource": "repo://tests/test_engine_protobuf.py#L157-L307",
+          "version": "repo-lines-v1:sha256:4e6fb5990dac786cf0de5b17dd435e551b5f3286ef8445ddb5d6a68040bbbf12:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwYWMwNzhlZTg1MGJkMjliNThlMWFiNDVhZWU2NTViOTViMDRmMWQ1N2M2ZDU2MGM2N2JlZTU2NDk2ZjVjNGYzIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJlYWJiNGU3ODQ4ODNkZmNkOTc3ZjcwZWNmMjU5Y2M2NjNhMTFmOGY5OTUxNTk5NWRlOWVjNzZlMzBhMGU5ZjNkIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIwZDRmMjE4ODdjYTM1MzA2Nzg2ZDk1M2I1NTNjM2NmMjFkZDlmYzE2NjNlN2RkNThhOGJkZjI0ZjBhYjU5NmExIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIyMDk4Njg5OWJiOTcyYjM4M2I4MDBjMGM4M2I3NTEyM2Y2OTg2NDJiOTM2ZTViMGJhNGJmNGQxOTY5MmJiOGViIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_eddc460bf1554f30bc3a57dbd0d772c6",
+      "statement": "The TCP log collector verifies the 0-prefixed handshake (self-cleaning on timeout via idempotent teardown), discards it, buffers lines into a 5,000-entry ring on a daemon thread, and serves slice() with absolute offsets that survive eviction: start clamps to the oldest retained line and next_offset equals start plus the window length, so paged reads are disjoint and monotone.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/engine_client.py#L300-L420",
+          "version": "repo-lines-v1:sha256:4d30837f26212b23fe7b26a4903ede1c95393f52c00a9bb67f926770f4fdb428:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJlMzE3M2I5YTQzNzZmM2I0OWMwOTUxOWM5MzA0MDcxODVjZTQ3YzY5NGIyZmQzMWMyMDQ1NjNlNjIwZDM2NzNkIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI3MGVjMjkwNGZhMDQwM2NmY2Y3MzE4ODEwMGNlOGEzNDU2OWEwZDQ2NWFlN2U3OTIyYzIzZjAyODM3MTM2OTk4IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJjYTZkMGQyOTA3ZDY1ZGY2ZGE4N2U4YWI3YWNlNzlkZjJjYzIzMWI5YTFjNzhjNzZiNDA4OTQ1ODFmMTVhZTI1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI1ZDg1MDM1MjA2Mzg4YzI2OTdiYjFkYjg3YTBmMDFlNzE2ZTIwODIwNGE4ODhhYjk4Njg1Njk2YjQzM2I2MTM2In0"
+        },
+        {
+          "resource": "repo://tests/test_engine_protobuf.py#L345-L475",
+          "version": "repo-lines-v1:sha256:3e4d01fe5d4133ba7f31ab02c381726595aa6639fb24682545d6bf8d5aa195ac:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI0MjA0YmFlYTlhN2YxZTUzM2I1MWQwYjE4OTc3MmEwYWFkYzc4MmMxNDBjZmVmNzI1YTQ4MmU5ZjE3N2Q3OWZkIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJmYjlmYmVjODRhYWMyZTg5OTZjYjBmMDU5YTAzNWFhYzczNDBmYjYwZTgzYTM4NTQwM2NhYmUyZmY3ODMzNzAyIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI3M2YzZjkzNDBhMjA2MThlNTQzZWVlM2JiODYyOTE0YTA2OGU4NTk0ZWUyNDY3ZTdmM2Y2Y2YyZGNhNGRkMmFmIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI4YWJhNWYyOTg2YjIzOTY4YjhmYjA2ZjdmZTg5ZmNkNzc3ZDRkMDZjODhiNmMwYWRjZjk4ODMxYmFmODhjNDQ1In0"
+        }
+      ]
+    },
+    {
+      "id": "claim_06963eae5e004f5abd08949e7737e620",
+      "statement": "The recording client checks the stop response before polling (a failed stop never falls through to the engine-global status), polls until finalized and complete, verifies byte length and sha256 against the receipt, saves atomically, DELETEs the file exactly once, and carries the orphaned file_id on verification failures.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/engine_client.py#L440-L606",
+          "version": "repo-lines-v1:sha256:f5c7713297b71db72662155e8345d31434cf68a5c795e7df6a051bbf4903af4a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTY3LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI2ZWU5YzczOTIyMWM0NTJmNTI3YWQ0Y2FiODk3NjYwMjJiOTdhMzYxMWRlMzJjOTk1NmMyZmQzMWU2MzVjYTU3IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJlNmIwNDQ5MTQ2OTcyMmU4MzYzYTk0ZTQwNDQ1MzhlMDEzYTJhMjE3ZTM2YjFlNTY4YmE2MGFjYjdiNGM4ZjJlIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4OTk1ZTg4MmE4NGE4ODdjMjg2MDRmODlmNzNmOTQwYmUyNTE1M2Y1N2JjY2RlNjk4MjdiYzkzNjM2Y2I4MTAzIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        },
+        {
+          "resource": "repo://tests/test_engine_protobuf.py#L481-L637",
+          "version": "repo-lines-v1:sha256:6eecf588bc152bff9933610ac36ead01f23282e5de6a17b9dcd2f26df98a7dfb:eyJzZWxlY3RlZExpbmVDb3VudCI6MTU3LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIzY2U2ZmZhNzgwNzc5YmUyODAyZGJjN2ViZWE1YzUxMWE5OTg0NWEwN2RkZDZkMTcwMzc2YjNiN2RhYWJmM2QzIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJlYzhkOWM3OTk5ZWRjYjY1Y2NlNDVhOGRjYzc0ZTY4NWNjNWQzZDUyZmExNjNjNTYwYmM4NjA2NTI0NjJlOTk1IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIyYjg1YjUwZmM0YTBjZDhjNzZhYzVhMjEwYjVlNWZhMjcxY2ZiOTUyMzA4MGEyN2Q5YjI3MTI5NTdlOGJmOTA2IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        }
+      ]
+    },
+    {
+      "id": "claim_45b1f55524bc4780aa380fdf7436c6e9",
+      "statement": "resource_reload raises on any non-2xx chunk POST with the count of already-posted chunks attached, and the engine port is discovered by the INFO:ENGINE service-started regex over engine stdout with the 8001 fallback documented for standalone launches.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/engine_client.py#L184-L215",
+          "version": "repo-lines-v1:sha256:ba807193bbdcf4f548f3988a2b60cd1ff34c420d3d5cf0928ad749210d7bb367:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRiZjIxYzg0NTk0ZDc5MTllZTQ0N2U2Mzg2ZjNiNTE2ZjBkZDY1ZDNmOWZhMDNhYTM1OWI3ZjU5NDNkZWE3MGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYxYzU2MzU5ZjM1NDQ4MWVjNDZjY2JlODA4N2E0NDlkY2EzZDJmZDkyZDU4YmE1MGNmN2IxN2ZkZWRjNDhhN2EifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/engine_client.py#L237-L280",
+          "version": "repo-lines-v1:sha256:b0bd5f3f1baab29074b89716240b7ab1a5308660099b01a3d3017f58eec55395:eyJzZWxlY3RlZExpbmVDb3VudCI6NDQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlmNjU0ODM0NDJmMWM1NGI3YTFmMzUxZWMyMTRhZGEzNWUzNzQ4OWNiM2VlNjA3YzYwNTYxYmI5YmU3ZGJhMjkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg5MTNjMWJmYjVmNjcwNzM3Yzc1N2QwNTlmMDRjYjQxZTIyZGEzZTY1ZDM0MzdkODEwZTFhNjkzZTFjZTNkZWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYxYmJkNjhiM2I4MzU4NGE0ZTQ4MWM0ZDlhODNlMTcxNjllZWFiMGQyNWYxNmQxM2IxOWY0Yzg2MTY1YmJhNGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYyYWZlNzNjMDAwZDhlYjhiMmE4MmJkMjMzY2ZkNDE3NDA0NDNjZWU4NzVkNzk3YzY5ODZjZTRhZWY1ZGJmNGYifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T04:08:33.115Z"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:11fc0046bb241f86c20ed0495f8e02a1c22337811d2e98ad157a03034200b51b",
+  "pageVersion": "sha256:8ec64b03850a2fbaa32b1e14d489f9eccbc29b73fd23b27d0a830bf6e35d1adb",
   "claims": [
     {
       "id": "claim_b0b9f01199ef441ab2d63ce8d85a6200",
@@ -18,7 +18,7 @@
     },
     {
       "id": "claim_c216c2c03bfe43d3ae042a30548f9a4c",
-      "statement": "The default gate ('mise run test') is hermetic — 152 tests across the seven suite files under tests/, requiring no network, Defold installation or JVM — while live-marked integration tests are opt-in via 'mise run live'.",
+      "statement": "The default gate ('mise run test') is hermetic — 183 tests across the nine suite files under tests/, requiring no network beyond loopback, Defold installation or JVM — while live-marked integration tests are opt-in via 'mise run live'.",
       "evidence": [
         {
           "resource": "repo://mise.toml",
@@ -32,25 +32,25 @@
     },
     {
       "id": "claim_3fb8242c97fa41959ff02a2c0a28ac13",
-      "statement": "The codebase is mid-build with eight landed subsystems (config constants, the game.project editor, the textproto package, the toolchain manager, the deps syncer, the docs FTS index, the Editor HTTP client and the bob/test runners) plus their tests; the MCP server itself, its tools and the remaining clients are planned but not yet implemented, and the defold-mcp console script declared in pyproject.toml has no implementation yet.",
+      "statement": "The codebase is mid-build with ten landed subsystems — config constants, the game.project editor, the textproto package, the toolchain manager, the deps syncer, the docs FTS index, the Editor HTTP client, the bob/test runners, the engine service client and the automation bridge client — plus their tests; the remaining work is the FastMCP tool wiring, project templates and the live smoke phase, and the defold-mcp console script declared in pyproject.toml has no implementation yet.",
       "evidence": [
         {
           "resource": "repo://pyproject.toml",
           "version": "repo-file-v1:sha256:38b46bf1d1248c02b1d6ab13e3bcfb8433ebfabbfbcc306a9b88b38c4a12514e"
         },
         {
-          "resource": "repo://src/defold_mcp/bob_runner.py",
-          "version": "repo-file-v1:sha256:f3a7609b9fd890605b2c11988c06d705db437f35083a8b051d5805c1d63c9ba5"
+          "resource": "repo://src/defold_mcp/bridge_client.py",
+          "version": "repo-file-v1:sha256:32c4c8af13a31cfef3c9c57cfa4c29a97e18e8d2156d7480cda7f1ed8beb8867"
         },
         {
-          "resource": "repo://src/defold_mcp/editor_client.py",
-          "version": "repo-file-v1:sha256:01f56554bd7f21e10177bc0684d1cfcca643416b8e210f6b49445ef414f94ab4"
+          "resource": "repo://src/defold_mcp/engine_client.py",
+          "version": "repo-file-v1:sha256:b0593b4d6a93af337de15c482f6781d482d1ae010256d5eb62f7792fdcd7b5d1"
         }
       ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T02:39:02.076Z"
+    "at": "2026-11-15T04:08:33.115Z"
   }
 }
