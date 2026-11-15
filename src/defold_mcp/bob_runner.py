@@ -271,7 +271,7 @@ def run_bob(
     project_root: "str | Path",
     commands: list[str],
     *,
-    spec: str = "stable",
+    spec: str = config.DEFAULT_DEFOLD_VERSION,
     platform: "str | None" = None,
     variant: "str | None" = None,
     archive: bool = True,

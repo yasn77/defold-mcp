@@ -52,7 +52,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from defold_mcp import bob_runner, toolchain
+from defold_mcp import bob_runner, config, toolchain
 
 # One JSON object per line after the literal ``TEST `` prefix.
 _TEST_EVENT_RE = re.compile(r"^TEST\s+(\{.*\})\s*$")
@@ -226,7 +226,7 @@ def build_test_collection(
     project_root: "str | Path",
     test_collection: str,
     *,
-    spec: str = "stable",
+    spec: str = config.DEFAULT_DEFOLD_VERSION,
     client: Any = None,
     timeout_s: float = 600,
 ) -> "bob_runner.BobResult":
@@ -272,7 +272,7 @@ def run_headless_tests(
     test_collection: str,
     *,
     engine: "str | Path | None" = None,
-    spec: str = "stable",
+    spec: str = config.DEFAULT_DEFOLD_VERSION,
     timeout_s: float = 60,
     config_overrides: "dict | None" = None,
     client: Any = None,

@@ -877,7 +877,7 @@ def test_live_defold_1_14_1_build_and_headless_test(client: StdioClient) -> None
         {"spec": "1.14.1", "install_jdk25": True},
     )
     assert setup["ok"] is True
-    assert setup["version"] == "1.14.1"
+    assert setup["version"] == config.DEFAULT_DEFOLD_VERSION
     assert setup["sha1"], "the pinned spec must resolve to a build sha1"
 
     bob_jar = Path(setup["bob_jar"])

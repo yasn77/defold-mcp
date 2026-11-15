@@ -18,6 +18,9 @@ GITHUB_RELEASES_BASE = "https://github.com/defold/defold/releases/download"
 # Asset store dependency index used for third-party dependency resolution.
 ASSET_STORE_JSON_URL = "https://insality.github.io/asset-store/dependencies_store.json"
 
+# Pinned default Defold engine version used when no spec is supplied.
+DEFAULT_DEFOLD_VERSION = "1.14.1"
+
 # Defold 1.14.x ships a bob.jar requiring OpenJDK 25 (class file version 69.0).
 MIN_BOB_JAVA_MAJOR = 25
 
