@@ -59,6 +59,10 @@ The live smoke (`@pytest.mark.live test_live_defold_1_14_1_build_and_headless_te
 14. **bob treats the settings file's directory as a content root** — the settings file must live in a private `tempfile.mkdtemp()` (removed in `finally`), never in the project (relative-path conflict) or plain `/tmp`.
 15. **bob's log4j `SEVERE  <message>` lines are hard failures** — now parsed as error diagnostics (resource/line `None`), and compile/bundle failure responses carry a 2,000-char `stdout_tail` so agents can self-correct.
 
+## CI live smoke (`.github/workflows/ci.yml`)
+
+16. **`dmengine_headless` links X11 and OpenAL** — "headless" means it opens no window, not that it is library-free: `ldd` on the 1.14.1 x86_64-linux binary lists `libX11.so.6`, `libXext.so.6`, `libXi.so.6`, `libxcb.so.1`, `libXau.so.6`, `libXdmcp.so.6` and `libopenal.so.1`. A desktop host already carries them, which is why the smoke passed locally; the first GitHub-hosted runner run (a server image) instead let the dynamic loader refuse the engine, so it exited non-zero before any `TEST` event and `defold_test_run` answered `{ok: False, run: None, passed: 0}`. The live job now installs `libx11-6 libxext6 libxi6 libxcb1 libxau6 libxdmcp6 libopenal1` before `mise run live`, and `tests/test_workflows.py::test_live_job_installs_the_engine_runtime_libraries` pins both the package list and the step order. The same gap bounds the published image: it is a minimal Chainguard build, so it serves the MCP server, `defold_compile`, `defold_bundle` and the docs tools but not `defold_test_run` or `defold_run` (`docs/INSTALL.md`, Troubleshooting).
+
 ## Operational facts
 
 - The artifact cache (`~/.cache/defold-mcp`) holds ~428 MB: `jdk-25/`, `defold-1.14.1/` (bob.jar, dmengine_headless), `builtins.zip`, `ref-doc.zip`, `docs.db` (≈4,100 docs: 2,142 lua_api, 1,145 cpp_api, 140 manuals, 140 examples, 262 assets), `resource-cache/`, `versions.json`.

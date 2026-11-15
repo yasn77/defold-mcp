@@ -83,6 +83,21 @@ jobs:
         with:
           install: true
 
+      # `dmengine_headless` is headless only in the display sense: the 1.14.1
+      # x86_64-linux binary dynamically links libX11, libXext, libXi, libxcb,
+      # libXau, libXdmcp and libopenal, and the GitHub-hosted runner image is a
+      # server image with none of them. Without them the dynamic loader refuses
+      # the engine, so it exits non-zero before printing a single TEST event
+      # and `defold_test_run` answers `{ok: False, run: None, passed: 0}` —
+      # the first live run failed exactly this way. A desktop host has the
+      # libraries already, which is why it passes there. The runner user has
+      # passwordless sudo.
+      - name: Install the engine's runtime libraries
+        run: >-
+          sudo apt-get update &&
+          sudo apt-get install --yes --no-install-recommends
+          libx11-6 libxext6 libxi6 libxcb1 libxau6 libxdmcp6 libopenal1
+
       # Real downloads, a real bob build under JDK 25, a real headless TEST
       # run and a real wasm-web bundle against Defold 1.14.1.
       - name: Run the live Defold smoke
