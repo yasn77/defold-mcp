@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:69b04b69d88abdfec05a64ccfa96ffd9fd53b2ac3224b85fa548f66354f6fecb",
+  "pageVersion": "sha256:51386f528e834fb303125f83646268562ff23b98198c3d5710feb30817d1ce6f",
   "claims": [
     {
       "id": "claim_b0b9f01199ef441ab2d63ce8d85a6200",
@@ -12,59 +12,59 @@
         },
         {
           "resource": "repo://pyproject.toml",
-          "version": "repo-file-v1:sha256:38b46bf1d1248c02b1d6ab13e3bcfb8433ebfabbfbcc306a9b88b38c4a12514e"
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
         }
       ]
     },
     {
       "id": "claim_c216c2c03bfe43d3ae042a30548f9a4c",
-      "statement": "The default gate ('mise run test') is hermetic — 294 tests across the twelve suite files, requiring no network beyond loopback, Defold installation or JVM — while the live-marked smoke is a separate opt-in gate via 'mise run live' (real Defold 1.14.1, ~10 s warm against a 428 MB artifact cache).",
+      "statement": "The default gate ('mise run test') is hermetic — 335 tests across the fourteen suite files, requiring no network beyond loopback, Defold installation or JVM — while the live-marked smoke is a separate opt-in gate via 'mise run live' (real Defold 1.14.1, ~10 s warm against a 428 MB artifact cache).",
       "evidence": [
         {
           "resource": "repo://mise.toml",
           "version": "repo-file-v1:sha256:9faf378f5b65c1a8cff4507e6e030edecaab7585c86fbf5da232c93e2432ec0c"
         },
         {
-          "resource": "repo://pyproject.toml#L22-L30",
-          "version": "repo-lines-v1:sha256:f0b905a9c934af5802f97042a9b049e57cdff97b669d1ecdb1419b517c0ea8ed:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGVhYjRlYzYzZGU1MTdkYTRjZDhlNWM4MzA3ZmIyYzc3MzdkMzkxOTBhYjY5ZjMyYTVlOWVmODFlYTQ0MTZkZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjk0MTZlMDlmNzhiYTMxNmMwMzI1NjgyMTNiODU1ZWU3NTZlNDE1NjVkOTE4ZjA5NTE5YzgxZmQ2MjBmNDA2MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzg4NTgxNDliNDM1NmMyYzBlOWUwMWY1MjM0MDA2NjU2OGM4NDVhM2I0NzEzN2Y1MzI3OTI0MzgyZWM4OWQwNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
         }
       ]
     },
     {
       "id": "claim_3fb8242c97fa41959ff02a2c0a28ac13",
-      "statement": "The project is complete: everything through the twenty-tool MCP server, the portable defold skill and the harness registration is landed and live-verified against real Defold 1.14.1; the server is registered in OpenCode and the skill is symlinked into the OpenCode skills directory.",
+      "statement": "The project is complete: everything through the twenty-tool MCP server, the portable defold skill, the CLI subcommands, the Chainguard container and the CI/release/Renovate automation is landed and live-verified against real Defold 1.14.1; the server is registered in OpenCode and the skill is installed.",
       "evidence": [
         {
-          "resource": "repo://docs/INSTALL.md",
-          "version": "repo-file-v1:sha256:25f9b3744309cbf9ac2770a06d455b7693f04d25049c9d799acda94c02b3f245"
+          "resource": "repo://Containerfile",
+          "version": "repo-file-v1:sha256:fa9f472e538ea3064a8c57444344adfb91ee1f3df68d458dc8705c78b16c32a6"
         },
         {
           "resource": "repo://skill/defold/SKILL.md",
           "version": "repo-file-v1:sha256:0ea4ce9f5d06a878667e414c9a021ca552a4d0ce9aba5e782f0d8d6c08163f8d"
         },
         {
-          "resource": "repo://src/defold_mcp/server.py",
-          "version": "repo-file-v1:sha256:e77c991726fe59373473557e8ef2e765cbd34d858a9b84a5d6cb20c8b2811ccf"
+          "resource": "repo://src/defold_mcp/__main__.py",
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
         }
       ]
     },
     {
       "id": "claim_9d887ffdfb36470bb49ec914685a913c",
-      "statement": "The defold-mcp console script runs the MCP server with stdio as the default transport and streamable-http available via a flag, and the e2e suite proves the real binary speaks the newline-delimited JSON-RPC handshake with exactly twenty tools.",
+      "statement": "The defold-mcp console script runs the MCP server with stdio as the default transport and streamable-http available via a flag, exposes the skill install and integration install subcommands, and the e2e suite proves the real binary speaks the newline-delimited JSON-RPC handshake with exactly twenty tools.",
       "evidence": [
         {
           "resource": "repo://src/defold_mcp/__main__.py",
-          "version": "repo-file-v1:sha256:be5809fe0648ce16686722dd44e5372139e2be48d624f9e8d2437b32b42c90c2"
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
         },
         {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py#L228-L267",
-          "version": "repo-lines-v1:sha256:038989c4cd8b2e1f91ed73536cc466a73924ddbcc4d9de5bb2df94602afb0a4e:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjOTg1ODBlOTkxOTgyMjVmODUwZDcyNzI5ZDk3Y2IwMTU0NzA1MDg1YTM3OWVjMTZiZjVmNmU5MjE3OGMwOGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUyMTk1YjczNzE4MGU5YmUxZWFjYTcyMDM5YmUzYmRlMTkxODgwMjY5MjYyYzI3NTAyMTA2Y2MxZDE4NGFkNzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyOTdmYjcyZjc3Y2QxNTI4MjQwNmNjMmZlM2ExMDIzMjFmMTQ0ZWYxNTBiYTY5MzE1NzFlYWNhZjZhZmMwNDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM1MTQ2MmFiMjY3MzkzMzgwOGNlNDdlNzdmMjI1MDgwN2M0ZmI1YjBkNGU3NzU2MTFjOTQyOWJlNDVjNmI2ZjcifQ"
+          "resource": "repo://tests/test_mcp_stdio_e2e.py",
+          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
         }
       ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T15:05:00.624Z"
+    "at": "2026-11-15T16:38:15.389Z"
   }
 }

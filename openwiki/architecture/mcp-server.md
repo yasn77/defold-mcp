@@ -5,7 +5,7 @@ description: The MCPServer tool layer — twenty defold_* tools, root resolution
 tags: [defold, mcp, server, tools, stdio]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T14:41:05.547Z
+    at: 2026-11-15T16:38:15.389Z
 sources:
   - id: openwiki-source-1370c63fa3e69beb9835d3e9
     resource: repo://src/defold_mcp/__main__.py

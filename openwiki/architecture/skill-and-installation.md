@@ -5,7 +5,7 @@ description: The portable defold skill package (SKILL.md with the 53-char trigge
 tags: [defold, skill, installation, mcp, registration]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T15:05:00.624Z
+    at: 2026-11-15T16:38:15.389Z
 sources:
   - id: openwiki-source-1141fa420136f17e342feb42
     resource: repo://docs/INSTALL.md
@@ -15,6 +15,8 @@ sources:
     resource: repo://skill/defold/references/proto-schemas-quickref.md
   - id: openwiki-source-e86976ecdb1a581288e2f627
     resource: repo://skill/defold/SKILL.md
+  - id: openwiki-source-1370c63fa3e69beb9835d3e9
+    resource: repo://src/defold_mcp/__main__.py
   - id: openwiki-source-aa7bb9cc08c41acd52278b2d
     resource: repo://src/defold_mcp/server.py
   - id: openwiki-source-ce941463b68b754d5210fcd3
