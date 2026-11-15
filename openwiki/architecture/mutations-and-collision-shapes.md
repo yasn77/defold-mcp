@@ -5,7 +5,7 @@ description: The textproto mutation layer — add_component's embedded/reference
 tags: [defold, textproto, mutations, collision, png]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-14T22:05:56.160Z
+    at: 2026-11-15T13:47:50.676Z
 sources:
   - id: openwiki-source-ce941463b68b754d5210fcd3
     resource: repo://src/defold_mcp/textproto/mutations.py
@@ -13,7 +13,7 @@ sources:
     resource: repo://src/defold_mcp/textproto/schemas.py
   - id: openwiki-source-c7f35c27a3e804b5af2c8277
     resource: repo://tests/test_textproto_roundtrip.py
-generated: { by: "opencode", at: "2026-11-14T22:05:56.160Z" }
+generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
 ---
 
 # Mutations and collision shapes
@@ -42,8 +42,12 @@ Appends a component to a `.go`-shaped tree, honouring the real Defold split betw
 
 ## Open questions carried from review
 
-- The 16-vertex hull cap follows the plan ("Box2D polygon limit"); stock Box2D `b2_maxPolygonVertices` is 8. Verify against Defold's physics documentation before shipping collision generation (tracked for the server-wiring task).
-- Whether the Defold editor accepts **embedded** `.particlefx` components is unverified; the guardrail currently blocks it (conservative bias).
+- The 16-vertex hull cap follows the plan ("Box2D polygon limit"); stock Box2D `b2_maxPolygonVertices` is 8. Verify against Defold's physics documentation before shipping collision generation (tracked for the **live smoke phase**).
+- Whether the Defold editor accepts **embedded** `.particlefx` components is unverified; the guardrail currently blocks it (conservative bias). Live verification pending.
+
+## The operations registry (added in the server-wiring phase)
+
+`apply_operations(tree, operations, extension=None)` layers the plan's full 14-op mutation vocabulary over this module's primitives: registry dispatch with `ValueError` naming the offending op index, deep-copied input, and the result normalised through `decode_embedded_data` so fresh resources round-trip byte-exactly. Every op validates single-line strings through the same guards as `add_component`. See [templates and the mutations registry](templates-and-mutations.md) for the op list and the end-to-end byte-exactness contract.
 
 ## Where the behaviour is pinned
 

@@ -1,11 +1,11 @@
 ---
 type: testing
 title: Testing and gates
-description: How defold-mcp is tested — the mise setup/test/live task chain, the pytest live-marker separation, the asyncio fixture loop pin, and what the current 183-test suite covers thematically.
+description: How defold-mcp is tested — the mise setup/test/live task chain, the pytest live-marker separation, the asyncio fixture loop pin, and what the current 265-test suite covers thematically.
 tags: [defold, testing, pytest, mise, gates]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T04:08:33.115Z
+    at: 2026-11-15T13:47:50.676Z
 sources:
   - id: openwiki-source-72b5d686f860ea86c8592080
     resource: repo://mise.toml
@@ -13,19 +13,19 @@ sources:
     resource: repo://pyproject.toml
   - id: openwiki-source-e200d53fe0347c46249510fb
     resource: repo://tests/test_bob_diagnostics.py
-  - id: openwiki-source-3ff7724e8a892710545e18d3
-    resource: repo://tests/test_bridge_v2.py
   - id: openwiki-source-aa918e62d579257ce43a1ddf
     resource: repo://tests/test_deps_sync.py
   - id: openwiki-source-4100c25666ae22e213937002
     resource: repo://tests/test_docs_fts.py
-  - id: openwiki-source-b70833c89ec665a468448695
-    resource: repo://tests/test_engine_protobuf.py
+  - id: openwiki-source-ec5f3515eba7d123ca68e770
+    resource: repo://tests/test_mcp_stdio_e2e.py
   - id: openwiki-source-d0ba0764c79275c3c198800b
     resource: repo://tests/test_project_ini.py
+  - id: openwiki-source-6adafae9b5e5047999e93399
+    resource: repo://tests/test_templates.py
   - id: openwiki-source-c7f35c27a3e804b5af2c8277
     resource: repo://tests/test_textproto_roundtrip.py
-generated: { by: "opencode", at: "2026-11-15T04:08:33.115Z" }
+generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
 ---
 
 # Testing and gates
@@ -47,7 +47,7 @@ The gates are intentionally split: unit tests stay fast and hermetic (no network
 
 ## What the current suite covers
 
-183 tests, thematically:
+265 tests, thematically:
 
 - **Config (6, in `tests/test_config.py`):** cache-dir resolution; the exact six-entry ordered `COMPILED_SETTING_KEYS` tuple; the hard constants (Java 25, 1024-byte POST ceiling, default engine port); host-platform shape (skipif-guarded) and the unsupported-pair `ValueError` message.
 - **game.project editor (18, in `tests/test_project_ini.py`):** root resolution (walk, env var, eight-parent cap); compiled-path `c` suffix idempotency; indexed and legacy dependency forms and gap-free rewrites; `include_dirs` splitting; line preservation, CRLF byte-fidelity, missing-section creation, blank-line-aware insertion; values containing `=`; `get()` defaults; `delete`/`delete_section`; injection guards.
@@ -58,6 +58,9 @@ The gates are intentionally split: unit tests stay fast and hermetic (no network
 - **Runners (21, in `tests/test_bob_diagnostics.py`):** bob diagnostics (both prefixes, JVM noise filtering, missing-line case), build-report top-10/total/shapeless rejection, missing-report degradation with warning; `run_bob` argv construction and cwd via fake `java` executables that write their argv to files, the java-missing error path, timeout kill with partial output and **no orphaned process**; test-stream parsing (TEST events, run-id gating with runless rejection, per-test statuses, suite totals, DefTest fallback only without TEST events), `--config` override rendering (booleans lowercase, multi-flag), `.collectionc` idempotence, `game.project` byte-identity across runs, engine timeout kill.
 - **Engine service client (25, in `tests/test_engine_protobuf.py`):** the exact wire-byte vectors (reload, system int32/string messages, two-byte varints); the chunker boundary with reassembly and order checks; a real local asyncio TCP server driving handshake verification, the 5,000-line ring, **eviction-safe pagination** (the two-read disjointness invariant) and filter semantics; the mocked recording protocol (headers on both calls, stop-500 aborts before polling, receipt verification, orphaned file_id, DELETE-exactly-once).
 - **Automation bridge (16, in `tests/test_bridge_v2.py`):** the DLIB 500 unwrapping (structured 409/stale_scene), raw-500 degradation, 200-with-ok-false tolerance; inspection routes with both element shapes; lease acquire/no-re-PUT/renewal-same-UUID; the full click flow with guards; automation_id not-found; poll timeout with last status; screenshot success, sha mismatch and the verified-flag honesty check.
+- **Templates (21, in `tests/test_templates.py`):** all four profiles render with per-profile physics/engine/HTML5 keys; the rendered main.collection round-trips byte-exactly through parse→serialize; the embedded sprite (2D) / camera (3d_pbr) trees; the licence notice module mounted and printed by all four profiles; Lua-escaped titles; dependency URL wiring; unknown-profile rejection.
+- **Mutations registry Part C (29, in `tests/test_textproto_roundtrip.py`):** one test per registry op (create, add_instance, add_embedded_instance, add_subcollection, add_component, set_property, remove_child, atlas ops, tilesource/tilemap, gui ops, collision_add_shape both variants) plus guard rejections (multiline strings, missing types), unknown-op indexed errors, and the end-to-end create→add_component→add_instance→serialize→re-parse byte-exact chain; TestSchemaOrderedSerialisation pins the extension= canonical ordering and the default's byte-exactness.
+- **Stdio e2e (14, in `tests/test_mcp_stdio_e2e.py`):** drives the REAL defold-mcp binary over newline-delimited JSON-RPC — the handshake and exact-20-tools list in order; the project_init → info → mutate → inspect workflow over real files with byte-exact assertions; **traversal containment over the live server** (`..`, normalised, symlink escapes rejected; inside-root allowed); the 25k cap on escaping-heavy payloads; payload-dialect editor routing with a stubbed probe; double-run orphan prevention; filtered process-log paging (disjoint, monotone, eviction-safe); backend-key honesty; stdout purity (every frame parses as JSON); clean SIGTERM.
 
 ## Conventions
 

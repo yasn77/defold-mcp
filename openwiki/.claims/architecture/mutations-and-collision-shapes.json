@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:bf88ca48d594e6bde7b203f296cf39d3bd1b258fc856ead39400d0dcd66909de",
+  "pageVersion": "sha256:0dacc0f088c19173d1335ff0a04f4763b1177e55898b1f44ba223da62e112c64",
   "claims": [
     {
       "id": "claim_409d5dd6f1814f159d6949035c9bb2ce",
       "statement": "add_component appends embedded components as {id, type, data} to embedded_components and referenced components as {id, component} to components, matching the real Defold PrototypeDesc layout where referenced entries carry no type field.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/textproto/mutations.py#L26-L92",
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L33-L99",
           "version": "repo-lines-v1:sha256:1ed131034adf522a602103f5019ddba0f6b96e3648a02f17a51e8c5c0c8e5a6c:eyJzZWxlY3RlZExpbmVDb3VudCI6NjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2YmQ1OGYzZDQxMTk0OTcwNzZjOTg2MDgwODBiZWZjOThhNDZiNGYwYjkzYmI2YWQxN2I4MGY5ODE0M2VjNDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJmODA2MGU5ZmQyZWY3MDYxNWZjYmI3ODBkZTQzMjcxZGEzZjY5NDRkZWVmZDUwYzM5ZWUxMzI3ZmE2ZGEzMmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg4YWJjOGFhOTljOTEzYmFjMmI0MDQ5YjFlYTg5ZmI0YTQ5ZDQyNzFiOTdkZWUxYmE5ZDhhMWJiZTE5MzU0ZWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQyNTc2NDAxODY1MmNjYjA0ZGI4YWQxZDhmYjQ2YmY0MjYxNjI4OTkxYzViODQxZjFiNzNlMGE5MmQ5MTEyYzIifQ"
         },
         {
@@ -21,11 +21,11 @@
       "statement": "Embedding a component whose type is in NON_EMBEDDABLE_TYPES raises ValueError before any mutation, with the exact message 'GUI components (.gui) cannot be embedded inline; add as a referenced component' for gui, and the tilemap type is normalised to tilegrid on the embedded path via EMBED_TYPE_NORMALISATION.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/textproto/mutations.py#L53-L92",
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L60-L99",
           "version": "repo-lines-v1:sha256:78f8475c12e22ecfd630f73871d6558d15c9028ad01f8cb06b4494d88e38a7ea:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1MDA5NGIwZmRhZWEyYjA4YWU5YzM3ZWJiYjlkNGY2YjhiYjM2MzliNThhM2Y5OTNiNGJjZjRkZDY1OTRhZjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJmODA2MGU5ZmQyZWY3MDYxNWZjYmI3ODBkZTQzMjcxZGEzZjY5NDRkZWVmZDUwYzM5ZWUxMzI3ZmE2ZGEzMmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY0MzEzOGVlYTU3NGI2NTJiOThiZTJkMDA1Zjc0NzYxZTRkNTczOWU1OTM3Zjk4YmM3MmExYjJiYjNlMWM3NjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQyNTc2NDAxODY1MmNjYjA0ZGI4YWQxZDhmYjQ2YmY0MjYxNjI4OTkxYzViODQxZjFiNzNlMGE5MmQ5MTEyYzIifQ"
         },
         {
-          "resource": "repo://src/defold_mcp/textproto/schemas.py#L108-L125",
+          "resource": "repo://src/defold_mcp/textproto/schemas.py#L110-L127",
           "version": "repo-lines-v1:sha256:8dd981d920ff9874afef54c7e244303edf3de391d93516eefda94b29b34d79f2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNiMmY2MWY0ZGJhNTM0N2I0N2E2Y2ZhNDhjYmEwOGM1NWE0MzQ4N2FiOGI2ZDUzZWYzOGUyZGZjMWQwMDkzZDciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJmNmIwNjAzMWFlMzk1ZTY0NTlkYzU4NjIzOGRlOWJmMDFjNDNlYTZkOTIxOGI3OGUxNzVjM2ZjZGU2NDE0ZDciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRmZGVlMzU0ZGI1MTcxZTQ3MGU4MWMzYzMzY2ZlODY3Y2M5YzIxMmZkYzRiNzQ3M2Q0M2JhMTk0MTJmYjBmNzQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUwYjM4MTg3ODBlYzEzM2IwMGFhYmU0MTdhMjUzZDk3NTI1ZWNhYjVjOGRiZjIzNzJjYWMyYjhjNDE0ODhmNzcifQ"
         }
       ]
@@ -35,7 +35,7 @@
       "statement": "add_component rejects newline and carriage-return characters in component_id, component_type and referenced-mode data with ValueError before any mutation, while embedded data stays unconstrained as proto content escaped by the serializer.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/textproto/mutations.py#L53-L67",
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L60-L74",
           "version": "repo-lines-v1:sha256:3caad3da7a11235041b920b597f772d490b18db20109de30e99648e7912b5cd9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1MDA5NGIwZmRhZWEyYjA4YWU5YzM3ZWJiYjlkNGY2YjhiYjM2MzliNThhM2Y5OTNiNGJjZjRkZDY1OTRhZjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5MDlhNTNhNjE4ZDAyOGUxZDMwMDBjMGE3YWJjZWVjYmU1ZmIzN2Y0ZTUxMWVmZTQ2NjQzZmFkNmU2Njg3MmYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY0MzEzOGVlYTU3NGI2NTJiOThiZTJkMDA1Zjc0NzYxZTRkNTczOWU1OTM3Zjk4YmM3MmExYjJiYjNlMWM3NjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjkzYjU2OGU0OGMxZTZhMzU3NWYzNWJjOGE2ZjlhNzg5YzRlYTcwMzkxZWRjY2Y2YmEyMGRhZGNjYTY2ZTM3YWQifQ"
         }
       ]
@@ -45,7 +45,7 @@
       "statement": "collision_from_image is a pure bytes-to-fragment function: box mode sizes TYPE_BOX from the inclusive bounding box of opaque pixels (alpha above the 127 threshold) with a fixed z half-depth of 10.0, and both modes raise ValueError when the image has no opaque pixels or the hull collapses below three vertices.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/textproto/mutations.py#L94-L160",
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L101-L167",
           "version": "repo-lines-v1:sha256:e846734ff3072d4f082a1dbc692c74ac3209993d8e58f91645ca7ef5ad9671d0:eyJzZWxlY3RlZExpbmVDb3VudCI6NjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg4MzEyMzNkMjhkOTUzNWQ3YjM3NjFkMjFhM2U5YWU0M2Q4MTYwZmQ1MTAzNWExNTM3ZDAxODJlODY4OGY4OWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjcyYWM4NjRhOWE0MDU4Y2MxNzVkMjUxOWQ1ZjVlNzYyNjMzZjdhM2U3M2ViZTUzNTZhZTVkNDI3YzI1NmEzMmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE3OGNiNmI1ZTVkNDdiMDc2ZTBmM2NkMmI3NGJjOTY4MGMzOWNjNDlhZTFiYmU0NjZhZmUzMjRmNjQ2M2ExMjQifQ"
         },
         {
@@ -59,24 +59,38 @@
       "statement": "Convex-hull mode computes the monotone-chain hull of opaque pixel centres, flips to y-up, centres on the bounding-box centre, enforces counter-clockwise ordering, and caps the result at 16 vertices by iteratively dropping the least-significant vertex.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/textproto/mutations.py#L120-L223",
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L127-L230",
           "version": "repo-lines-v1:sha256:f4a035bfdc8187a0a8209857150a742122d244fb2bcaaf1226d5844e5e6934bb:eyJzZWxlY3RlZExpbmVDb3VudCI6MTA0LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI5M2NlZWJlYjRjNjc2MTkzNmZiODgwY2Q2MmNiNjczOTkwOTBkMjZjZTQwNGY5NTM1NTY3MzU1N2M4MDVjM2VkIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJkOTFmODVlODVkZmE5OWRmZmIyOGI5MjM0NDQ1YjcyNzY0YTQ4NmRmYWE0MDRmNGQyNjUxMTBlNzk3MDQyM2JiIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJmNTRmMWFiNTc2ODMzNmNhNzVjNmZkYTE2MDk1MGM1MDYxYzMyZDMxZGM0NGIxNmQ3NzI3MDYzZTBhMmU3MjIwIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
         }
       ]
     },
     {
       "id": "claim_ba8c6726fa2e47faa0a723fdce4d5f45",
-      "statement": "The 16-vertex hull cap follows the plan but stock Box2D b2_maxPolygonVertices is 8, and embedded particlefx legality is unverified — both are open questions carried forward to the server-wiring task.",
+      "statement": "The 16-vertex hull cap follows the plan but stock Box2D b2_maxPolygonVertices is 8, and embedded particlefx legality is unverified — both remain open questions, now tracked for the live smoke phase after the server-wiring phase completed without resolving them against real Defold documentation.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/textproto/mutations.py#L10-L24",
-          "version": "repo-lines-v1:sha256:74524fdbc64deb04ee5e836dc0db193916b0853312a114f17caf10bbd8403ddf:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA4NWVhOTFkN2NmZWI0ZjU2OTU3OTNmODgyYzc0NjNjYmZkZjdiZTlmOThlNmM1MTMzODQ3YTI0NWJiZWEzNjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFhM2JhM2U1Nzg0YzJjZmI4MGUyODRlMjZjYjAyNjFmMzY2ZDllMTE2MDM4NjkyZmYzNjQ2MGYwM2Y1ZGM2YmYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY0ZjNhNDZiYzJiMTQyZWNhNWMxMTIwMTIzYzliMTdhYjFhMzRiYTE2YzBhMWQ4ODhhZDlhOWNlNDgxZTFjMGEifQ"
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L25-L31",
+          "version": "repo-lines-v1:sha256:d80ee543a09b4e84e039938cda4956915e505f7818db94fc6a565fd47c8f0ee1:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM1YjhhMmUwOWUzOWM3MzgwOGFlNjM2N2M0MDQzZmFkZThiMTc2MmU5OTIwN2QyMjhkZTllNWZhMjM1ZWJiNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWQ2YWM5NGE4OWQ5ZDRhOGE0ZDRmNzQxMGMzY2ZmNWE3ZWE3NjMyYTIyN2RjYjI1NTY0NTk5OGVhMmNlMWI0NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjRmM2E0NmJjMmIxNDJlY2E1YzExMjAxMjNjOWIxN2FiMWEzNGJhMTZjMGExZDg4OGFkOWE5Y2U0ODFlMWMwYSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_9235902223ad44c69f10e4c0b23d2ced",
+      "statement": "apply_operations layers the plan's 14-op mutation vocabulary over the module's primitives with registry dispatch, indexed ValueErrors, deep-copied input, single-line guards matching add_component's, and results normalised through decode_embedded_data for byte-exact fresh-resource round-trips.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L240-L406",
+          "version": "repo-lines-v1:sha256:29ac6a35ed0354787b1da533cbafeefc8ad1984e83328b18bf076d74efe64964:eyJzZWxlY3RlZExpbmVDb3VudCI6MTY3LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwMWJhNDcxOWM4MGI2ZmU5MTFiMDkxYTdjMDUxMjRiNjRlZWVjZTk2NGUwOWMwNThlZjhmOTgwNWRhY2E1NDZiIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJjYzRhMWQ4YjY5M2MzZWZjMzg5MjM1YTEwMjkzYWJmZTQwMDJkNmZiYzE2MDc4OGUyNGQzOTQ0OWVhNjQ2NGYzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4NWZiOGM5Y2JjM2FjNTA0MjMyYzk1OWE0MjUwY2M0MDVjZmYyOTk1ZjYyYTZiYjlmYTYwOWVhODA2OTU1ZjMwIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI0OTUxODE0MDI4ZjEzNWIzMWY5M2YxODNiYjE2OTY4Y2U5NmRlMDkyYTcwZGE4ZmUwZGFhZjQxYTRhMDhjNDM3In0"
+        },
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L1166-L1310",
+          "version": "repo-lines-v1:sha256:a8f9644b2c3ec1274a3bcd7106c9bcdfd33bcafe85cd3f97d30ef1075bccfc89:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQ1LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJiMjhiOWJjNjkxOTk4M2U0MTAzODUxYWQ4ZDZmMTM4NzRhZTVmOTNlYTVlMWUyMTVkMDFlNDc4ZTMzNWRkNjg5IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJiNzkzMWZmOGI0OWEyOWI4YzJmNzAyOTJiOTliNjY2NTc5YTI1ZDk0Mzc5YzlhYTlkZWE0N2JkNmE1MWQ3YTRjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJhNGFhNjAxMzU0OWM0NTU1MDIxMTM2OTI0M2YzMTNlYjgxMzkyZmViMTJlNzM0ZTllOTBiOTU0MGE5MTIxZmNkIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI2YWQ5NDdjYzkwOTM3MDM4ZDhjZjEwYjZjMTg3ODg3Y2EzNzMzZDFkOGVmYjg1Zjc0MzI1MzliMGU4NjkyMDcyIn0"
         }
       ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-14T22:05:56.160Z"
+    "at": "2026-11-15T13:47:50.676Z"
   }
 }

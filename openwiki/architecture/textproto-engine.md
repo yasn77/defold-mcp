@@ -4,7 +4,7 @@ title: "Textproto engine"
 openwiki_generated: true
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-14T22:05:56.160Z
+    at: 2026-11-15T13:47:50.676Z
 sources:
   - id: openwiki-source-467bf05f14c0b05e12ede3ab
     resource: repo://src/defold_mcp/textproto/parser.py
@@ -14,7 +14,7 @@ sources:
     resource: repo://src/defold_mcp/textproto/serializer.py
   - id: openwiki-source-c7f35c27a3e804b5af2c8277
     resource: repo://tests/test_textproto_roundtrip.py
-generated: { by: "opencode", at: "2026-11-14T22:05:56.160Z" }
+generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
 ---
 
 
@@ -54,8 +54,8 @@ Defold stores nested protos as strings inside strings:
 - **Floats:** `repr()`-based, always at least one decimal (`200.0`); the `.0` guarantee holds within [1e-4, 1e16) — outside that, scientific notation appears (value-stable, documented).
 - `data_ast` is preferred over the raw `data` string when both are present, so mutations mutate the AST and the serializer re-encodes from structure.
 
-## Schemas (the documented deferral)
+## Schemas (wired since the server phase)
 
-`schemas.py` holds the canonical field-order tables (`CollectionDesc`: name, instances, collection_instances, scale_along_z, embedded_instances; `PrototypeDesc`: components, embedded_components; best-effort orders for atlas/tilesource/tilegrid/gui/collisionobject/material), `ALWAYS_LIST_FIELDS`, `NON_EMBEDDABLE_TYPES`, `EMBED_TYPE_NORMALISATION` and `MATH_DEFAULTS`. **The order tables are not yet wired into the serializer** — which follows dict insertion order (file order for parsed trees) — and carry a prominent comment that the server-wiring task MUST wire them before any freshly-created resource is serialised. Round-trip correctness never depended on them; freshly-built trees do.
+`schemas.py` holds the canonical field-order tables (`CollectionDesc`: name, instances, collection_instances, scale_along_z, embedded_instances; `PrototypeDesc`: components, embedded_components; best-effort orders for atlas/tilesource/tilegrid/gui/collisionobject/material), `ALWAYS_LIST_FIELDS`, `NON_EMBEDDABLE_TYPES`, `EMBED_TYPE_NORMALISATION` and `MATH_DEFAULTS`. The order tables are now wired into the serializer through the optional `extension=` parameter — canonical top-level ordering for freshly-created resources — while the default (`extension=None`) preserves dict insertion order, keeping round-trip byte-exactness for parsed trees. `ALWAYS_LIST_FIELDS` feeds the parser's schema hints and the mutation registry.
 
 See [mutations and collision shapes](mutations-and-collision-shapes.md) for the mutation layer above this engine.
