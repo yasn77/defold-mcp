@@ -1,0 +1,32 @@
+# Build context for the Containerfile. The wheel is built from pyproject.toml
+# and src/, so anything a developer machine carries beyond that only bloats the
+# context or — worse — leaks foreign binaries into the image.
+
+# Virtualenv and Python caches: a host venv holds a host-architecture
+# interpreter that must never reach the image.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Everything the wheel does not need. The build needs `pyproject.toml` and
+# `src/` only, plus `README.md`, which documents what the image is; the rest of
+# the repository is documentation, tests and tooling that would only bloat the
+# context.
+tests/
+docs/
+openwiki/
+skill/
+.github/
+
+# Version control and generated documentation state.
+.git/
+.gitignore
+
+# Build outputs.
+build/
+dist/
+*.egg-info/
+
+# Local planning notes, if present.
+IMPLEMENTATION_PLAN.md
