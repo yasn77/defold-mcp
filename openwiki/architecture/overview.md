@@ -5,7 +5,7 @@ description: defold-mcp is a dual-mode (Live Editor / headless) MCP server for t
 tags: [defold, mcp, architecture, overview]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T13:47:50.676Z
+    at: 2026-11-15T14:41:05.547Z
 sources:
   - id: openwiki-source-05ccef8d4cf1698187f20464
     resource: repo://pyproject.toml
@@ -15,28 +15,26 @@ sources:
     resource: repo://src/defold_mcp/config.py
   - id: openwiki-source-0ba4ffedd14b8a1eef3a8986
     resource: repo://src/defold_mcp/deps.py
-  - id: openwiki-source-96c224729593bfb78f3b9a49
-    resource: repo://src/defold_mcp/docs_index.py
   - id: openwiki-source-d57d093dceb0da08744e2de5
     resource: repo://src/defold_mcp/project.py
   - id: openwiki-source-aa7bb9cc08c41acd52278b2d
     resource: repo://src/defold_mcp/server.py
-  - id: openwiki-source-2c7c1fca6695097aaa0e289a
-    resource: repo://src/defold_mcp/templates/__init__.py
   - id: openwiki-source-920c288fa775427e5500aec9
     resource: repo://src/defold_mcp/textproto/schemas.py
   - id: openwiki-source-edd5cc407110cd57fc145906
     resource: repo://src/defold_mcp/textproto/serializer.py
   - id: openwiki-source-18a04b4bf25ad2fe02e760b4
     resource: repo://src/defold_mcp/toolchain.py
+  - id: openwiki-source-ec5f3515eba7d123ca68e770
+    resource: repo://tests/test_mcp_stdio_e2e.py
   - id: openwiki-source-c7f35c27a3e804b5af2c8277
     resource: repo://tests/test_textproto_roundtrip.py
-generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
+generated: { by: "opencode", at: "2026-11-15T14:41:05.547Z" }
 ---
 
 # Architecture overview
 
-`defold-mcp` is a Python MCP server that gives coding agents a structured, safe way to build, inspect, mutate, compile, test, bundle and live-drive Defold game projects. The full tool layer has landed: eleven subsystems plus the twenty-tool MCP server. Only the live smoke phase, the portable skill and harness registration remain.
+`defold-mcp` is a Python MCP server that gives coding agents a structured, safe way to build, inspect, mutate, compile, test, bundle and live-drive Defold game projects. The full tool layer AND the live smoke have landed: eleven subsystems, the twenty-tool MCP server, and a real-Defold-1.14.1-verified pipeline. Only the portable skill and harness registration remain.
 
 ## What exists today
 
@@ -67,6 +65,11 @@ generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
 ## Layering rule
 
 Constants and environment resolution live in `config`; artifact-format models live above it; download/version state lives in `toolchain` and `deps`; search state in `docs_index`. Dependencies flow strictly downward: `project`, `textproto`, `toolchain`, `deps`, `docs_index`, `editor_client`, `bob_runner` and `test_runner` may import `config` (and `deps`/runners import `toolchain`), never sideways into each other's internals and never upward. The FastMCP/MCPServer tool layer (`server.py`) has landed and orchestrates all subsystems behind the twenty `defold_*` tools. No module imports from a layer above it.
+
+## Remaining work
+
+- **The portable agent skill** (`skill/defold/SKILL.md` + `references/`) and harness registration (`docs/INSTALL.md`) — the final phase.
+- Everything else in the original target architecture is landed and live-verified (see [live toolchain notes](live-toolchain-notes.md)).
 
 ## Target architecture (planned, not yet implemented)
 

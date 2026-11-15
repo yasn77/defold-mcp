@@ -5,13 +5,13 @@ description: Defold version resolution with TTL caching, atomic verified artifac
 tags: [defold, toolchain, jdk, downloads, security]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T01:05:39.762Z
+    at: 2026-11-15T14:41:05.547Z
 sources:
   - id: openwiki-source-18a04b4bf25ad2fe02e760b4
     resource: repo://src/defold_mcp/toolchain.py
   - id: openwiki-source-aa918e62d579257ce43a1ddf
     resource: repo://tests/test_deps_sync.py
-generated: { by: "opencode", at: "2026-11-15T01:05:39.762Z" }
+generated: { by: "opencode", at: "2026-11-15T14:41:05.547Z" }
 ---
 
 # Toolchain manager and JDK handling
@@ -20,8 +20,8 @@ generated: { by: "opencode", at: "2026-11-15T01:05:39.762Z" }
 
 ## Version resolution — `resolve_version(spec, …)`
 
-- **Channels** (`stable`, `beta`, `alpha`): `GET https://d.defold.com/{channel}/info.json` → `{"version": "1.14.1", "sha1": "ee28…"}`. Any non-200 **raises** (`ValueError` naming the spec, URL and status) — a transient 5xx or removed channel must never silently degrade the toolchain. A 200 missing the `version` key raises naming the URL.
-- **Pinned specs** (`1.14.1`): `GET https://d.defold.com/{version}/info.json`; on 404 only, resolution falls back to GitHub-release mode `{"version": spec, "sha1": None}` (artifact URLs keyed by version tag). Failures of any kind are never cached.
+- **Channels** (`stable`, `beta`, `alpha`): `GET https://d.defold.com/{channel}/info.json` → `{"version": "1.14.1", "sha1": "ee28…"}`. Any non-200 **raises** (`ValueError` naming the spec, URL and status) — a transient 5xx or removed channel must never silently degrade the toolchain. A 200 missing the `version` key raises naming the URL. **Live finding:** every download host redirects (301/302/307), so the default client follows redirects.
+- **Pinned specs** (`1.14.1`) — **live-corrected**: `d.defold.com` serves NO per-version `info.json` (404). Resolution probes the channels in preference order (`stable → beta → alpha`) and adopts the matching channel's sha1, cached under the pin (a two-matching-channels test locks the stable-over-beta order and proves beta is never consulted when stable matches). When NO channel carries the pin, resolution falls back to GitHub-release mode `{"version": spec, "sha1": None}` (only bob.jar and ref-doc have version-keyed URLs — engines cannot resolve in this mode; documented). Failures of any kind are never cached.
 - **TTL cache**: successful resolutions land in `<cache>/versions.json` (atomic write) with a 1-hour TTL; `force=True` bypasses. Within the TTL, no re-request occurs (pinned by a request-counting test).
 
 ## `check_java()` — first-qualifying discovery
@@ -43,7 +43,7 @@ Downloads Adoptium (`https://api.adoptium.net/v3/binary/latest/25/ga/{os}/{arch}
 - symlink members are skipped (documented — Adoptium layouts are regular files);
 - `_check_jdk_layout` raises when the extraction produced no `bin/java`.
 
-`ensure_toolchain(...)` orchestrates resolution + downloads into `<cache>/defold-{version}/` and calls `install_jdk25` when requested and no qualifying Java exists. Residual (accepted for now): `ensure_toolchain` re-downloads artifacts on every call — only the JDK install is idempotent — and `download_artifact` buffers whole bodies in memory (~200 MB peak for the JDK).
+`ensure_toolchain(...)` orchestrates resolution + downloads into `<cache>/defold-{version}/` and calls `install_jdk25` when requested and no qualifying Java exists. Artifacts are **reused** when present (live finding: every tool call used to re-fetch ~300 MB), with magic bytes re-verified on reuse — `PK` for jars/zips and `b"\x7fELF"` for Linux engines (`_engine_magic`), riding the corrupt-artifact re-download path. Residual: `download_artifact` buffers whole bodies in memory (~200 MB peak for the JDK); macOS/Windows engines have no cheap magic on reuse.
 
 `read_installations()` parses the OS-correct Defold Editor `installations.json` (Linux `${XDG_STATE_HOME:-~/.local/state}/Defold/…`), tolerating malformed JSON by returning `[]`.
 

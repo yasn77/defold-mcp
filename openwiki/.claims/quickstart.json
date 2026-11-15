@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:93dc1f0b26727fc6a9f76d50fdb18daf0a2cb4591760314f4310992d85bfd3cc",
+  "pageVersion": "sha256:6a299d3836d77fcad35501abdc869c2a3d6c16ec5b035ba52729d319fdadcfa3",
   "claims": [
     {
       "id": "claim_b0b9f01199ef441ab2d63ce8d85a6200",
@@ -18,7 +18,7 @@
     },
     {
       "id": "claim_c216c2c03bfe43d3ae042a30548f9a4c",
-      "statement": "The default gate ('mise run test') is hermetic — 265 tests across the twelve suite files under tests/, requiring no network beyond loopback, Defold installation or JVM — while live-marked integration tests are opt-in via 'mise run live'.",
+      "statement": "The default gate ('mise run test') is hermetic — 294 tests across the twelve suite files, requiring no network beyond loopback, Defold installation or JVM — while the live-marked smoke is a separate opt-in gate via 'mise run live' (real Defold 1.14.1, ~10 s warm against a 428 MB artifact cache).",
       "evidence": [
         {
           "resource": "repo://mise.toml",
@@ -32,19 +32,15 @@
     },
     {
       "id": "claim_3fb8242c97fa41959ff02a2c0a28ac13",
-      "statement": "The codebase is mid-build with everything through the twenty-tool MCP server landed (config, project, textproto with the 14-op registry, toolchain, deps, docs index, the three clients, the runners, the server with __main__ and the templates) plus their tests; the remaining work is the live smoke phase, the portable agent skill and harness registration — the defold-mcp console script is implemented and works.",
+      "statement": "The codebase is nearly complete: everything through the twenty-tool MCP server is landed and live-verified against real Defold 1.14.1 (config, project, textproto with the 14-op registry, toolchain, deps, docs index, the three clients, the runners, the server with __main__ and the templates) plus their tests; the remaining work is the portable agent skill and harness registration.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/__main__.py",
-          "version": "repo-file-v1:sha256:be5809fe0648ce16686722dd44e5372139e2be48d624f9e8d2437b32b42c90c2"
-        },
-        {
           "resource": "repo://src/defold_mcp/server.py",
-          "version": "repo-file-v1:sha256:5eebc64e23f870e296b36eb923182c1e52c95ba791d1bc47b427676109f98075"
+          "version": "repo-file-v1:sha256:e77c991726fe59373473557e8ef2e765cbd34d858a9b84a5d6cb20c8b2811ccf"
         },
         {
           "resource": "repo://tests/test_mcp_stdio_e2e.py",
-          "version": "repo-file-v1:sha256:5157ac667169f4a6c5827ceea0a64cc6177ec30f4991a8ea43695aa934268f4b"
+          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
         }
       ]
     },
@@ -57,7 +53,7 @@
           "version": "repo-file-v1:sha256:be5809fe0648ce16686722dd44e5372139e2be48d624f9e8d2437b32b42c90c2"
         },
         {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py#L221-L260",
+          "resource": "repo://tests/test_mcp_stdio_e2e.py#L228-L267",
           "version": "repo-lines-v1:sha256:038989c4cd8b2e1f91ed73536cc466a73924ddbcc4d9de5bb2df94602afb0a4e:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjOTg1ODBlOTkxOTgyMjVmODUwZDcyNzI5ZDk3Y2IwMTU0NzA1MDg1YTM3OWVjMTZiZjVmNmU5MjE3OGMwOGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUyMTk1YjczNzE4MGU5YmUxZWFjYTcyMDM5YmUzYmRlMTkxODgwMjY5MjYyYzI3NTAyMTA2Y2MxZDE4NGFkNzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyOTdmYjcyZjc3Y2QxNTI4MjQwNmNjMmZlM2ExMDIzMjFmMTQ0ZWYxNTBiYTY5MzE1NzFlYWNhZjZhZmMwNDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM1MTQ2MmFiMjY3MzkzMzgwOGNlNDdlNzdmMjI1MDgwN2M0ZmI1YjBkNGU3NzU2MTFjOTQyOWJlNDVjNmI2ZjcifQ"
         }
       ]
@@ -65,6 +61,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T13:47:50.676Z"
+    "at": "2026-11-15T14:41:05.547Z"
   }
 }

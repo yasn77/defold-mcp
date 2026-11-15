@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:11ed4f320515d96ab7e36a76283e04315fd713bcdcc771c268f45aa4a0a58fc1",
+  "pageVersion": "sha256:eb21e12146a6c77fec2884aa7ea137e4858611a491f191cc91c7faa74ade7a89",
   "claims": [
     {
       "id": "claim_20c01b8cf15e4ca79ab56290b86eb68d",
@@ -24,15 +24,19 @@
     },
     {
       "id": "claim_e73bffaa1ec140b28bda81998581a5a6",
-      "statement": "The unit gate is hermetic: 265 tests across the twelve suite files cover all landed subsystems plus the templates, the 14-op mutations registry and the real-binary stdio e2e (traversal containment, response cap, dialect routing, orphan prevention, log paging, stdout purity) without network access beyond loopback or a JVM.",
+      "statement": "The unit gate is hermetic: 294 tests across the twelve suite files cover all landed subsystems, the templates and mutations registry, the real-binary stdio e2e and the live-phase hardening (channel preference, redirects, exec bits, cache reuse with magic re-verification, SEVERE diagnostics, docs-db self-heal, the settings build route, log-prefix stripping) without network beyond loopback or a JVM; the live smoke is a separate opt-in gate (mise run live).",
       "evidence": [
         {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py",
-          "version": "repo-file-v1:sha256:5157ac667169f4a6c5827ceea0a64cc6177ec30f4991a8ea43695aa934268f4b"
+          "resource": "repo://mise.toml",
+          "version": "repo-file-v1:sha256:9faf378f5b65c1a8cff4507e6e030edecaab7585c86fbf5da232c93e2432ec0c"
         },
         {
-          "resource": "repo://tests/test_templates.py",
-          "version": "repo-file-v1:sha256:64b1806569e9d1459ab7cce7bd2088d49e7cbc2a21c404b1f0d59b168468b91f"
+          "resource": "repo://tests/test_deps_sync.py#L137-L238",
+          "version": "repo-lines-v1:sha256:0011f9d0ec5c8b078a60275d6c65011428efeea78f7d7da1d6a6be882a382d09:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAyLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwMmUyNTM3YWI3MWVmYmU3OWI2ZTYyZGNkZWNkZDI0ZmEyNjg4MzVmYmIyOTk1YjQ4ZDBkMzg0Yjc5NGIzZjViIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJjM2VmZjQyN2EyZDMxM2U3NjNiZDU4ZGMwMzYwNGRlMzM5YzQ1M2IwM2JjMzI0ZDMxOTkzNjlmODU5ZmZiZTUyIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlNjg4NDBlOTQyMjdiZWJkMzQ0OTYzYmZmNDRlN2M0ZjkyZDFlYWMxNzcyZmFhYzdiYTA5NGQzMGM3NTU1MTA3IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI0OGM1MWIyZGM3NmI5MmExMDMzOTNkZTI5YjdlOGJlNGUxMjA1YjZkNGQ1YjNkYzgzMGM4ODg0NWQ2YmNlMjBiIn0"
+        },
+        {
+          "resource": "repo://tests/test_mcp_stdio_e2e.py",
+          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
         }
       ]
     },
@@ -52,7 +56,7 @@
       "evidence": [
         {
           "resource": "repo://tests/test_textproto_roundtrip.py#L271-L312",
-          "version": "repo-lines-v1:sha256:c2c98ba8bf85f7629e2deb9edd1ddfb462e4610f26ec68422b3dd18f27fbd423:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1NDQzZWZiZDViZGEyN2ZkY2JmZjU5Yzg1NGE0NjJhODc0YzU0YjM1ZWVhMjdiMjhkMTc4ZWMyNmQ1OTMwZmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3OTkzZTM0Njg0NGRmZWE4N2NhNDlkYjVjMjU2NmYwMDEwNGU1MDRhM2NlMGIyYWM2YmNhMGY4ZWUxYTUyMzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyY2JmMjI1NWIyZjYzMzFkNzgwYTI3ZTFkOGJiMTQ2NzZmYjgyMjZmOWJiMTBmYmE2MDMwOWJmMThiMDM1NjgifQ"
+          "version": "repo-lines-v1:sha256:f64082c75090eb2261d9b034c580e9564beaa789f0f35cc7436f8648a8cfe7ad:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1NDQzZWZiZDViZGEyN2ZkY2JmZjU5Yzg1NGE0NjJhODc0YzU0YjM1ZWVhMjdiMjhkMTc4ZWMyNmQ1OTMwZmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3OTkzZTM0Njg0NGRmZWE4N2NhNDlkYjVjMjU2NmYwMDEwNGU1MDRhM2NlMGIyYWM2YmNhMGY4ZWUxYTUyMzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyY2JmMjI1NWIyZjYzMzFkNzgwYTI3ZTFkOGJiMTQ2NzZmYjgyMjZmOWJiMTBmYmE2MDMwOWJmMThiMDM1NjgifQ"
         }
       ]
     },
@@ -61,8 +65,8 @@
       "statement": "Test style is mixed by design: plain functions for the foundation suites and grouped classes for the textproto Part B groups (TestSerializerRoundTrip, TestMathDefaultOmission, TestGuardrails, TestCollisionFromImage).",
       "evidence": [
         {
-          "resource": "repo://tests/test_textproto_roundtrip.py#L271-L740",
-          "version": "repo-lines-v1:sha256:0ba01d954042464ec21018983c0375109e8bf83c21e262bc9f6e03cacba088c7:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI0MTJjYTM0NWNjZjc1YmY5YzA4MDZiY2U2OTViZThkZTgwOGI3OTk4NDI1MWE3YTU0ZDIwMmNmNjEwMWRkNDUxIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIzMzljMjQyNjdiMTg0YTFjMWI5M2RlNDllZmY3Y2I5NWQ2YTQ1MDQ2NThkMzdhODhmZDYzMmNkMTBhNzUyNDA3IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJmNzk5M2UzNDY4NDRkZmVhODdjYTQ5ZGI1YzI1NjZmMDAxMDRlNTA0YTNjZTBiMmFjNmJjYTBmOGVlMWE1MjM1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+          "resource": "repo://tests/test_textproto_roundtrip.py#L271-L1332",
+          "version": "repo-lines-v1:sha256:07348389bb9cda740a2d673dabef6d8216430401b86608cbf70642b564096cab:eyJzZWxlY3RlZExpbmVDb3VudCI6MTA2MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTUwMzJlOTY0ZDA5MzIzNTFlNWQxODUyNjkyODFiMTcxYTNhMDliMDhiMjg2ZTY2MWVhNDcwMzIzYzgyZWI0ZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjc5OTNlMzQ2ODQ0ZGZlYTg3Y2E0OWRiNWMyNTY2ZjAwMTA0ZTUwNGEzY2UwYjJhYzZiY2EwZjhlZTFhNTIzNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
         }
       ]
     },
@@ -71,12 +75,12 @@
       "statement": "The security pinning tests cover the dependency-name sandbox escape (dot-dot URLs extract under hash names), both zip-slip forms, the JDK extractor's backslash and dot-dot traversal rejection with resolved-path containment, and strict asset-feed shape rejection.",
       "evidence": [
         {
-          "resource": "repo://tests/test_deps_sync.py#L280-L302",
-          "version": "repo-lines-v1:sha256:32654729f16dcbd292963dfd43a8c958a128c6dd719b7dd9bba53a63a80eeddf:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5MDlhNTNhNjE4ZDAyOGUxZDMwMDBjMGE3YWJjZWVjYmU1ZmIzN2Y0ZTUxMWVmZTQ2NjQzZmFkNmU2Njg3MmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllNTFjOWI2Njg4N2M3YTRkN2IzOTEyYjUzNzY4MTIzYWIzYTVhOGZmMjZlMTM5MmFjZWM2NzUyNTNhZjE5ZjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJhYWMxMzlhNDJjNGI5ZDM3Njc5NTI0MzQ4MGYzZjJlM2UzZjNhNzliY2EzYTQwN2Q4YzkzNjJmYTI0NTQ2MWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA3NjFlNTFiMWYxNjhjZWRhMzcxYzU4OTY4YTgzOWJkNWRjMTg5Mzc2MDEzMmQ1YmZmMjA5Yjg1NTU0MGQ1NDUifQ"
+          "resource": "repo://tests/test_deps_sync.py#L363-L447",
+          "version": "repo-lines-v1:sha256:b4d02054d1621e45c3619ff5c5da0555dc979aa7c0ca7fde3269d4dcfdde925e:eyJzZWxlY3RlZExpbmVDb3VudCI6ODUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5MDlhNTNhNjE4ZDAyOGUxZDMwMDBjMGE3YWJjZWVjYmU1ZmIzN2Y0ZTUxMWVmZTQ2NjQzZmFkNmU2Njg3MmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllNTFjOWI2Njg4N2M3YTRkN2IzOTEyYjUzNzY4MTIzYWIzYTVhOGZmMjZlMTM5MmFjZWM2NzUyNTNhZjE5ZjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJhYWMxMzlhNDJjNGI5ZDM3Njc5NTI0MzQ4MGYzZjJlM2UzZjNhNzliY2EzYTQwN2Q4YzkzNjJmYTI0NTQ2MWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA3NjFlNTFiMWYxNjhjZWRhMzcxYzU4OTY4YTgzOWJkNWRjMTg5Mzc2MDEzMmQ1YmZmMjA5Yjg1NTU0MGQ1NDUifQ"
         },
         {
-          "resource": "repo://tests/test_deps_sync.py#L438-L517",
-          "version": "repo-lines-v1:sha256:9ad42b8b252711123458af4c9fa2bc45463c41ea96de1fac705b24e3f7b9787b:eyJzZWxlY3RlZExpbmVDb3VudCI6ODAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJkZmUzYTkxNmQ1YjBmYmE3OWZmMTc3NzcwZGMzMGRhMjkxYzk5MDZkODI4OTM0YTFjM2Q2NGEyOTRjYTViMTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMxNjg2YjM4OGYxNzdkYmQ3YTlmNjc0NjgwYjhlYjY4Y2FlNjc5M2Q0ZTZiY2YyYmVlYzIxYThjODA3NGZkNTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg1ZDhiN2U5ZjgzYzU4NjQzYTgyODJmMWIwZjkxZjVmMGIzMzFlMTliMzQwZjcwZmMwOGZmYmNjN2RiNjVhYzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAzNGM2NDIyNTE1NTFlMTZkNzQxYjgzZjZjNzM1YzMxZGQ1NWI0YmYyNmIyMDM0ZmM0ZDJhNzdmNDMyYTMxMzcifQ"
+          "resource": "repo://tests/test_deps_sync.py#L583-L702",
+          "version": "repo-lines-v1:sha256:36d06ea531bbcc9fe556758fa8bc8f842a48eae00ceae1cd9f50d9dcb7669785:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJiZGZlM2E5MTZkNWIwZmJhNzlmZjE3Nzc3MGRjMzBkYTI5MWM5OTA2ZDgyODkzNGExYzNkNjRhMjk0Y2E1YjE1IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIzMTY4NmIzODhmMTc3ZGJkN2E5ZjY3NDY4MGI4ZWI2OGNhZTY3OTNkNGU2YmNmMmJlZWMyMWE4YzgwNzRmZDU5IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4NWQ4YjdlOWY4M2M1ODY0M2E4MjgyZjFiMGY5MWY1ZjBiMzMxZTE5YjM0MGY3MGZjMDhmZmJjYzdkYjY1YWMxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIwMzRjNjQyMjUxNTUxZTE2ZDc0MWI4M2Y2YzczNWMzMWRkNTViNGJmMjZiMjAzNGZjNGQyYTc3ZjQzMmEzMTM3In0"
         },
         {
           "resource": "repo://tests/test_docs_fts.py#L481-L485",
@@ -97,6 +101,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T13:47:50.676Z"
+    "at": "2026-11-15T14:41:05.547Z"
   }
 }

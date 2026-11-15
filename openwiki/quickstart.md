@@ -5,7 +5,7 @@ description: Get oriented in defold-mcp in five minutes — what the project is,
 tags: [defold, mcp, quickstart, onboarding]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T13:47:50.676Z
+    at: 2026-11-15T14:41:05.547Z
 sources:
   - id: openwiki-source-72b5d686f860ea86c8592080
     resource: repo://mise.toml
@@ -17,14 +17,14 @@ sources:
     resource: repo://src/defold_mcp/server.py
   - id: openwiki-source-ec5f3515eba7d123ca68e770
     resource: repo://tests/test_mcp_stdio_e2e.py
-generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
+generated: { by: "opencode", at: "2026-11-15T14:41:05.547Z" }
 ---
 
 # Quickstart
 
 `defold-mcp` is a Python MCP server (plus a portable agent skill) for the [Defold](https://defold.com) game engine: it gives coding agents structured tools to scaffold, inspect, mutate, compile, test, bundle and live-drive Defold game projects across 2D and 3D genres — safely around Defold's many file-format traps.
 
-The repository is mid-build: everything through the twenty-tool MCP server is landed with tests (the console script `defold-mcp` works); only the live smoke phase, the portable skill and harness registration remain.
+The build is nearly done: everything through the twenty-tool MCP server is landed and live-verified against real Defold 1.14.1 (the console script `defold-mcp` works); only the portable skill and harness registration remain. Anyone touching toolchain or bob behaviour should read the [live toolchain notes](architecture/live-toolchain-notes.md) — fifteen verified real-world findings.
 
 ## Prerequisites
 
@@ -44,7 +44,8 @@ mise run test         # creates .venv, installs the package editable, runs the s
 
 | Command | What it does |
 |---|---|
-| `mise run test` | The default gate: 265 unit tests, hermetic (no network, no JVM, under 20 seconds). |
+| `mise run test` | The default gate: 294 unit tests, hermetic (no network, no JVM, ~20 seconds). |
+| `mise run live` | The live gate: one real-Defold-1.14.1 smoke (~10 s warm; ~428 MB cached artifacts under `~/.cache/defold-mcp`). |
 | `mise run live` | The live-marked integration tests (real Defold downloads; minutes). |
 | `mise run setup` | Just rebuild `.venv` and reinstall (rarely needed directly). |
 | `.venv/bin/pytest tests/ -v` | Plain pytest when you want verbose single-file runs. |

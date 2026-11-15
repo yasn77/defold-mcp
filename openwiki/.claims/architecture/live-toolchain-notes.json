@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:d4dc6be3fc027d9bdcc0ea161361ff812749514d39298c8039e5ec63389dea18",
+  "claims": [
+    {
+      "id": "claim_71a9115106df455da172e28ee88ad06e",
+      "statement": "d.defold.com serves only channel info.json documents — pinned specs resolve by channel matching with a stable-over-beta preference, and every download host (d.defold.com 301, GitHub 302, Adoptium 307) redirects, so both default clients follow redirects.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py#L100-L220",
+          "version": "repo-lines-v1:sha256:c44ef84e64fa521c681c2310cfb983d26ce006c5736361a2bee419299815f37c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJkMGU4MTI4NmVjZTZjZTE3OTBiNDJlOGI2MDI1YzA2ODAwZDAzNmUwNzQwYjBhZGIxNDA1Mjg3NWI3YTRiN2MzIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJhYWQ0Njc0ZTQ0MWQ0NmFhZGM2NWFiMzU4ZWQ5Njg2MTExZDJiY2M5ZmE1NGFiNWE1YjE1MTdhNDI5MmU4ZWRmIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIyNTA1OTE5MzUyYmIzNjUxMDY2MmRlZjczYWQzOTc2YTc0OTEwMGVhY2UxYjFmMzcxYzYzZWFkYjE5NTc3YjUxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIxOWRhNGM4YmYwMzUxZWEzN2MxODgxMWI4MTc0NDVmOWJlZGZhOTFhNzk5Y2FkY2EwYjQ1YmM5YTJkZGU1ZDYyIn0"
+        },
+        {
+          "resource": "repo://tests/test_deps_sync.py#L137-L238",
+          "version": "repo-lines-v1:sha256:0011f9d0ec5c8b078a60275d6c65011428efeea78f7d7da1d6a6be882a382d09:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAyLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwMmUyNTM3YWI3MWVmYmU3OWI2ZTYyZGNkZWNkZDI0ZmEyNjg4MzVmYmIyOTk1YjQ4ZDBkMzg0Yjc5NGIzZjViIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJjM2VmZjQyN2EyZDMxM2U3NjNiZDU4ZGMwMzYwNGRlMzM5YzQ1M2IwM2JjMzI0ZDMxOTkzNjlmODU5ZmZiZTUyIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlNjg4NDBlOTQyMjdiZWJkMzQ0OTYzYmZmNDRlN2M0ZjkyZDFlYWMxNzcyZmFhYzdiYTA5NGQzMGM3NTU1MTA3IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI0OGM1MWIyZGM3NmI5MmExMDMzOTNkZTI5YjdlOGJlNGUxMjA1YjZkNGQ1YjNkYzgzMGM4ODg0NWQ2YmNlMjBiIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_85a57490b6f74bd7bf16b37916b593ab",
+      "statement": "JDK tar extraction preserves archive permission bits (a mode-blind extraction produces a non-executable java and Permission denied), cached artifacts are reused with magic re-verification (PK for jars and zips, ELF for Linux engines), and a stale or malformed docs.db self-heals by rebuild.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/server.py#L460-L520",
+          "version": "repo-lines-v1:sha256:1567738b062c6614cf17bb063adec698b468dbcb193310735e8cc23d54b16160:eyJzZWxlY3RlZExpbmVDb3VudCI6NjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2ZDRmMDMyYTM2OTNiNTVlY2Q3ZjQzNDMzMmNmMmRhNDZkOTQ1NTM3MzRiODM1ZjEwNzQzNzYzMjQwMGQwZWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI1ZmY4MDMxMGFmNjJlODQwMjgzYzAxZGI0MWE3ZDJlZDU2NjMwODcwZDM2NjUzNmU4ZDQ2OTAyNDBhYWFmMTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYxYzEwNjAzMzc4NjEzYmJlZjY1M2ZmNGQ2NjZlNTA5ZGZhMWZkNDliMjQxNjgxNzE5NzliMjczY2FlYzNjOGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI2OTcwOGE5NDAxZTRlOWJhMTdjYTA1YTkxYjAyZWY4YzM5ZWRhNDk0ODlhZmQ3MTdkYjRmOWNjYTE5YjEyZGYifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py#L330-L400",
+          "version": "repo-lines-v1:sha256:cbc7caa5e3426eb01df039a3923c2457924c25668f49e2c909dbc28ebba52fe0:eyJzZWxlY3RlZExpbmVDb3VudCI6NzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZkZWIyYmQxYWI3N2FhY2VlODUyOTNiNmRkZWRmMzFmODE3M2Q0MjQyOTdmNzhlYjk0ZDM2YTRhMmUzNGNjNWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY2ZmRkZjBkN2QyNWM1ZWVhNmQ2ZWNkMTU3MjI4YzE3NzRmYmE1NGE2NTc1NDkzMTliNmMwYjgzMmUzNjEwMWYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ3MDE0OWUwNjlhZDY3ZWNjZjQ3MzY0NmZmMWM3NTAwNTBkMzI5ZDExMDAxOGRjNTc2Njg3OGVhZmExZDYwN2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBjYzI5NDA2MmU5Y2VjMzQ0MzdkMjQ3NGQ3M2Q1NDQyZWMxZWE3N2NmYmQ2Y2Y5NjM3NDA3MDg3OTI0NjMxMTAifQ"
+        },
+        {
+          "resource": "repo://tests/test_deps_sync.py#L734-L775",
+          "version": "repo-lines-v1:sha256:3e6e0973d6a26a5daa2b429baa8b5661dafb98169f89291588f4aad0b3bce89d:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjYjlkM2EyZjEwMjc0YjNmNWU1NTliNjRhZWMzYmZhODRmYmU2ODU0Mzk3ZTEzMDBhNGQ2NjMwOWI4YmU1NmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5ZGQ5YjM3MjY4NzU3ZjI1ZjgzOTIzZTAxNzNlODkwNzU5ZjZkNGJhN2JiNmUwOTIzZjEyMjE1NjAwNGQyYjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUwOWEyZWEyYWY4NDMyNDRmMmMzYzU2M2QwMjUyY2NkMWNlNTk1MWIxY2Y2MGNhNDI2NGJhYWIyM2U2OWFjYzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI0YjBhMTNmMGM1OTlkYjE1OGQ2MzcxNTc2Yzc2MGZlYTc2NWQ5MGMyMWM2MWY4N2YwZWI4YmJkNGFkMzk5NGUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_15a8266311534d9ba4ae817d7446e2d7",
+      "statement": "bob rejects comment lines in game.project, requires input.game_binding (the builtins default covers headless projects), treats game.project resource values as compiled paths needing the c suffix while collection_instances.collection takes the SOURCE path, and emits log4j SEVERE lines on hard failures that now parse as error diagnostics.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bob_runner.py#L52-L143",
+          "version": "repo-lines-v1:sha256:71408d167c7dfaee049cf52adc9f2bfd50fe895a4d672354cc7ee52f7f932a88:eyJzZWxlY3RlZExpbmVDb3VudCI6OTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3NmQ5ZGQ2YzBhZDI2ZThjMjliZjMyMTNhNDRjZjE3NzM5NTUwNzgxMWM3MDhmMTZlNTRiNzIyNjFlZjA0MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4YTNkNzljMTJlNGZmNDFlYThhY2QxYWM4ZGJlM2JkMmY2MmUwM2ZmMDZjMzk0MTZiYTVmYjk5ZWIyYjBkMGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlZDQ4YjE5OWQ0ODVkY2ZjZWE4Mjc0NTc2NWViYjhhNDhmYjk4YTU0M2MwN2JjOTZiNDU1YWMyMGJkNjgwZTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU0MTA1NDNmYzgxZDIwM2ViM2RlNjZhMTJlMGQ0ZTQ1YjNiZTNiNzM3NTA2ZjM5NjNkZWI5YjYyZTVjY2NjMzgifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/templates/__init__.py#L100-L210",
+          "version": "repo-lines-v1:sha256:efd5a230daad6c944ab23091791734da161a4e9e1fc9138b15995bea058def37:eyJzZWxlY3RlZExpbmVDb3VudCI6MTExLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwNDk3NDEwZDUwMWZmZDIxN2ZmMjk3OTlmMDIwZWFlYmNmNjI4NzBmY2FjMzgyYjBkODA3NDZlMWNjOTVhZmE0IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI1OWM3MTQ5N2NmYzgyZTZmZTBmZmZmMGIwNjIzNjVlZjQ5NzE1Mzg4YTY1NDdiOTdhMTMwMGY3ZWVhMjhmMDJkIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4ZjAzODNmOTY0N2YzNTA3ZDgxMTc4MmJiNzJhMzVkM2M0YmQ5MmRlYTBmYjM1ZmY0ZGQ3YzUzNjg3Njc0MzE2IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIzMWM4MzA5OGQ3YTNmNGU2OGM3ZjZiZjJjMmU3ODFjMTFiZmY4NjkzN2JkY2M1ZDU3MGNkNmQxOTFiZmZlYjI1In0"
+        },
+        {
+          "resource": "repo://tests/test_templates.py#L107-L165",
+          "version": "repo-lines-v1:sha256:8232fa023a8dc1ba6c3559046674b150d80024d07c752effa12adec777e6d76f:eyJzZWxlY3RlZExpbmVDb3VudCI6NTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUzNjQ4NmE5MTNkNmQ5N2RmMGFjZDY0MjU5Yjc3YWJhYmM3YTMzMWM2MmRkNDcwZjAyZWI4ZTFlMGM2OTc2NmQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ2NDAwZjg5MTI3YjY4OWJmNWE2ODZiZTMxNzNmODYwMWI5ZjBlNTZkYmY1OGVjYTkzOWIyOTVlM2QwMDk4OGMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBjM2Q5NDYwZjk4Y2RhZjQ1YjhhMWYwZDBkMThkMjRiMDU3NTI2YzA0NDhiNWFmZWYwODZhN2NmZjcyNzk1MWQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6000080eb0eb43bd8ed927d47220c55d",
+      "statement": "The engine prefixes print output with LEVEL:DOMAIN: (one prefix stripped before TEST/DefTest matching), subcollections are flattened and never archived so the engine can only boot them when built as the archive bootstrap via a bob --settings file, and bob treats the settings file's directory as a content root requiring a private temp directory.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/test_runner.py#L60-L300",
+          "version": "repo-lines-v1:sha256:f723915fe1a98e0d2f0dab71e02a67c39b7882ffce91843c84d7079258f91a7b:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJkZWUyZmRhMjY4ODg0YmI0NDAxNTlkN2RiYmRkODYyYjIwOGE3NzBkYzEyMmY4ZjY5ZDYxNGZiZjNjMTIxNjc0IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIzYjQxNTNjNzYwNzA3MTA0ZDc3NTJkZWFmNWY2YWRmMDhhMjg0NmQ3NDc0NDI5NmVlMDEzYTlkY2VjNDRkMThjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4YjJhMDc5ZWM0MzU2YzM4ZDc4ZmIwNGY4NTc5NmI5Y2MwMGYxYTg1ZDYxNjE5Y2RkZGMwYzc4MGJhM2IxN2VjIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI3OWM2M2QxNDVkMGJjMGY0NDQ0MWE0ZjY2YmQ5YmJkZmVmZmZkYjkzZWZjYzUzNzkxMzFkNjAyNmI2MGViMzdmIn0"
+        },
+        {
+          "resource": "repo://tests/test_mcp_stdio_e2e.py",
+          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
+        }
+      ]
+    },
+    {
+      "id": "claim_efd652b52bf54cc9b42feb4bd3d1fd76",
+      "statement": "The live smoke test (@pytest.mark.live) drives the real stdio server end to end against Defold 1.14.1 — setup, docs search, project init, real bob compile, real headless TEST run (exit 0) and a real wasm-web bundle — with a 428 MB artifact cache and gates of 294 unit tests plus the one live test.",
+      "evidence": [
+        {
+          "resource": "repo://mise.toml",
+          "version": "repo-file-v1:sha256:9faf378f5b65c1a8cff4507e6e030edecaab7585c86fbf5da232c93e2432ec0c"
+        },
+        {
+          "resource": "repo://tests/test_mcp_stdio_e2e.py",
+          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T14:41:05.547Z"
+  }
+}

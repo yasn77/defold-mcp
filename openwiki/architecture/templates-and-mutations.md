@@ -5,7 +5,7 @@ description: The four project scaffolding profiles with the Defold licence attri
 tags: [defold, templates, scaffolding, mutations, registry]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T13:47:50.676Z
+    at: 2026-11-15T14:41:05.547Z
 sources:
   - id: openwiki-source-2c7c1fca6695097aaa0e289a
     resource: repo://src/defold_mcp/templates/__init__.py
@@ -17,7 +17,7 @@ sources:
     resource: repo://tests/test_templates.py
   - id: openwiki-source-c7f35c27a3e804b5af2c8277
     resource: repo://tests/test_textproto_roundtrip.py
-generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
+generated: { by: "opencode", at: "2026-11-15T14:41:05.547Z" }
 ---
 
 # Templates and the mutations registry
@@ -28,7 +28,7 @@ generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
 
 `render_project(dest_root, *, title, profile, dependencies=None, with_deftest=False)` writes a minimal valid Defold 1.14.1 project for `2d_pixel`, `2d_hd`, `3d_pbr` or `minimal`:
 
-- **`game.project`** with the plan-pinned defaults: 2D profiles carry `[physics] scale = 0.01`, `gravity_y = -1000.0`, `velocity_threshold = 100.0`, `use_fixed_timestep = 1` plus `[engine] fixed_update_frequency = 60` (the plan's §1.5 point 10 names `[engine]` explicitly); 3d_pbr carries `type = 3D`, `scale = 1.0`; all profiles carry `[html5] scale_mode = Stretch`, `heap_size = 64`, `retry_count = 1000`; bootstrap references the builtins render and debug scripts (`/builtins/render/default.renderc`, `/builtins/scripts/debug_init.scriptc`).
+- **`game.project`** with the plan-pinned defaults: 2D profiles carry `[physics] scale = 0.01`, `gravity_y = -1000.0`, `velocity_threshold = 100.0`, `use_fixed_timestep = 1` plus `[engine] fixed_update_frequency = 60` (the plan's §1.5 point 10 names `[engine]` explicitly); 3d_pbr carries `type = 3D`, `scale = 1.0`; all profiles carry `[html5] scale_mode = Stretch`, `heap_size = 64`, `retry_count = 1000`. **Live-verified bob rules** (see [live toolchain notes](live-toolchain-notes.md)): NO comment lines (bob rejects `;`/`#`), `input.game_binding = /builtins/input/all.input_bindingc` (required), `bootstrap.render = /builtins/render/default.renderc` but NO `debug_init_script` (the builtins path does not ship), and every resource value carries the compiled `c` suffix.
 - **`main/main.collection`** built through `serialize_textproto` from the same tree shape parsing produces — so the rendered file round-trips byte-exactly. 2D profiles embed a `hero` game object with an embedded sprite (material `/builtins/materials/sprite.material`) and a referenced script; 3d_pbr embeds a camera; **all four profiles mount the referenced `main.script`** so the licence notice prints at runtime.
 - **`main/main.script`** declares a literal `go.property("speed", 10)` (Defold's compile-time parser requires literals), prints the title (Lua-escaped: a title containing quotes renders safely) and requires the notice module.
 - **`license/defold_notice.lua`** — the Defold Foundation attribution module satisfying the Defold License's clause 4(b) notice requirement, shipped out of the box.

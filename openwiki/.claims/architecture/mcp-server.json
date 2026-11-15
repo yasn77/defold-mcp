@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:9c6b301e5fb6ba081143dca7b9428b6b561c595ba9d27176da89cd887b05d5a9",
+  "pageVersion": "sha256:81dea37c92b6a4aa1533a51c49129b10bdc37ea13c9830b6e2f8bea9b432a9e9",
   "claims": [
     {
       "id": "claim_fa554fb7886548fdb0e9e7a44d4d69ec",
-      "statement": "build_server() registers exactly twenty defold_* tools in the plan's section 2.3 order on the MCP SDK's server class, and the e2e suite drives the real defold-mcp binary over newline-delimited JSON-RPC asserting the exact tool list, order, descriptions and object schemas.",
+      "statement": "build_server() registers exactly twenty defold_* tools in the plan's section 2.3 order on the MCP SDK's server class, and the e2e suite plus the live smoke drive the real defold-mcp binary over newline-delimited JSON-RPC asserting the exact tool list, order, descriptions and object schemas.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/server.py#L1-L90",
-          "version": "repo-lines-v1:sha256:28a9afdfcd35826b6e450cdb808f2359715a1e760118d1f466a76f4201087a98:eyJzZWxlY3RlZExpbmVDb3VudCI6OTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgxODU3NDE3NGQwYmMwNmE3OGZkNjcwNGQ3ZmYyMzMxZmU1OTE2ODk4ZWZjYWM2ODRmZTljMGY1ZmFjY2NhYTYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM5YmM5NGIxNjQ5MzA1NDE3NWFhOThiOWYyM2YyMjdjZTlkOGFkOTJiZDg1NDE1NzhlMmJmN2VjZjZkM2ExYmQifQ"
+          "resource": "repo://src/defold_mcp/server.py#L1-L120",
+          "version": "repo-lines-v1:sha256:acdcf405a17719e7a55334c33d24698cd53a0a33999d03087c0e15cb82daaac8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI4MTg1NzQxNzRkMGJjMDZhNzhmZDY3MDRkN2ZmMjMzMWZlNTkxNjg5OGVmY2FjNjg0ZmU5YzBmNWZhY2NjYWE2IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI3NjJjOTQ4MTdkMDEwMjY5MGMyNjBmYzdjNGI3NjgyOTc3NzcyM2RhNDYwYjkxODI1YjJlNjgzZGI2MDc2N2Q0IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MCwicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIxYWMwZjhkMDBkMTJkMGZjM2RjYTYyMWE2Y2MzZTQyZGM3MTVhNzM3ZjFjMjRlYmIxOGFlMjAxNjNkNDIzNzNhIn0"
         },
         {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py#L221-L260",
-          "version": "repo-lines-v1:sha256:038989c4cd8b2e1f91ed73536cc466a73924ddbcc4d9de5bb2df94602afb0a4e:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjOTg1ODBlOTkxOTgyMjVmODUwZDcyNzI5ZDk3Y2IwMTU0NzA1MDg1YTM3OWVjMTZiZjVmNmU5MjE3OGMwOGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUyMTk1YjczNzE4MGU5YmUxZWFjYTcyMDM5YmUzYmRlMTkxODgwMjY5MjYyYzI3NTAyMTA2Y2MxZDE4NGFkNzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyOTdmYjcyZjc3Y2QxNTI4MjQwNmNjMmZlM2ExMDIzMjFmMTQ0ZWYxNTBiYTY5MzE1NzFlYWNhZjZhZmMwNDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM1MTQ2MmFiMjY3MzkzMzgwOGNlNDdlNzdmMjI1MDgwN2M0ZmI1YjBkNGU3NzU2MTFjOTQyOWJlNDVjNmI2ZjcifQ"
+          "resource": "repo://tests/test_mcp_stdio_e2e.py",
+          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
         }
       ]
     },
@@ -21,11 +21,11 @@
       "statement": "_resource_path enforces resolved-path containment against the project root (is_relative_to), blocking dot-dot traversal and symlink escapes for both defold_inspect_resource and defold_mutate_resource, while dot-dot paths that resolve inside the root are allowed by design.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/server.py#L166-L181",
+          "resource": "repo://src/defold_mcp/server.py#L170-L185",
           "version": "repo-lines-v1:sha256:10d06598d0d8617f86ded3e3be0635f17c1a55584ea5082556a00efb8104bdbc:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkzZDI5NTMxNjRiM2EzMTVhMTczMDViMzFmNzUzNmJhNWZhZDdkYjA0OTBhNDdkZDE2YTM5NzE2YjVjNzJjOTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjhjYzRhN2QxY2M3OTZhYmEzZTQ2NzIzMzI3ZjUxN2U5ZjgxMTk4MmQyNTBmMDcwMjk4NmU0YjU3NjRhZDk1ODkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJlZmNhMTIyOTI4Zjk0NDRhYmNmOTlkNTU1ZTU2MjlmYjNkOTJlYmI0M2UwYmI1ZmQ0MzJlN2NiZWE4NzAzMzAifQ"
         },
         {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py#L460-L476",
+          "resource": "repo://tests/test_mcp_stdio_e2e.py#L467-L483",
           "version": "repo-lines-v1:sha256:284b08d02b5b64a24a658b1c124f5aaabaf4ca1cc86f301f642464e553a83f07:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1MWM2NWQ3OWIwMDk1ZDc1YjdjOTA5OWE4MTk5YjY2ZmZkMGRjNzQwZmIwYmJjNGQzYzU5MzU4ZDA0ZDRlMTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJhNmFkMDMyMTk1MDFkMTY4YzJkZmEzOTJjOWZhZWZlNjI3NTcxMzhkNjUxMTkwMDAxNmQ3OGUzNGEyZGQ5YmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFmZGZjNTdkMDUyZTYzMDAwMjY4YmUxMWM2ZWJlZDg1NDZkZDNjYjBlY2Y0NjZhM2U4ZjRmZWQyMjcxY2EyNzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY2YjM2MWJkYWYzNjIzM2JmODA4MjQwMzgwZDU5MjIzNDQ3Mzg2MjI4ZmVlODEzZGNjNTY4ZTAwZTY3YjU5MWUifQ"
         }
       ]
@@ -35,11 +35,11 @@
       "statement": "_truncate caps every text response at 25,000 characters by iteratively shrinking the preview envelope (re-escaping can expand a sliced JSON dump) and always marking truncated payloads, never exceeding the cap even for escaping-heavy content.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/server.py#L182-L218",
+          "resource": "repo://src/defold_mcp/server.py#L186-L222",
           "version": "repo-lines-v1:sha256:266db3bf98b8695c9cf1caa98d58404780c95e181b5b976df75896983c9d3750:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIyNzhlM2VlZDFiMzEwNjY5NzlhOGYyMzcyNjE0MGU0OWFjZTFiN2ZhOTQ5OWJkNzg5YmY5NmFhMTE3YTI2YWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ1YWFkODE3ZDU4Mzg4MTVlOTFmYmY1MDUwNDE0OTY5ODExMjAwODg0ZTMxN2QzZmIxODI4ZDVkMDE0YjQ2YjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM5MzY5YmFlMjkzYzNiMGY2YWYzODE4YzJkMzhkMTYwNzc5NTJmN2I2YWQ0MDRhZDQ1ZDFlMzU5NzQ1YmI1YzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIxMDZjOTkwZWE3MGZmYWM2MjMzZThlMWRiMzg0MWUwYmZmMjBkYzA5ZTQ2NGI2YTgzZWVkNGIwYjZkZGFjMDIifQ"
         },
         {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py#L508-L524",
+          "resource": "repo://tests/test_mcp_stdio_e2e.py#L515-L531",
           "version": "repo-lines-v1:sha256:ac6c0423b9e52a716571629f8149f78f8cd43c52e7242ea0f4c19cf157c17943:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjNDVkNzkzN2VlNzk4NmI3OTU5MGJmZDFkYTUzOWRiOGE5ZDc5MDc2ZGU0ZDM1NjVlYjQwMDk2ZTQxYmU4ZjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0ZDE4YmMxMTBmZjU3MmMyNjUwMmM2MTA5NmEyYmVmZmM4NWJjZjMzYzllMDc3NWQ2ODU4OWRkZTRlZmZkNjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYyMWRjYzQyMjMyNzZmMmQzNjgzZDhjOTEyM2FiYTdkNmQyNzA5N2Q5MzAxYmQ0MDU2OGNiN2JmOGUyNjJjNzQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRmODIxNGVjZDNiODg1YzFmNGM5ODQ1YzI5YjY3ZDE3ZmU4ZWY5MDliMzM1MWFmMGUyNTkzZjI0YzM3ZjNiYWMifQ"
         }
       ]
@@ -49,11 +49,11 @@
       "statement": "defold_mutate_resource routes on payload dialect, not op-name: editor-dialect ops (add_resource with path and template, set_property with a string node) reach editor transact_mutations, while registry-dialect operations always take the parse-apply-serialize AST path.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/server.py#L269-L310",
+          "resource": "repo://src/defold_mcp/server.py#L273-L314",
           "version": "repo-lines-v1:sha256:0de95929c1b626bfecac132f56ec193024a948bb78eed2ab97413e9e084c7849:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAyNjY0ZTE2YTZkZWYxODRlNjE1NzlkNzlhOTJjM2MxMjM0NzYwZDE3N2IzOGY0ZDIyYWUzNzgwYTY2NzUxNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZGFlOWI4ZjIzOWY5NTYzZThiZTQzODYyYTE0YTgxOTUxMjIyNDZmOWU0YzlmMWQ5NDNmMWQ1MWY3MGRhNTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFjOWIwNjk0MTJjYTgxYjVmYzlhZWY3YjMxMzRmZjBhZmQzYWY1OGQ5MzNkNzFhYmQzOTY4MGJkMDU1NWZkZTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQwODU1ZDc4NjIxOTBhM2E4ZWQxMTAwNzM4NTU3ZTgzMGNmYjdiYTQwOTg1ODg3OTI5OTk0ZjQwNWM1NzFiNWIifQ"
         },
         {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py#L548-L586",
+          "resource": "repo://tests/test_mcp_stdio_e2e.py#L555-L593",
           "version": "repo-lines-v1:sha256:7c3bd8ee3937e46163b3e4c31202328d0ca8571e5a036952407c037f09b67cc4:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUwNjA4NTJmNzA4MjZmMGVkNGRjZWEwOWYyZWQwODQ3ZjQwMzUwZDM2MzAxZGYwYWJjNTliMWFlZmE0YzE0MzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY4YmQ1MDRiNTgxNGE4NTU1MjQ5OTE3NjgzMWNmN2ZjNGVkODU3NGMwM2JlODY1MTRiYjgzY2NiYjAwYjhjZjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJiZTM0ZmRiMDE4MjMyMzIxODJkYzYxOWVlMmZiZDA0YWNiYjI4ZDdmODY1YzcxNDEwZDE2ZmZlNjhkMmZkZDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhlNWM4ODRmYmRjMTcxNGY0ZjIyMmQxYmI1MjY1NzdmMGIzMWM1Njg5ZDRkMGU0MDY5NmJkMTJiZjdjY2Q0MzgifQ"
         }
       ]
@@ -63,11 +63,11 @@
       "statement": "The run registry prevents orphaned engines (defold_run stops any live prior entry via the shared _stop_entry before spawning) and the process-log ring mirrors the TCP collector's eviction-safe absolute-offset semantics, with next_offset computed from the unfiltered window before filtering.",
       "evidence": [
         {
-          "resource": "repo://src/defold_mcp/server.py#L291-L342",
+          "resource": "repo://src/defold_mcp/server.py#L295-L346",
           "version": "repo-lines-v1:sha256:3ed6dfb1e5bcc4275e21676312f02bf724be7fd4f2f2e0237bab60a064e0289d:eyJzZWxlY3RlZExpbmVDb3VudCI6NTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFiODllODdhZjY4NTI0NjU5NjQ3YTRhZmVjMTMzY2U1YzdiMGZmZDU2YjI1ZGU2YWZkMDFjMDM4NTFkNmQ2NDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUwYjIxYmY4OTVmYWUyZDczOTIwZDkzMTc4Y2ZkNTg0MWNkZjhmOTUyNDUxNmM4YTU2NTg0MzZhNGFjNDhmM2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFmZThiM2I4NTAwMTMyMTQ5YmVlYzgwZTVmYWM3YjE5ZDViZDgzYmJjMmQ4YmJkNmY1MGUzODk0ODM1YzBhZWUifQ"
         },
         {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py#L615-L682",
+          "resource": "repo://tests/test_mcp_stdio_e2e.py#L622-L689",
           "version": "repo-lines-v1:sha256:2f0342417f284bd30effe0beb862c42b685b483e6b4c09e783f3dc1f2c3175a7:eyJzZWxlY3RlZExpbmVDb3VudCI6NjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0MzAyZGJmOGRhODU1YWIwOThlYWVlYzczNGM2YTI2YTE3Y2Q2MjE0MTk5MmFiMGM4YjlhMGU3ZWI0MzFmYjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMzOGJkYjVjNTFmYjM2YmJiMWE0MmEzZjc4OTc3OGE0OGMzMWFhNWRhZTFjYjcyODIyNGE3NzQ4NmJlZmQ3YjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRmNGVjY2QzMDM4Mjc3ZDRmOWFjZWJkYjg1NGY0OTI1YTc3MmJmYTE1NmZkOGMzOWQzYTNjZWI3MzJlMTg3ZmUifQ"
         }
       ]
@@ -81,14 +81,32 @@
           "version": "repo-file-v1:sha256:be5809fe0648ce16686722dd44e5372139e2be48d624f9e8d2437b32b42c90c2"
         },
         {
-          "resource": "repo://src/defold_mcp/server.py#L30-L60",
-          "version": "repo-lines-v1:sha256:ffbf60840949376e0c497cb23a92b0e857a7098bf3084ed7b6bd5c640ae4f37b:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMDNlY2RkNGE0ZDEwZjE5YzczZmQ0MmZkMTI0MzdmZDMzNTRhODI2ODE2MDVkYTUyNTVhOTdhMzkwNjhkYmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA4ZTgxMGZiZGU1OTQ4OTM0YzJiODk0ZTdlZTQzNGFmYmM3M2UyZTRlMTg4NWE1ZDZiNDA5MmVlZjc2ZDg0ZDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU4YjU3MzQ4MjgwYWE0N2QyNmM1NjE4ZDQ5ZjQxMjUyYjY2ZTc2OWJkMjI1Y2EyODQ5NzAwNDQxODBkMTA0MWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU4Y2I0NWJhMDVmYjhjYTU2OGI4Mzc4MjdjYmM3Mzk5NmZjMmYyZjkzNDMzOTJjYjU4ZGZkYjE4Yjc3ZGJhZDgifQ"
+          "resource": "repo://src/defold_mcp/server.py#L30-L70",
+          "version": "repo-lines-v1:sha256:4a17499be0e4f762c051434858b7ead25f25b24294fd80ce2908729abc8e5c5f:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMDNlY2RkNGE0ZDEwZjE5YzczZmQ0MmZkMTI0MzdmZDMzNTRhODI2ODE2MDVkYTUyNTVhOTdhMzkwNjhkYmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU4YjU3MzQ4MjgwYWE0N2QyNmM1NjE4ZDQ5ZjQxMjUyYjY2ZTc2OWJkMjI1Y2EyODQ5NzAwNDQxODBkMTA0MWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI1MjI2MjVjMjMyMjQ1ZWJiMzk5OWEzYmFhYjEwNDFiMTRlODI2OTMwN2E3ZmIwODFjODc3YjY0MDA2OTA5M2UifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_204b21063e5645c58556896e85cc5556",
+      "statement": "The live smoke refined three server behaviours: defold_test_run builds the test collection as the archive bootstrap first (structured build-failure reporting with run/status/exit_code/rejected_events), defold_setup_toolchain self-heals a stale or malformed docs index, and compile/bundle failure responses carry a stdout tail for agent self-correction.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/server.py#L460-L520",
+          "version": "repo-lines-v1:sha256:1567738b062c6614cf17bb063adec698b468dbcb193310735e8cc23d54b16160:eyJzZWxlY3RlZExpbmVDb3VudCI6NjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2ZDRmMDMyYTM2OTNiNTVlY2Q3ZjQzNDMzMmNmMmRhNDZkOTQ1NTM3MzRiODM1ZjEwNzQzNzYzMjQwMGQwZWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI1ZmY4MDMxMGFmNjJlODQwMjgzYzAxZGI0MWE3ZDJlZDU2NjMwODcwZDM2NjUzNmU4ZDQ2OTAyNDBhYWFmMTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYxYzEwNjAzMzc4NjEzYmJlZjY1M2ZmNGQ2NjZlNTA5ZGZhMWZkNDliMjQxNjgxNzE5NzliMjczY2FlYzNjOGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI2OTcwOGE5NDAxZTRlOWJhMTdjYTA1YTkxYjAyZWY4YzM5ZWRhNDk0ODlhZmQ3MTdkYjRmOWNjYTE5YjEyZGYifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/server.py#L797-L880",
+          "version": "repo-lines-v1:sha256:c0bfcd2edb73a4b119722dbc6261da6394b29413710a755da7a773adc9f572e8:eyJzZWxlY3RlZExpbmVDb3VudCI6ODQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI1NDBjYTdkYmY1NjkzNjEwMjA5MmE4NTc1YzdhMzNhYmZmZmMxOGI1MzdlY2FkNDI2YzQyNDFiY2UwMjJkNDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZiMWJmOTJmNWMwNDFkN2FkNzcxNGUwMDM5ZGI5NzBjMmU4ZDViY2ZmZjFmN2RiMTIwY2YzNDkzODJmNWNlY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZiZmM3MzIyZjc0MDhjZDY2OGVjMTBkY2ZiOTlmNGY4NGYxNjgxOWU5ZGI2ZjdiZjE5YjJkOGU5YTE0ZDkzNzIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk4NTdhNTliMWYzZjY4Y2M3NGM4MDcxNTAyNzZmOTljYjY5NjU3M2NhYWJiZThmNmZiY2ZhMzgwNjcxODk2NTgifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/test_runner.py#L160-L300",
+          "version": "repo-lines-v1:sha256:d330c34097c851290422f73fd113ab17535d17c474f8cfa0d574b3c8a372ea81:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIyMTU4N2Q5M2U3ZjRmMjZmMDQ3ZGUzYzFhM2YzNGY5ZDVjZDBjMzFiNjI1ZTljZTVjN2NkZTViMmEzNTRkODdhIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIzYjQxNTNjNzYwNzA3MTA0ZDc3NTJkZWFmNWY2YWRmMDhhMjg0NmQ3NDc0NDI5NmVlMDEzYTlkY2VjNDRkMThjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJjYWMxMzVmMWJjYTFjNWIyZWZiNmY3YzYzODc1MTU5NTEzNjg3ODU4ZTFiZDg5ZjEzMTQ1NDc2NTg3NDM4YjIzIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI3OWM2M2QxNDVkMGJjMGY0NDQ0MWE0ZjY2YmQ5YmJkZmVmZmZkYjkzZWZjYzUzNzkxMzFkNjAyNmI2MGViMzdmIn0"
         }
       ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T13:47:50.676Z"
+    "at": "2026-11-15T14:41:05.547Z"
   }
 }

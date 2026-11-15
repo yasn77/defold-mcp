@@ -5,15 +5,17 @@ description: The MCPServer tool layer — twenty defold_* tools, root resolution
 tags: [defold, mcp, server, tools, stdio]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T13:47:50.676Z
+    at: 2026-11-15T14:41:05.547Z
 sources:
   - id: openwiki-source-1370c63fa3e69beb9835d3e9
     resource: repo://src/defold_mcp/__main__.py
   - id: openwiki-source-aa7bb9cc08c41acd52278b2d
     resource: repo://src/defold_mcp/server.py
+  - id: openwiki-source-60018a68c712ae4c069cbdcc
+    resource: repo://src/defold_mcp/test_runner.py
   - id: openwiki-source-ec5f3515eba7d123ca68e770
     resource: repo://tests/test_mcp_stdio_e2e.py
-generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
+generated: { by: "opencode", at: "2026-11-15T14:41:05.547Z" }
 ---
 
 # MCP server and the twenty tools
@@ -36,6 +38,10 @@ generated: { by: "opencode", at: "2026-11-15T13:47:50.676Z" }
 - `_RUNNING` (keyed by resolved root) tracks spawned engines with their stdout pump threads and rings; `defold_run` **stops any live prior entry first** (via the shared `_stop_entry`), so run-run sequences never orphan an engine; `defold_stop` reaps the same way.
 - `_slice_ring` mirrors the [TCP log collector's](engine-client.md) eviction-safe offset semantics exactly: monotone totals, absolute offsets, `next_offset` from the *unfiltered* window before filtering — the Phase-5 duplication bug class cannot recur here.
 - `_TCP_COLLECTORS` is wired best-effort: `defold_run` fetches engine `/info` and connects a `TcpLogCollector` when a `log_port` is present; `_stop_entry` pops and stops it. `defold_logs` sources: `process`, `tcp`, `editor`, or `auto` (first available in that order).
+
+## Live-phase refinements
+
+The live smoke tightened three server behaviours: `defold_test_run` now **builds the test collection as the archive bootstrap first** (subcollections are flattened and never archived, so the engine can never boot one via `--config` — the build runs through bob `--settings` in a private temp directory) and reports `run`/`status`/`exit_code`/`rejected_events` with a structured build-failure response; `defold_setup_toolchain` **self-heals a stale or malformed docs.db** (`_is_sqlite_database`/`_discard_unusable_db`) and rebuilds empty indexes; and `defold_compile`/`defold_bundle` failure responses carry a `stdout_tail` so agents can self-correct (see [live toolchain notes](live-toolchain-notes.md)).
 
 ## Where the behaviour is pinned
 
