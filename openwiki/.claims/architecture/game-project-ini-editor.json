@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:cd9955508088110165431db47155f697ebf5cf4665f3cbabc68bb8894e52e2b9",
+  "claims": [
+    {
+      "id": "claim_631eb085b69841628b4566960390ee23",
+      "statement": "GameProject models game.project as an ordered line list and rewrites it losslessly: comments, blank lines, key order, section order and the file's original newline convention (CRLF or LF) all survive every edit, with lines joined using the newline convention detected at load time.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L234-L240",
+          "version": "repo-lines-v1:sha256:087f8dd1e1895ff7ae8af0ec28f790fb2c6fd4d51682b268e5a4585421e13b79:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjNkMDBjZjI3MDk2NGQ0NGExM2RmYWM4NzUyYjA5ZmNjNDM1YjBmMTliMzE2YWJjZjgxYTdhYTY0YmIxMjJkNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzE4YjExNDk1ZGE4ZjU5ZGM5NTFkNjFlMTExZGUzZDM1MmIyNTM0NDdlNjkxNDBiMjNkODMxMGU4MTY3YmJjZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2E4NmNhZGY2YWU1ZWM4N2RmYzI5ZjYzNDFlMDUzYTQ2YzQ4MGIyYTY2MDAzZjFlYTAwMjA3OTk3MTQxODJlZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWFkZDA5ZjJhZDgyODA0MjA5ZjkzNzg4ZWM5MmY1YWNlODQxMWI5NWM3ZDRlNTI5ZDU2NjQxOWUzYzg3MzQ3YyJ9"
+        },
+        {
+          "resource": "repo://src/defold_mcp/project.py#L54-L69",
+          "version": "repo-lines-v1:sha256:12ad39134d14291f61670e2f9ae53bd1f83a21ee6ab5a818172445430660e75e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlMGE2YzFkYjUwYTRiNzM0ODVhNDgyNDU3OGQzMDZkNjMyNjNkNjM0NzFmNWM2MGY0MTA4NTdiYjg1MGY1Y2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyYmFhZjY5ODAyMzI3NTU3Y2JhYWEwODUxZjYwODRjMWRhMDRlMjc5NWFlZWI1YTliNTc2ZTk2Y2VlZTFkYjQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMwM2M4MjA2ZjViOWNlMmViMzQ3NmMwMjAxZWY3Y2VmOWRjYmI4ZjNiOGM0MWY3YWZmNDhmMjJjNjc1MWYxNTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNmOGViNTQzZGQyZWY4MzdiM2Y1MjhhOGQ3MGJjMThlYzQ1NzEwMGUyMDFhYTM3MjllNjA0MDJkOTUyNzdjNzQifQ"
+        },
+        {
+          "resource": "repo://tests/test_project_ini.py#L239-L250",
+          "version": "repo-lines-v1:sha256:bf5dfb4d08c1150e1d64d1e8f480b18ab5381acaef44c42dc211215fee80aea8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllNjVjYzZjZDE0Mjg1MjEyYmZhOTg3ZWFiM2M5ZGY3MWYzNjZkOTVjZWI2MWVjMzJmMjgxYTM2OTMzYjkzMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEwYmUxZDI0ZTRmMjhiN2I5MzA4NThiMWE3ZjBiOWNjMmY1YmY1MWY3NTU2YmVmNDBkMTJlYWU4NDgzNDVhOTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhMTgzZWUwNWZkYmM4ODRiNDJlYTg1ZGEwZmYxZGY4OTc3NzBjYjBlNzg5NTg4ZGQ4Nzg4OTNiMmZlZjE5OGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAxZDFlZDEwMTMxMjkyNjBlYTc0ZmMwYjJkMmU2NTI0MGVkYTFjOTI4NjgxNGY5OWRjMmVhMjgxYjhjOTY1NTMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_797df54b88b943f49baf64b2c417d0bc",
+      "statement": "The editor deliberately avoids configparser because configparser lowercases keys, cannot represent keys containing '#' such as dependencies#0, and strips comments and blank lines.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L1-L8",
+          "version": "repo-lines-v1:sha256:c8cc511c901b278ef4a41135f20e4f728e6f9041fdf03cd97970f27de072e288:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzY1ZWUxZjY2ODBkYzgxYzcyNDc3ZjEyZDNmZGUyNGYzNzQ3YjA0NDkxMTBkMTllYjdiMmU0YzVkNWNmZWQ3YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTMwM2VjZGQ0YTRkMTBmMTljNzNmZDQyZmQxMjQzN2ZkMzM1NGE4MjY4MTYwNWRhNTI1NWE5N2EzOTA2OGRiYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGQ0ZGU1NzBjMzg3ODAwMDdmNDdlM2Q3MTE2ZmM2ZWIzM2Q3MmY3ODhkMGJkMjUwMTU5YmEwMTk3MDViYmE4NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_266ffd2e99e54b7291f62f2dbe90cfa3",
+      "statement": "resolve_project_root honours the DEFOLD_PROJECT_ROOT environment variable (which must contain game.project) before walking upward through at most eight parent directories looking for a game.project file, raising FileNotFoundError when neither succeeds.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L20-L43",
+          "version": "repo-lines-v1:sha256:9fc413b43b75cce8f632403783acbc49ab2bea93c5a1b6158b88fc33e58c65cd:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNiMjEzYTRkOGZmOTVlNTAwNmY3ZGRlNjdjMTE3MDlhNDMyZTM5YmVhNTM3ODI3NjRkYjE5ODZmNjQwZDIyZTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMwYzFmMTg4ZjE0MmVkN2E4MjQ2ODBiMjA3MTcyYzU1MTliYzYxNGE0OGZkYTdjZjE2N2VkYjhkZGY3OTk1NmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBjYTdiM2YxZGU5NTY4MjkyMzJmMTAwYjk0OGNmMDhlNDYyZTYwZGJlOGE0N2UwMjRiYzYyNzU5NTcxMWZkZTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJjMmY5NWJhZmI5YTZmMTg2ZDY2OWNhMzkzODM0NGIzODk2ZTgxYjY0OGUwNjE2MDA4ZjFiODc0ZDQ0YWQzNjIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_90a049e6de3048bcaaf0754e1340a865",
+      "statement": "set() enforces Defold's compiled-path convention by auto-appending 'c' to the values of exactly the six COMPILED_SETTING_KEYS (matched section-qualified as 'section.key') when the value does not already end with 'c', making the operation idempotent; all other keys are written verbatim.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/config.py#L22-L41",
+          "version": "repo-lines-v1:sha256:545112269dbf71d7b5acdebe1e2ba2c2ad4f83a9ad20fd688d9ff3ffc9b48b04:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlYzhiNGFiMmE2NmEyOWZjZTkwMTU4ZWEyNjEwZmYyYjE2ZDQwYWZlNWViMDEwMmFmYjE5OWZkYjBmZjFjZjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhZmJhMDUyN2MzOTUzYzRiNmUwZTViNTczOWJhODM2MTJmODA1M2JjZGM5NDY2NzMwMTkzY2QxZDU5MGI0MDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjExMWY3N2VlNzBiYjRlMDkyY2IzZjVjNjUyYmFlNzk3MTU2MTM0OGQwNmNkNGUzNmMzYTY3M2Y2MWYzM2JmNzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNkZjg2OThjZjEzMTdlZDBhZTU4NmIyNTk4MWFlYWU0MWQ4ZDJiNjc0ZjU3ZDZhMjZlNmI1MTc5OWZmYmJjYmEifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/project.py#L134-L148",
+          "version": "repo-lines-v1:sha256:927e3687807d76eb83eb897831e11c988068c20cbef617e3999e100fab20ac73:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVmYTcyMTAxMTNkN2ZhNjVhYjlmNTNmODI0MjA3ZTFlZDA5NjgzMzVlNjBkYWMwMjYyNTZkZDk4NTI5NTAxNDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2MDc2Y2E4MzY0OGMzODg2ZTIyMGYyZTQyZTdhNThlN2IzOTY3NzE5NTE0ZDdiN2EyYjljYTFiZThhOWE0ODAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNiNWRkYWRmMjlhOTZiYzFlZGQ0YjZjM2ViOWIxN2ViNTJmZjkwNzViY2ZjZjNmOGViN2FkM2UxM2Q1Nzk2YjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQyMTNhM2M2ODQ0OGZkMjg1YmFhNGE2YmI0MjhiNzUzMjBhM2I3YWNlYzNiODU2MDk2OTBiMTdmMWNlMWI0MDQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_2b5124801a60471bb032d8dd09b0d4ee",
+      "statement": "Dependencies are read numerically ordered by the index after '#' (dependencies#2 before dependencies#10) with the legacy comma-separated 'dependencies' key used only when no indexed keys exist, and add_dependency/remove_dependency rewrite the whole block as gap-free sequential dependencies#0..#N-1 keys while leaving unrelated sections, comments and blank lines untouched.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L108-L125",
+          "version": "repo-lines-v1:sha256:a120f19c1c8461a6b5d9665b5667db8cc5ce568a3d94d3a1a7c6b2afd43da2ef:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFmMmEzNWExY2ZjMGVlYWQ5YWIyYjcxNWQ0YWRkZGFjNDI3ODFhNWNlZjIyY2U2YzhkNTRiMTZkMWNhOTA1ZTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUyOGFhYjI0ZjBkNDExMDFiNThiNDFlNTk5OGI1MWZlZTQ1YmU4NGI2ZTYwZjk0ODk1NGU3Y2MyMzAzNzQ2MTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdkYTRiODQ2MDIyYmNiZjViYjA2OTc1NmJlZDhiNWY3NDQ0ODM4Nzc4Njc2NzEyNzZjZjRmYWMwYzA1ZmYzZjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVjNzMwMTEyMTM0YzU0OTdkMzUyZWFlYzgzNTQyMDE4ZTE2NjVlMDgwZjYwNDM1OWZjODk0MWFjZjVmN2QzM2MifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/project.py#L180-L230",
+          "version": "repo-lines-v1:sha256:03c593d7a6ee561aecfa85adb12f5e4789b21b290371f8b21c77ec2ef2cd82a5:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhM2ZlNmRkYTY1MWFlYjQ4NGY2MzZmNjhkMGNmZWM4ODZjZGEyNDE0ZWRlMDY4NjY5ZTFmZGE0MGFhMzgxMDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQxMDQyNGJkZTNhZDkxZmY4ZGFlYTgxYTRhYTUwNGIyZmU5ZDM3OTIzZjU5Mzc5MTUyZDU0M2Q3YjRkZWFmNzEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI0ZjJmMmRkOWEwNTNhYTExZjI5OGRiYjAxNTM1MzQ5MjkzYmMzODZlMGM3ZTEyMDlmZGE4OTMzYTRlZTc2OTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNhODZjYWRmNmFlNWVjODdkZmMyOWY2MzQxZTA1M2E0NmM0ODBiMmE2NjAwM2YxZWEwMDIwNzk5NzE0MTgyZWUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_36bb072af3e84bd68de89c7d3b7bbe31",
+      "statement": "Public mutators reject newline and carriage-return characters in their string arguments (and ']' in section names) with ValueError before any mutation, preventing line-injection of forged sections or dependency entries from LLM-supplied input.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L134-L141",
+          "version": "repo-lines-v1:sha256:8a6b27bb6abf06e9e8475ec61da1057fe8b9fa6aea2ba7026f5604973378cf43:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWZhNzIxMDExM2Q3ZmE2NWFiOWY1M2Y4MjQyMDdlMWVkMDk2ODMzNWU2MGRhYzAyNjI1NmRkOTg1Mjk1MDE0NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTdmM2U3MjA1ZWM5MzZjY2Y5YTJiYzUzN2UwNjZlNWI5NTg3YWUwZDhjZWIxMmRhMGFiYTg3NDZmYjJiNmRlNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2I1ZGRhZGYyOWE5NmJjMWVkZDRiNmMzZWI5YjE3ZWI1MmZmOTA3NWJjZmNmM2Y4ZWI3YWQzZTEzZDU3OTZiNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTE4ZTNiOWE4YjAxYzBiMjdjMjVjZjQxNmE4YmIxZjJkNDliYTVmZmVhZjIwMmYxZWZhNTM4MWQ0NTBjOTU1MCJ9"
+        },
+        {
+          "resource": "repo://src/defold_mcp/project.py#L211-L230",
+          "version": "repo-lines-v1:sha256:59ef9709284bcd578ba0ac1467cbe6516a0e14289b032cf7ded3b13edcdec574:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFmYTRmYTRhNmVjODI0Zjk3ZmM3MjQxZTFiN2Y0M2M1ZjdlNjVmNjFiZTkzM2FjZTc2ZmRjZTI5ZGVhMTA5N2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQxMDQyNGJkZTNhZDkxZmY4ZGFlYTgxYTRhYTUwNGIyZmU5ZDM3OTIzZjU5Mzc5MTUyZDU0M2Q3YjRkZWFmNzEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBhNWQ4OWI3MjE4MjczYmY0ZDRiNmVjMjU1MDk3OWQyYjI1OTk1YThkMmI3ZGQ2MTExMjBjY2I0YTlhM2VhODAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNhODZjYWRmNmFlNWVjODdkZmMyOWY2MzQxZTA1M2E0NmM0ODBiMmE2NjAwM2YxZWEwMDIwNzk5NzE0MTgyZWUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_df0ef40021314529b9732b224478d991",
+      "statement": "save() writes atomically via a sibling .tmp file and os.replace, using newline='' so no os.linesep translation corrupts CRLF files on Windows.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L242-L249",
+          "version": "repo-lines-v1:sha256:3d8b46cf5ec673baf105179647b384f6572fe85750124517616ee456e40af3d9:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmNhY2RkYjI5ZmIwMWQ1YmY3MzNjNGExMTJjM2U4Zjc1OGZiN2I4Mjg2OWQ2ZjE0ZTk4Y2FlODEwNTNjMDQxZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWZkMmJmOWQ1N2Y2ODFhNjUyMDg2NjgxNDE0NmU0Yjc3YmNjYjNhZWI2Yjc2N2VlYWRlYWJhOTI3YmRjYjVjOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGNmNjhjMDU2NzJlOGE5OTRiNjM3MjViNWU0ZjhjMGU3YjI1YzBiMjA5MjlmN2FmODU2ZjYyMGFmZWY2ZTNmZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a0a0641c109142b1bb5c7554739a1cb4",
+      "statement": "parse_include_dirs splits [library] include_dirs on runs of whitespace and/or commas, so both the official space-separated convention and community comma-separated lists parse.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L46-L48",
+          "version": "repo-lines-v1:sha256:0197e7681b7ba086e5cc004875a7d40128ea8595dfea31e7dc99ffb9caba2afc:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGY0OTE0NzU4ZDQ3ODI3NGM5OTYwM2VhNjMxZmFmYzA2ZDI4ZGVkMTI3ZmYxNDY0OTRjYWZmYjI3MWY5YjAxNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDcxMjNmYTgwNGFlNmUxMWYyMmQxMzQwN2Q3MGM4NzcyMWQwNmYxYmU3NWU1MWM4NzgyODkxY2IxYWI1YjU5NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGNjNGE3ZDFjYzc5NmFiYTNlNDY3MjMzMjdmNTE3ZTlmODExOTgyZDI1MGYwNzAyOTg2ZTRiNTc2NGFkOTU4OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODA2NGQ0ZTEyMjViMzUyMzQ1ZDdhMjY5OGQ1NGZiODRhYjY1MWU1NTYyMjk5ODE3MzI3MTdjM2M4OTExNmZkOCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_94f7feb85b904e80a2e1018819a50943",
+      "statement": "Keys containing '=' are not rejected by the mutator guards; validating them is deferred to the MCP tool boundary in the server-wiring phase.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L86-L94",
+          "version": "repo-lines-v1:sha256:c1d3a46d1e5ab7ac32336cb75889186423df13e31d7480322d0f2b086b73e40c:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjZhOWMxOThjZjFmMTY2YzVjYjdhYzAxNzhlM2YxODlkYjVmYjZmMTQ5MDFlZjU1ODAzNmMyNjc1NjQ2Njk2NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMGViMmZhNTgxZmVmMTRlZjRkNjkyOTA0YjY5ZjU0MjMwYWQ1OWYyYzczMTdmOWFkNTlkNGEwMjJlNjAyN2QyYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjhmMDVlYmU3M2M0ODc5NTljNGYyNDUxNmE1MzM5NDQ2NDYzNWIwNWI2NzUyYTNkMjEwNTZjYjQ2NjRmNTUzMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTkxYWM0NTY3YWIwNDc5ODhhNjkyZWQ5MjU0NDgzZjVhOWIyYTI4OTgyYmE0Y2UyMTNjOGQ3OGM0ZTRmNmVhYyJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-14T16:49:47.288Z"
+  }
+}

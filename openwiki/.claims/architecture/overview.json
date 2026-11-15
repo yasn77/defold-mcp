@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:bd4cc700edaf6c4de5fae4034f81e654a8496f012e4e4dd3e42efd0fa0108ad5",
+  "claims": [
+    {
+      "id": "claim_e8d9095eb07f49daa4286b0a85aa31d7",
+      "statement": "config.py is the side-effect-free constants layer: it owns the artifact source URLs, the hard limits MIN_BOB_JAVA_MAJOR=25, ENGINE_POST_MAX_BYTES=1024 and DEFAULT_ENGINE_PORT=8001, the six-entry ordered COMPILED_SETTING_KEYS tuple, the cache-dir environment override, and the host-platform triplet mapping.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/config.py",
+          "version": "repo-file-v1:sha256:440035b40a0ff1d3d4143458f303952a8b163339d9754a70324be71c55073288"
+        }
+      ]
+    },
+    {
+      "id": "claim_968313ee233341db943e673e890821a5",
+      "statement": "get_cache_dir resolves DEFOLD_MCP_CACHE_DIR when set (falling back to ~/.cache/defold-mcp) and host_platform_info maps the running host onto Defold's platform triplets, raising ValueError listing supported combinations for unknown pairs.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/config.py#L66-L97",
+          "version": "repo-lines-v1:sha256:5dccac2a5b88eac06eead7234727208654cec0bff1eeea48d0bce16866280005:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYyY2UzYTRjZTIxZmNmMDRhMzY3OWViOGY0YzZiMTIzYmQ1Y2MzNjQxZTliZjE4OTJkZWMxNjRmY2ZiMGQ5NjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_89cba0ef680d472ea01db0bd0b598685",
+      "statement": "project.py models game.project as a line-preserving editor and imports COMPILED_SETTING_KEYS from defold_mcp.config, establishing the downward-only dependency layering (project depends on config, never the reverse).",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/project.py#L10-L14",
+          "version": "repo-lines-v1:sha256:26d8a6b09db813589a3b7eff316bc065db5493379755b1c3651bec170b3cb231:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzcyN2FkZmY1MjRlMDYxNjAyMmVhZGQ4ZjRhZjIxYTA3NzhiMjlmYzRjNzdiZGZlZmQxYWZjZTJjYmY1ZTRiNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGFiODViNmNhNWRkODZiOGU1ZTNmZDFmMjE2YTlhMDNmOWE4OTQyZWNjZjExZDdkNDAwNWVlMmNkYjEwZWVkZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzE3YWJhYjQwNWE1MWQyZjg4MGUzYzVlNGE1MWUyMTAzMzg3NmYxODg1ZTdlNzMzOWY5MGVlYjYzMTNhMjM2ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTA5YWQ2MjkyMjVmZmQ5YjJmOGQxZmRmMzczYzRiN2M0NTQyYmJmOTc4NDg3Y2NhMzQ3NzhmMGQyZDNhYmJkYyJ9"
+        },
+        {
+          "resource": "repo://src/defold_mcp/project.py#L51-L69",
+          "version": "repo-lines-v1:sha256:1ddf68ab4f313d077dbd3175027557acda34921a1756ffc3af7651dc49db005d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFhOGU1YjI1NGQzMTMwN2U1N2I4NjM2NTdiMjQxN2JjY2M4MjI3MDQ4NGJmYjI3NDI2YWRjYmM3NzMxNTFmOTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyYmFhZjY5ODAyMzI3NTU3Y2JhYWEwODUxZjYwODRjMWRhMDRlMjc5NWFlZWI1YTliNTc2ZTk2Y2VlZTFkYjQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk1NTYxMjU0YTY0YTllMWZiY2VlYzcxNzllNWRjOWJjN2JkZWUwZWQwYzZiZTI3NjFiNDBmN2FjNjZiM2YzNjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNmOGViNTQzZGQyZWY4MzdiM2Y1MjhhOGQ3MGJjMThlYzQ1NzEwMGUyMDFhYTM3MjllNjA0MDJkOTUyNzdjNzQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b5e7b01962614172a9af814450142980",
+      "statement": "pyproject.toml declares the console script defold-mcp = \"defold_mcp.__main__:main\", and __main__ is implemented — it serves stdio (default) or streamable-http and exposes the skill install and integration install subcommands.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
+        },
+        {
+          "resource": "repo://src/defold_mcp/__main__.py",
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
+        }
+      ]
+    },
+    {
+      "id": "claim_b92ba7ba290e4ac99e7dae6454a0dbf9",
+      "statement": "The package targets Python >= 3.14 with runtime dependencies mcp>=1.6.0, httpx>=0.27.0 and pillow>=10.0.0, dev extras pytest, pytest-asyncio and pyyaml, and a hatchling build backend with the skill force-included into the wheel.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
+        }
+      ]
+    },
+    {
+      "id": "claim_b25ded6e891e4e7a9ea90a77788830d0",
+      "statement": "The commissioned plan is fully delivered: the src/defold_mcp package contains twelve landed subsystems (config, project, textproto with the 14-op registry, toolchain, deps, docs index, editor/engine/bridge clients, runners, the twenty-tool server, templates) plus the package marker, and the repo additionally ships the portable agent skill, the sanitised-env handshake probe, the per-harness install guide, the skill/integration CLI subcommands, the Chainguard container, and the CI/release/Renovate automation — all live-verified against real Defold 1.14.1.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml",
+          "version": "repo-file-v1:sha256:8f73b280c8cd68658dd89f1b92f4495bef21297656cb1b8ce5345768dcfacfe9"
+        },
+        {
+          "resource": "repo://Containerfile",
+          "version": "repo-file-v1:sha256:fa9f472e538ea3064a8c57444344adfb91ee1f3df68d458dc8705c78b16c32a6"
+        },
+        {
+          "resource": "repo://src/defold_mcp/__init__.py",
+          "version": "repo-file-v1:sha256:5e3d506e3254779b75aef97842ba2f7cddb59c2ec350561c7d1339630b59a8bf"
+        }
+      ]
+    },
+    {
+      "id": "claim_944effd10f7f4190a33865067be9a51c",
+      "statement": "The textproto package is the structured-resource core with a byte-exact round-trip contract over verified Defold 1.14.1 fixtures; its schemas.py field-order tables are now wired into the serializer via the optional extension parameter (canonical top-level ordering for freshly-created resources), with the default parameter preserving insertion-order byte-exactness.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/schemas.py#L12-L22",
+          "version": "repo-lines-v1:sha256:1cc044d6f13953cb48aaf11e14ccbaec285c3eab0aceb5ea6c52e79333e9139c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjZDVhNzQ5NGUyNjhhOTk5ZjFkOGY3Y2EwZjhjYTgyMzEzZjIwZDQ5MmI0MzI0M2RkZjRlODkzZDExYzlmNTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFhYWY3NjM3Y2I2ZTdlNWRiODVkNjM0Mjc0NjAxNGRmMDQxY2NkNTU4YTkyMGIyOWViNmFjNzE5ZDdiYWY1YzIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjZkNjk5YTE1MTNiMTU1N2RjZTdhMWNlNTg4ODMxMDk5MzRhMDU3MGVlZDdmYjNlM2EwMGI4MDAwNzY5MDJiOGYifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/textproto/serializer.py#L297-L311",
+          "version": "repo-lines-v1:sha256:90368853a0f5079a6a47c9c9039af2057cb1e867e1645dcde82e7d8789232e61:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUxYWQ2NzJmMjQ3Yzg1NDkzMjhjZTQ2MzgyMDcxMjEyYTUzMjVmODliYWNhYTc3YmViYjdlY2Q3ODE3YzFlOTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1MTc3ODFlZjRiMmI0ZjdmNzNmMjVmOTRlZjk0YWUwMjlkMGQyYzk4NDI1MDE1ZmVmOWM1NjZjMDUyYzcxM2UiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk4MTRlNWVhNDk5YjU2MmU4YTA2NzJjYjA0NTExZjk3ZDY1MDhlMWRjN2EzYjY2ZDhkODA5YjgwMmU1ODFlYWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk3Y2IxYzMyMzViNjA4NThiNmI2NzE3ODA4NjczZDZiOTVjMjlkZDUwNDQ2M2JmNjQ5ZGZiOTZkODE0M2RjMDEifQ"
+        },
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L1250-L1296",
+          "version": "repo-lines-v1:sha256:bc37f125f3bdc2da1547c60078c9fc7c7bd9cc6714b768814b59254ea8b85522:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM1MDI1ZDRmMjQwMDExOGZmMzUxOGU0ZmJlNmU4OTMyMjBlZGE2YmE3NTJiNmMxMDk4OWMzMjIwYjYxZGM5MTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQwMGFhOTE4Mjc2NWI4ZmU5NWQwYTIzNjYxMzFmM2MyZTBmZjg4OTNhOTFjOTMyZWZhMjgyMDA4MjJhNzNlMTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIzZGYyYWNmMDZlOGMzZjAzYzcxMzVjNmU4YWM1YTljYTU0MzJhYmUwNmE3NGFjYTBmZGQ5YTUzYTAwOGY5ODciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAwODhhY2E1YjY4YjA2OTE3MzBkN2NmNjUyOWRkZjE4MDA2MjY3NDE3N2IzMGExMjI3YWFmMTVjYjNiZTAxYzMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c4ab1b608c05448f862a4cf5978a61cf",
+      "statement": "The toolchain, deps and docs_index modules follow the downward-only layering rule: they import config (and deps imports toolchain) but never each other's internals nor any layer above them; the MCP server layer orchestrates all subsystems behind the twenty defold_* tools.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/deps.py#L17-L21",
+          "version": "repo-lines-v1:sha256:0bcc80240e57a99033be3b78982b0c7d817c1410f16a5338188ddd2e070a8054:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmQxYzUwMGUzMWI2ODZiZjdjYjczOTg3ODVhZTc3YmUzYjVmMTlmOTJmZDU3YWFjNThhMjcxZTJlOWMxYWMwMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMWI2NjJjOWU3NjdhZjM1NDg1ZjczMjNhNWQ4YzM3MGFmOWM1Mjg2ZTM1NzUxOTZhNTNiNDhkYTc4OTk5MzgxZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODhmNzA4MGZhMWUwMDA4MmEwYWRiY2QzODQzNzAzNTZiMzVhOGVhODQ2Yzg0M2E3YTFhZTI4N2JkYzE3YTI5NCJ9"
+        },
+        {
+          "resource": "repo://src/defold_mcp/server.py#L1-L120",
+          "version": "repo-lines-v1:sha256:acdcf405a17719e7a55334c33d24698cd53a0a33999d03087c0e15cb82daaac8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI4MTg1NzQxNzRkMGJjMDZhNzhmZDY3MDRkN2ZmMjMzMWZlNTkxNjg5OGVmY2FjNjg0ZmU5YzBmNWZhY2NjYWE2IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI3NjJjOTQ4MTdkMDEwMjY5MGMyNjBmYzdjNGI3NjgyOTc3NzcyM2RhNDYwYjkxODI1YjJlNjgzZGI2MDc2N2Q0IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MCwicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIxYWMwZjhkMDBkMTJkMGZjM2RjYTYyMWE2Y2MzZTQyZGM3MTVhNzM3ZjFjMjRlYmIxOGFlMjAxNjNkNDIzNzNhIn0"
+        },
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py#L1-L60",
+          "version": "repo-lines-v1:sha256:f472d98129542f0959e408a5f60db1f4c5445deb44cae25fe1753a9614df1f8a:eyJzZWxlY3RlZExpbmVDb3VudCI6NjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdhNWVhNzdmZmY3MzdjYmU2Nzg3MzJhYjM3Y2M5NDYwMWZkNWVjNTY4Y2FlNTkyMGI4MjZlODQ4NjQ5YWE2YWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1OGE5YmVmODA1M2FkNGQzMDFlZGRkYTM4ZGViZWFjYWIzNmUyOTYzOTU5NTJhMDQxYjFkYTU0NTk0Y2FmMzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjEwYmFiNGI4YjQzM2YyMzlhOGI2YmU3NTI1ZTgzMzZiZWUxY2E1NGIwOTNlNDE2NWE0YTQ5Zjg0YmY2NzYyMjYifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T16:38:15.389Z"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:ba0c048141501ccabbdfef4963615a6461d34d007d1e033da8306de52c4dcc28",
+  "claims": [
+    {
+      "id": "claim_ea082c9c2d384f479480e944daab42ce",
+      "statement": "The skill's frontmatter is restricted to the portable subset with the description byte-exactly 'Use when building, testing, or bundling Defold games.' (53 chars, pinned by a validation script), and the body carries the seven commissioned sections including all ten hard invariants and the closed-loop procedure with checkable criteria.",
+      "evidence": [
+        {
+          "resource": "repo://skill/defold/SKILL.md",
+          "version": "repo-file-v1:sha256:0ea4ce9f5d06a878667e414c9a021ca552a4d0ce9aba5e782f0d8d6c08163f8d"
+        },
+        {
+          "resource": "repo://tests/test_mcp_stdio_e2e.py",
+          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
+        }
+      ]
+    },
+    {
+      "id": "claim_3bd887f77ef046aa833aea5b21d4e05f",
+      "statement": "Every action name, payload key and API call in the skill was verified against the shipped server, the mutations registry and the offline ref-doc index — review caught and fixed three drift findings (invented gui.property, two phantom runtime_act actions, a wrong collision mode) before merge.",
+      "evidence": [
+        {
+          "resource": "repo://skill/defold/references/proto-schemas-quickref.md#L140-L160",
+          "version": "repo-lines-v1:sha256:6e60f6cb667ae84fe4dd8976fc5c4d8277f7476a53e87b1b8553879df79f5fc2:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg0NTFmMjk3ZDlhZDI5MjJkMmJjMmVlZmY3NjQ3NDYzYTA1ZDYyMGMxZDBhZmI0ZWI0ODJhNDliZWNiNzIzODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI5ZjMzMGU2YzMzZDAwMzk0NmQzYzlkODM1NWI3YjJjMzcyYTQzNjdjM2NkNTFkYzU0NTRjNmE5MjlhYmJhYzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVhOThiMmY1N2JlOGUxZTdlZWQzZWU4YWRmNmRhOGU4ZTlkOTJmMjczZjc5Y2NkNGYxOTdmNjc1MTg3Y2FkYjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY2ZTg4MTM2M2FlMjI0ZDMyOWRhOGM2NzllMDgxN2RhNjM3ZmJiYTA1YTBmOGQxMDBhNWYzYjc2MDIyNTAyY2YifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/server.py#L1202-L1316",
+          "version": "repo-lines-v1:sha256:16cc82d115eb909ca3b69b8bf79ea6734953338c70ec294cc48ab05d6bc531fe:eyJzZWxlY3RlZExpbmVDb3VudCI6MTE1LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJjYzQ3OTU3ZTQ5NWUxNjNmYTVkYmU1YmIxMDU1MGVjYzRkNjYyZGFmOTcyOGI5ZGI3NmYzMDgxZTMxMzQ3ZmRjIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIwMWJhNDcxOWM4MGI2ZmU5MTFiMDkxYTdjMDUxMjRiNjRlZWVjZTk2NGUwOWMwNThlZjhmOTgwNWRhY2E1NDZiIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4Y2M0YTdkMWNjNzk2YWJhM2U0NjcyMzMyN2Y1MTdlOWY4MTE5ODJkMjUwZjA3MDI5ODZlNGI1NzY0YWQ5NTg5IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIxMTAyZTE4MTYwOWRiNDI2NDY0NjMyNDZiZTBjMDg2ZDI0ZjBhZGFlY2Y3ZmNiMWQxZTZhOGU5MjViZDQxNDkyIn0"
+        },
+        {
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L114-L118",
+          "version": "repo-lines-v1:sha256:05603f8ec7802eac0595c841c1191461744b87be92a1a3a02aac4a03f2ccfb32:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWMzMWY4ZDdhODk1NGI0MGM5MTBmYzEzODY2YjlkMWJiZmQ1MGE4MWFjN2E3YzcyN2I5ODhkZDg2N2I3OGI4YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjcxYWMwYjI4M2JiYjM2OWNhMTYxNjU1M2I4ODJhOWEyYTM0N2MyM2Y3ZjA4NzA3MmE4N2RiNjRmOGUzY2NmZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmQ2OTJiYTI0ZDI3MjI4Y2ZkZmE2MGNkZmExYzEzNTIyZWRlODNkMTU3MDhmMWU1ZDg0ZjI2OTE1YWVhY2YzNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMmZlNGI0Y2JlNWY5MjkzMjMzMTA5MzQ4MjZhMWMzMmJjNTdlMDQ2MDJkNTUzMjE5N2FmNDdkYTQxYTYxMjY1NiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_df77c89747e043c0b41bd33b685d04dc",
+      "statement": "docs/INSTALL.md is the canonical per-harness registration guide with unit-correct per-tool timeout guidance (OpenCode and Claude Code in milliseconds, Codex in seconds, VS Code and Cursor with no knob documented honestly), grounded troubleshooting, run modes including uvx and the published container image, and the registration is now automatable via the defold-mcp skill install and integration install CLI subcommands.",
+      "evidence": [
+        {
+          "resource": "repo://docs/INSTALL.md",
+          "version": "repo-file-v1:sha256:a8c4bf03835ce484c4406c75320fe11768029404b7169e4208fd1ebaca45972e"
+        },
+        {
+          "resource": "repo://src/defold_mcp/__main__.py",
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
+        }
+      ]
+    },
+    {
+      "id": "claim_c74bd0ca65ef4de9a4c4dc15eef324d9",
+      "statement": "The handshake probe spawns the real binary under a sanitised environment (PATH, HOME, USER, TMPDIR only), asserts exactly twenty tools with descriptions and object schemas, calls defold_doctor, enforces stdout purity, and exits non-zero with clear messages on its negative paths.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/mcp_handshake_test.py",
+          "version": "repo-file-v1:sha256:e0fcfe0d71f08a136f2e2922c90785145c7a6fb1c918bdac91773be2bc1f4627"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T16:38:15.389Z"
+  }
+}

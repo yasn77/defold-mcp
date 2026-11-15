@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:544f552612eef76028689508590ae6655cbecce89a09dcdda25e6eaf8d7208ba",
+  "claims": [
+    {
+      "id": "claim_d529cfe9167248eb9948b7956d8edfa1",
+      "statement": "The client unwraps the extension's DLIB status quirk: HTTP 500 bodies carrying ok=false with an error dict raise BridgeApiError with the logical status, code and message (not the HTTP confusion), raw or non-JSON errors degrade to raw-status BridgeApiErrors, and a 200 carrying ok=false correctly does not raise.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bridge_client.py#L100-L140",
+          "version": "repo-lines-v1:sha256:c6d849a1aca3365c4f80e1e3689b4344e98895da430dff19f7feb4480e69b47b:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUyZjhlM2I0YzJlMDQwZDA1ODhjNWEzYTUyMzFiMTVlN2Q5ZThjNDFjNWZiNmIyNTAxYTgzZWNmYTM4MGVkNjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY5ZTYyOGYzNDdjNjk0NThiNGQ1ZGRkNzY2ZGNlMTdlMzhjNTYxNGI1MGM1YTUwMzE4YTUyZTcwYTBjNTYwMTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI4NjE4ZTE3ODg1Mzg1Mzg2OTNkYjc4OTU4MDRjYTYwYjZhYjMxYjRmNzdkMzM2NTE3N2EwZmI5MWI0N2NiYTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQwZDE4MzkwYWU5ZmE2OWIzOWJkZjc4YWI4ZjkwMGE1NDEzMTBhYThjYTJiMDk3ZDZiMDBmZmE0M2UxNTk0YmUifQ"
+        },
+        {
+          "resource": "repo://tests/test_bridge_v2.py#L30-L66",
+          "version": "repo-lines-v1:sha256:a220a343c837dbb7f1b9b581415a6a797ad6ddce588b77e7747ef27c7bd75a53:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJmZjZjZGQ5ODhhMTk0NDgxZWIzNDliZDlhNmEwNmFjZWE5YmUzNzBkMDY4NmJmNmUxNzRiMzU2MWQyYmY1MmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU4M2MyMzRkY2IzMGI5NzQyOWU0NjczNzBkN2Q2Mjc5MDUzNTg4MDc0ZjEwNWUzMzMwMGM3ZjQ1ZjM0MDJkMjEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNiODc0ZDZkZDU0OTFmMTMzMDNmYmI0NTkzY2VlODEzNDBiOGE2OWY3MTk2MjY5MDE2YzE0OTZmNzcwZDM2ZjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU2MDk0OWJhOTBjMzIwNDhjNWU1ZDQyZGY3NmIxNTk4OGQ4YmYxOTE3YTE4ZDZhZWI4ZTE4NDg4YmQ1ZmY5NzkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c0dc8ad4a4344668b849e5e037af71d5",
+      "statement": "The FIFO input lease uses a lazily-generated, sticky per-instance session UUID with monotonic-clock expiry; every input action silently reconfigures with the same UUID when expired, and release_lease never raises.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bridge_client.py#L191-L260",
+          "version": "repo-lines-v1:sha256:1fd4be2382b26a89b5d88c3c8fce74a004b20b77e71d22977e953e8605fc3cd8:eyJzZWxlY3RlZExpbmVDb3VudCI6NzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNiZjUxZDg3YTkxNjU1ZjUzYWRlMjhlNWYyMWVhNDEwNmFkOGNjYmZlZTc4YzAyZWE3YTIyMjk3NzU2Mzc2MTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgzNDYyOTY0MGY3ZDBmNWRmNDFlNjViMTY3MTQ3MDlhZTk5NjEyNTlkMTkyNWQ1M2JjY2U5YjA2ZDU1ZGVkYTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEzZGZlYTZlOTY2ZWI3ZjQ5NGZmZDM1MWQ3YzhkOGUyMWJlMmVhM2UwMzFjMTQzZWIyYmYxMGUwYzM3NzFkNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVjNDcxODIxZTc3ZjM3NjQwOGEzMmI4NTY1OTg4OTA1MWU3MTlmZTE3ZWZlYzNmNmJlODE0NzNlNWQ0ZDRhNTAifQ"
+        },
+        {
+          "resource": "repo://tests/test_bridge_v2.py#L123-L176",
+          "version": "repo-lines-v1:sha256:fdbad4ccfb2408c4b48e9e34c7195f04df5efe2ad4b19a771c134ef08dcd5289:eyJzZWxlY3RlZExpbmVDb3VudCI6NTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNhMGMxN2RhOTJmN2ZkMmU3ZjFjOGNiNTBkMmZlNDU4OGRlNzkxYTRiMzU3ZmUxZmNjOWU0NjQ2MzJjZjBmYzAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3YjE3YTQwOTFkNjRhMGIzNzY4ZTYwYWM3MzM0YTJjMmU4MmY1MjZmZjRkMDI5MTEyYmY3NThmNzg3ODU5NmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY5ZWYyMjI4ZDRhZGY5NTFkY2I5N2I5ZjdmYjFkZjk1YmUyMTUzZGNhM2FiZGNhNjVlNjM2YWU2NmM5ZmYwYmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxNDk3OTBmOWI0ZGJlZDBlZWFkNWIyZmEyNDViNWE3YzI0M2E4MTQ0NTY0YWVkN2M4OTk4NzU4ZjkzYTQ5OTkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b695a294503b40a1bedcf3d2581e2fd4",
+      "statement": "Input actions resolve targets (direct element, automation_id first-match with LookupError, or coordinates), POST bodies carrying the element id plus expected_scene_sequence and expected_logical_id guards, then poll input status until state equals released; timeouts carry the last status.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bridge_client.py#L262-L476",
+          "version": "repo-lines-v1:sha256:aadb6ef8d9ff3bca8b6e3d665001de4303215467aa02c51998a162da29110c8a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjE1LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIzYWI1NDAwZDhkMTI5NTYzY2M4MWYxMTU4NjZhMWM2MmI3ZmY2MDhkY2NiMGFhNDY3ZmE1MmExZjBkMTM4ZDI2IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIwMjdiN2UxYWM1NjYyNTgxNWMzY2NhOWZiNmY3YTIyYzdlZTI0YjZjZmYzZWNiNzIyZDhkNGQ0Y2E4ZjY3NDdmIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIzMGRiNTQ0NGM2Y2VkYWYxMmU4ZGFiZTBjNDM4ZmNkZTQ5ZTcwNDE0OTJmMDljYjZlYjk5ZTU4M2ZkYTY2ODQwIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJiM2E2OTIwMWNhMzM5N2U1MjFiYjIxNDYwOWU3MzQ1MGI4YTJmN2M1ZGNkM2E5MjMzNDg1YTYwN2QzYTA1MzVmIn0"
+        },
+        {
+          "resource": "repo://tests/test_bridge_v2.py#L178-L240",
+          "version": "repo-lines-v1:sha256:2efaacc23fe3c7647a5f8d3776207d846a7edbdf1053d9c80cf18158f1ad1d3b:eyJzZWxlY3RlZExpbmVDb3VudCI6NjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM0ODA0ZWY5ZmI1M2VlZmMxNTRhMjFhMDdlNTI2YTMzM2Y2MjM1Yzk1OGRmNjkwYzNlNzQwODkyMWQ5ZDAxM2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyYjNmNTNiYzhjYjBmMmNkNmVjYjk2YzJkYjgwN2M3OTE3MDc2MzU4YWNmNzlkNzNjOTkxMmNlNmNkZTFkYWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc2MzdkNjU1YWY2MTYwNmY5NDc4MmE4MWZmMDRjNDBjMGU5MGY3YWQ5NTA3MjFlYjI4MWM2YWY4Njg0ODlhMTkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ef181e74dce0422eadab41c41ddc89ae",
+      "statement": "take_screenshot polls the capture status to completion and validates the receipt sha256 against the engine-side file, reporting verified as sha256-is-not-None and raising BridgeApiError code sha256_mismatch on mismatch.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bridge_client.py#L478-L540",
+          "version": "repo-lines-v1:sha256:a9a8912e91fb3a288f2308688a5f53d0d4253da065fa2a0861446c4e58a1ef61:eyJzZWxlY3RlZExpbmVDb3VudCI6NjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJjNzhmNWQxODY4NWI5NWYzOWJlY2VhYTlmMjE5ZTNlOWFjNTFhZjg0YTUzYWFkMTBhZmNjY2EzMzViOTZmZjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMjY0NDkxZThiN2QyYjRlMTE3NDc0OTJjZDBmOTIzNTNiN2FkYjFhNzhjNWIxZWNhNWYwOGE5MzBlYzA4N2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://tests/test_bridge_v2.py#L289-L345",
+          "version": "repo-lines-v1:sha256:df020d7dc3e0ee714d788105d56538f5968320958b40e4e8a1c3fc92254bcc34:eyJzZWxlY3RlZExpbmVDb3VudCI6NTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ3NDA5YmM4Y2RmNGIwYjQxNzc2MWFiNWY4NjEyZDNhNjA3ZWIyMjVhOTZkMzhjODdlYjlmYThhZjJiMGNkMWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImExOTJjODM1YzY2YWQ3NzBkNzE4MjkyMjc5OGYxOGQwMTJmNDA2M2YwNzc0MWRlYzA3OThmZGFiNmFiYzVmMDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMxODEyMjIyNTBmZDNhNTFlNjM4ZmY2NWIyYzk4MzY0ZDQ2ZDJjYjEyY2MyYWZjMzRjNmRiZTdkOWFmOWU0ZmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJmNjc5YjUwYTA1NGRjYjg2NGU0M2Y0Y2NmNmEwZDQ5NTRlOWVjMGYyMTg5ZTdmYjY5YWZmMDkxYTNmZjVmYTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_879063628aef4abcb6c5c1599f36d7d3",
+      "statement": "Malformed 2xx bodies across both live-runtime clients raise client-owned errors naming the missing key (input_id, capture_id, completion path, element id) rather than KeyError or TypeError.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bridge_client.py#L276-L325",
+          "version": "repo-lines-v1:sha256:424e6a199ec8281e0eb38d0dc148dba944d99d35b880abaeb398e41053cf71d3:eyJzZWxlY3RlZExpbmVDb3VudCI6NTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMwMzdmYTQxMWUxMThkNDRmMjk2Nzg4OGJkNGY1ODdmZWRhNzZiYzRlZGJkOWMxYTA2YTJmZjZkYTEyNGYzMGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU1MDMyZTk2NGQwOTMyMzUxZTVkMTg1MjY5MjgxYjE3MWEzYTA5YjA4YjI4NmU2NjFlYTQ3MDMyM2M4MmViNGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVhN2VjNzJlOTJkODdhMmQ2ODgwZWFmYzgxZjEwODYxYTIxMjlhNWMxYjNlMmZmYzA1MWY0MzYyN2E0M2NhOWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImEyZDdhMmQ0M2U4OTU5ZWU4Mzc0ZTcyMGQ2ZmIxMTQxMjBhMGUyYzVlZTRlZWUzMDhlOWFjODliOTMxOTZiMmEifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/bridge_client.py#L478-L522",
+          "version": "repo-lines-v1:sha256:d567c9890d907a6ad46fba9aa4e07159132f0bf8cd3cf053285e76f691f22a52:eyJzZWxlY3RlZExpbmVDb3VudCI6NDUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJjNzhmNWQxODY4NWI5NWYzOWJlY2VhYTlmMjE5ZTNlOWFjNTFhZjg0YTUzYWFkMTBhZmNjY2EzMzViOTZmZjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU1MDMyZTk2NGQwOTMyMzUxZTVkMTg1MjY5MjgxYjE3MWEzYTA5YjA4YjI4NmU2NjFlYTQ3MDMyM2M4MmViNGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMjY0NDkxZThiN2QyYjRlMTE3NDc0OTJjZDBmOTIzNTNiN2FkYjFhNzhjNWIxZWNhNWYwOGE5MzBlYzA4N2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNlMmZhMjdjZjc3YjU2Y2E5ZTMyMGMyNzMzYjU4MTE3NWMwZmJkMGI0YjFlODFiZWMxMGNjYTM2NTg3NmUwZjEifQ"
+        },
+        {
+          "resource": "repo://tests/test_bridge_v2.py#L348-L356",
+          "version": "repo-lines-v1:sha256:77085259ac1ccfb64b4482e326b34c37da072d1d7b228a9762fc776598786146:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDVkYWQ4OTNkNjY2MjQzMmM0MGNiYThhMTBjNzdlMjU1YTQyOTMyMjM2ZTU5YWQwZDgzMDNmYjY5MDU5YTdlNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzNmOWE5MmRlZjVhM2NiMTI3ODlmNWMyYWMzZGNlNDk2ODA0ODE4ZDEzZWVkNDBiYWQ1MzAyOTUwMWU0ZTczYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDdhYTYyM2Q4OTU4ZGRlZjk4OGEwZGRmNGIwMTQ3ZTM3Y2I3ZjQ3OTIyMzQzN2FmYWNjZmFjOWI5YzUzNzAyMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T04:08:33.115Z"
+  }
+}

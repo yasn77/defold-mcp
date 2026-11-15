@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:622a50ccc0d621c8300a9dc399e48696a0e0a5588c8f3df4d2a9a05aba8a00a7",
+  "claims": [
+    {
+      "id": "claim_94c32f48bf08439088545665ff66db8a",
+      "statement": "probe_editor returns None without raising when the port file is missing, unreadable or non-integer, or when the openapi.json probe fails within its 1.5-second timeout, and returns a bound EditorClient (base URL, parsed spec, token from .internal/editor.token) on a 200.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/editor_client.py#L640-L720",
+          "version": "repo-lines-v1:sha256:31c6cd4dc4e4f69d9766fa4b48e7f02d4d085e745e6db10aa2af5ee87d9f5b49:eyJzZWxlY3RlZExpbmVDb3VudCI6ODEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxNWY5ODRhYTc0YmU1MTkyZGI2ODIxOGI3ZGFkNzVkMDFjZTI2NWNjZTI3MGI4ZmUyOGE1NTJkMjA1NzEzN2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMxMGFiODQwNWY3MWQ2ZjkzMjRkNjJlYjVmYmMwMDQ1MTMxNjhlOTBlYzkzYmNmYjgxYmQ5M2M2ZjM4OWFlYzYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBhNTRhNTQ4MzBmMjE4ZTFmMGE3OWNkYzEzZjUxZTRmZmE0ODRmMDZhZDUwYjQ4ZDY5NmQzZWE4ZmFjYzUxYmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjMwYzFmMTg4ZjE0MmVkN2E4MjQ2ODBiMjA3MTcyYzU1MTliYzYxNGE0OGZkYTdjZjE2N2VkYjhkZGY3OTk1NmMifQ"
+        },
+        {
+          "resource": "repo://tests/test_editor_client.py#L102-L140",
+          "version": "repo-lines-v1:sha256:33d03ae30674789d55efb15ad1ccf30464cee3e91a24e9f35d5c1b63dc29ae31:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ2MzU0ZWEwODExY2FmYjE5OWNkNjViZTcwYWRhOGZmMDE0ZDNiY2IzZTg0YjgwZTM0MmFhOTUzMDk1ZDI3OTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdhZWM1N2FlNzFiYzdjNDQ0Mjk3NTNkZWM3MTZjYThlYzFhMThkOTk2M2RiNTMzYzMwYTEyMzg0OGUwMjMzYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIzYjRhODRlODQzNDUxOTE3YmI3ZWI0ZTQ3NTllZGU4YTIwNTlkMGRlMWVhMDgxYTkyODY3OTdlNTM5OGFkYWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ2NGU5ZTVkMWRkYjcwZWIyZmY1NTQwOWM2YmI2MDcwN2RjODExNzJmZjg1NTg4MjMxNzU4NTJlMTFkMzlmYmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_bc45660b9497434fa361ec1bc2e92b90",
+      "statement": "compile converts 422 issue ranges from 0-based to 1-based lines with non-integer fields coerced to None, and malformed Editor bodies (non-dict 422 JSON, non-JSON 200s on console/bob_call) raise EditorClientError rather than tracebacks.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/editor_client.py#L168-L400",
+          "version": "repo-lines-v1:sha256:7ae0bc06d67db2c2f7ee3d355d2405f84a9244bf041ff8f31d30436e0d7b9f97:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMzLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI1M2U2OTg1NWM2NDJjMGQ4NDczMDdlMzQyYWFkM2Y3MDQ1Y2UzNjljYjM2MmY5YjE0YWY0NzNkYWZmODU2ZThlIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJhODIxZTU3NGM5MDA1NDhmYzNjOWY5MDM0YTljNDlkM2U3YjQxMzAzNzliYTVlYmMwNWI1MzNmNGE5NGVlNTQzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJjNTVkZmY4ZDMxMzlhZWYzODg3NzFiZWU0YjdiYmFjYjhiNzE4M2FjMGJmMzlkNjExZDgyMGIyNzQ0YTFiYTQ1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI4ZWU2M2YxYTdjYTkxMmU0ZDU3NTlhOTczNzk4NDVjOTdiMzVmYWJjODcyODc1YWUzZjU4YmE1MTk1NzgzZGEwIn0"
+        },
+        {
+          "resource": "repo://tests/test_editor_client.py#L170-L205",
+          "version": "repo-lines-v1:sha256:cf0e8bd6628d26f7bc325d9ddcf1abea4cc51784cc7f6c3fbf366900ddc44af4:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlOWQyODg1YTYxZWM0MWE2YjFlNjM4ZTAzNjhjODUyZjJmNGM4ZTg0NmQ5YWU1YmFhZTA2YTE2MDE1ZmZhYWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZkZmNjYjY5MzIxMTI1NmI4ZGZhOTIxNTFhNGU4ZGE4NmUzZmVlYmU0MzFlYzFiOTE0MzA5MTU1ZGNjZmE2NjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNiMWZhMmE5YWY3M2ZiZDZjNzc3OTQyYjhkNzFhZDEzN2ZiYmE2ZTljNWM1YjVhN2Q4MjE4Yjc1Njk5YmFmMGMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ0ZTdhMmFhM2FmMmI1MTc1OTE3YzJlMjIxMGYyNmFlZjdiOGQ2Yjk5NGEwMmE3MjMxNjc3NTMyZjUzMGIwZGIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3a357d53865a43a0b103eebf245d11e0",
+      "statement": "render_preview percent-encodes the resource path before URL interpolation, verifies PNG magic bytes, writes atomically, and maps 404 to FileNotFoundError and 422 to ValueError.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/editor_client.py#L490-L540",
+          "version": "repo-lines-v1:sha256:367475ff84075245d04ae96f8e077783501bb2ac773c56dc5d9c3fe5e1e34894:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ3ZmNjMzEwNWJkMDY3OGEyOGFkYjA1YjFjNWQwYmIxMWZlZTdmNzg0ZjNiNjAzMzY0ZTNjY2M1ZTM2N2U5MjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MjFlNTc0YzkwMDU0OGZjM2M5ZjkwMzRhOWM0OWQzZTdiNDEzMDM3OWJhNWViYzA1YjUzM2Y0YTk0ZWU1NDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0NDUxZDY4MDBkMDU5MWVmYjEyMjU5MjQxZGU5NDg0ZmE0M2UyMjllNGU2YjIxNjNhYjk0OGQ5ZmZlMDQ4MjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwNjY5YjkwOTYzOTYzZDY1NDlmMDA4ZjE4OGM2YjM0ZTE5NzEzYWMzMzI0NWM3M2M3ZDhiZGJiMzE4M2IwZDgifQ"
+        },
+        {
+          "resource": "repo://tests/test_editor_client.py#L279-L288",
+          "version": "repo-lines-v1:sha256:c3cf7629baaef63e903201625a6e34f1755c72156ea43fd33147d4db6c47fa92:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYyOWYxYjI0ZTY4YmJmYzMzOTNhNWMzMjBmOWVkOGRkY2ZiY2VmMmRkZDQ2MTFiNTNiZWZiNjBhOTBmMWQyNTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkMzM5ZGFkNTFjN2Q5NWMxY2MyNTVkODhkNWMzY2U5ODNhMzI3YTE3MDhjOGNkZGNmMmNmMDk4MjE1NWI0YjciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM3ZGJkYmJjZmU3ZTExN2YyOWMzOGY3MTc0NGQ2NGZkMWQ1NTdiZjQ4OWIxNzZlNjFlZDExZDI1YjY4Yjk0YWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwMjkwNjQwYzE0ODljZTg4YmY4YWM5OWVjZjk2ZTBjNzQ1YjgxY2MzZjU4YzVhZTQ5MTkxNTEyODRkOWRiNDkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_884c96c231354f73966230c547c53518",
+      "statement": "transact retries HTTP 503 up to three times with exponential backoff and never retries 422 (LuaScriptError carrying the Editor's message), and transact_mutations builds editor.transact with editor.save via a table-driven op generator embedding every user value through lua_quote and _lua_literal only — with non-finite floats rejected and nodes addressed as client-quoted path strings.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/editor_client.py#L100-L135",
+          "version": "repo-lines-v1:sha256:f07ef370bd9d85d5dbcd480d506e79babca199ea9b2a9313ff236ac5d445cbaa:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdhYWFhYTdlZTNiYjg2MTc4M2RiZDNjYzFjOGRhNmEwOGI1NWIyMDFkYTIxNzUyYjQ1ZWMwNDhiYjEzMzRiYTYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgzN2YyNWY2YTE2OTE2ODFiNzlkYzg3ZDc2MWZjZTgwNTg1MjEwMzI2NmIwYzM1MjE2NDVhYjMxNTY5MGRkMDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJmNWFmODAyMTUwZDIxZTM0YWFkYTFmOTk4NTAxZjJiZjQ4ZDQ3ZmEyZTVhY2M3YmZhYjUwZTRkNDRiNjkyZjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQzZDNiNzVmMjdlMDliYmUxNWNmN2JkMmVlMzY1ODczZTk2MDQ1MzEwYzc1MzZkODBmMzBiNDFlODBiMjdkNmQifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/editor_client.py#L560-L660",
+          "version": "repo-lines-v1:sha256:2c206d56fb8a94ea354a1eba791b132e6e002c32931677813a3b9cc2221a753e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJiNWE4ZTQzMjllNDEwMWI0YjQ5YzZkMmY4NzMyNjI3NDk2NDU3YjM2NTU0ZDQxZGEyNmYyNTBlYzNjYThiMGVjIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJhODIxZTU3NGM5MDA1NDhmYzNjOWY5MDM0YTljNDlkM2U3YjQxMzAzNzliYTVlYmMwNWI1MzNmNGE5NGVlNTQzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlYjM1YTgxNDYyNjE1NTk4NjdiY2I2NWIwZmJhMGE4OWE0ODllODRjMDYzZDhmM2IxNzk2ZjQ0OWI0NDkwMjQxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI3MjM5OGY3ZWUxZTVkZDk2NzFmNGZlZmRmMmYxODIxMDJkY2E1YzQ4MzY5OTczZjk5NGIzOTExY2UyZTMyNDA4In0"
+        },
+        {
+          "resource": "repo://tests/test_editor_client.py#L286-L395",
+          "version": "repo-lines-v1:sha256:a757841a63e39674f1eebdea4f43b9d6c2abd808b0a468ee3bd8917418c1985e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwMWJhNDcxOWM4MGI2ZmU5MTFiMDkxYTdjMDUxMjRiNjRlZWVjZTk2NGUwOWMwNThlZjhmOTgwNWRhY2E1NDZiIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI5NzI1OWJjYzk2NDQ0ZDZlMThhNWZjZTNjYWVjZDc4ZmQ0OGE2ODhmYjllMDNjZmI0NWFlMjc2Yjg3YjM5ZmMzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJiZmY3ZjAzN2QwMmNjODZjOTIwNmY4NGFhZTExMTZkM2RjOGI5NDlhY2FlMWI4OWFhNjFjYTBhYWE2MTYzMTEwIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI0ZDZjMWI2NWRiZTEyNjhhZjAwMzI1OWU0YTljMjE2YjQ3NDc0ZjFiMjY4OTA3YTIyOTIyOWQ0OGZiMmE3MWNlIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_0e20e295b12e417aa8b2043008f618c6",
+      "statement": "The bearer token attaches only to /eval and /bob, never appears in exception messages, bodies or repr, and cannot leak through the exception chain because httpx errors are caught, the request closed, and EditorClientError raised outside the except block with from None.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/editor_client.py#L296-L331",
+          "version": "repo-lines-v1:sha256:83fffda4b35a28caf38b475d830ece8e30306af6f92058e54015107696e12f7d:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjYTIxMTExNjVmZTBhNWQ0ODgxZGFmMDZmYjJlZjcxY2Y3MTc3NmQ4NGUwZTg2ZDY0ZDUwNDRkODMyNzI0MjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhODQ5NmVlOTY0MjcyZmM5MTFhMmMyMmVlNDFkYTBmY2U3Zjg0OWJmYWRlMzQwNjUxMmJlMWQyYzgxODhjZWYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYzYmUyN2QxZTJjNWQ0MDFhMTYzMGE3YWU3MDYxYTI5YjQ0YTgwNzA5OWM3NjhjZDFhYjEyZGI4MjlhMzM0ZTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJhZGY5ODBmMTRkZWIzYWUzZjQ2NjU3N2Q2ZDNjYWQ0M2U5NzA4NjBhZWE0M2QyMGZlNTQwZGQ0N2JiZGI5OTQifQ"
+        },
+        {
+          "resource": "repo://tests/test_editor_client.py#L535-L553",
+          "version": "repo-lines-v1:sha256:99782d5cde9d405f5163864cf6fad41474e1f67435cd1c21a79cb10ab96ca77f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYWVmMzE0ZWYwZjVlOWRmMDhiZDA5OTE1ZGQ1NWZiOTYzMDZhM2QyODc4NWNhNWJiOTZlODgzZjAzZmU0NDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNlYmFiMGMzODk3ZGY4YWE4ZWNkZjNkM2MxYWE2ZmZhZDZkNTM0Y2FkMjY4Y2I5ZTA4ZjM2ODAwMjIyMDc4NDAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjcyZTUzZmZlYzkwZmFjYzRjZWZiYzU0ODM1ZjhmN2QzMTc2NTM4MjYwNzEzZGJkNzdlOGJmMmYxMTQwYTVkZjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjczZmUxODEzOTY4MDJjN2ZlMjQyODg4MmMxMGY3OTI2ZTQyM2IyMjJiZjNjM2VlMTkyNmQzNTIxMjQ4YjhhYjQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b14eb6cb6e48445c8ce9bb66aa04e432",
+      "statement": "Editor operations use an explicit 60-second default timeout threaded through every route while the discovery probe keeps its 1.5-second bound; the editor.get/tx Lua signatures and 422 range shape are plan assumptions documented as pending live validation.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/editor_client.py#L48-L50",
+          "version": "repo-lines-v1:sha256:96160fb4a392b0a5c3db345cc63879f02698984d82e61c3ed84387ed5cbf17a7:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGZiNDE2ZjhjY2ZiNTA4NmRhMzhkN2MxNDgwOWUwNmUwY2ZkYmNhOWRjNWZkZDQ3ODRhZTEzODU5YjlhMjU2NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWU1MmZhMzI4YTcwNmY4OGM4YzQ1NTIxZWVhOTFiN2E2MjQ1ZGI0NDQ4NWQ1ZjI1NjRmNjJlZTA4NDg0MDJhYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzg2ZmUwOTg3MGYzZTBlMjczZDFlZWE3ZjRiMmQzMDI0NDI5ZTAxZTA1ZGQyMzVlM2UzN2VkY2E5NzlmM2U5MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTcxMGY3YmUzNGI3MzIyZTViY2M4MjQ0Nzg0ODMzNzk4ODc3Yjc4ZTJmYWUxNjViMjU3YTkxOTNkZGFhYzA1OCJ9"
+        },
+        {
+          "resource": "repo://src/defold_mcp/editor_client.py#L8-L15",
+          "version": "repo-lines-v1:sha256:4e9599939c47182a52e278cacb7baf77eeffaf7ae8e2e9a7c514b95d91bfa675:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzVhZjczN2ZhZDQ1ZmI3ZjQzYzMxZjc1ZDdlMTQ0OGYyODVjNDljNDRmMDk5OTNlZTI1ZDY2ZGZkNDdiMmM3ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGM2NDIyYjU4NzhjNDliNDkzNzVjNTdiMjQxNjcyMDMwYTNjYjk5MWE3MDUyNDNmMzc2YWVhNjBlOTQwN2VmMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTc2N2MzZTMxZGEzYjU1ZDAxODEwZDFlNmIyNjg4ZGIzYmE2MDEwYTk0MTMzMGUxYWE2M2NjN2U4NzU2NDNiNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDkzNDNmODI0MWY4YjU3ODM1YjMxMDNhM2E3OWYwZDc2ZWY0MGIwNjQ0OTc4MTc5OGZkOWJmNzE0ODg2YjNkOCJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T02:39:02.076Z"
+  }
+}
