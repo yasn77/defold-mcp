@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:51386f528e834fb303125f83646268562ff23b98198c3d5710feb30817d1ce6f",
+  "claims": [
+    {
+      "id": "claim_b0b9f01199ef441ab2d63ce8d85a6200",
+      "statement": "The repository pins Python 3.14.10 and uv 0.13.7 via mise.toml, and a fresh clone needs only 'mise trust .' followed by 'mise run test' to bootstrap: the test task depends on setup, which recreates the uv virtual environment and installs the package editable with dev extras.",
+      "evidence": [
+        {
+          "resource": "repo://mise.toml",
+          "version": "repo-file-v1:sha256:9faf378f5b65c1a8cff4507e6e030edecaab7585c86fbf5da232c93e2432ec0c"
+        },
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
+        }
+      ]
+    },
+    {
+      "id": "claim_c216c2c03bfe43d3ae042a30548f9a4c",
+      "statement": "The default gate ('mise run test') is hermetic — 335 tests across the fourteen suite files, requiring no network beyond loopback, Defold installation or JVM — while the live-marked smoke is a separate opt-in gate via 'mise run live' (real Defold 1.14.1, ~10 s warm against a 428 MB artifact cache).",
+      "evidence": [
+        {
+          "resource": "repo://mise.toml",
+          "version": "repo-file-v1:sha256:9faf378f5b65c1a8cff4507e6e030edecaab7585c86fbf5da232c93e2432ec0c"
+        },
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
+        }
+      ]
+    },
+    {
+      "id": "claim_3fb8242c97fa41959ff02a2c0a28ac13",
+      "statement": "The project is complete: everything through the twenty-tool MCP server, the portable defold skill, the CLI subcommands, the Chainguard container and the CI/release/Renovate automation is landed and live-verified against real Defold 1.14.1; the server is registered in OpenCode and the skill is installed.",
+      "evidence": [
+        {
+          "resource": "repo://Containerfile",
+          "version": "repo-file-v1:sha256:fa9f472e538ea3064a8c57444344adfb91ee1f3df68d458dc8705c78b16c32a6"
+        },
+        {
+          "resource": "repo://skill/defold/SKILL.md",
+          "version": "repo-file-v1:sha256:0ea4ce9f5d06a878667e414c9a021ca552a4d0ce9aba5e782f0d8d6c08163f8d"
+        },
+        {
+          "resource": "repo://src/defold_mcp/__main__.py",
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
+        }
+      ]
+    },
+    {
+      "id": "claim_9d887ffdfb36470bb49ec914685a913c",
+      "statement": "The defold-mcp console script runs the MCP server with stdio as the default transport and streamable-http available via a flag, exposes the skill install and integration install subcommands, and the e2e suite proves the real binary speaks the newline-delimited JSON-RPC handshake with exactly twenty tools.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/__main__.py",
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
+        },
+        {
+          "resource": "repo://tests/test_mcp_stdio_e2e.py",
+          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T16:38:15.389Z"
+  }
+}

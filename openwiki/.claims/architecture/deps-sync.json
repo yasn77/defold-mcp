@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:237268f43c0d596f58c858540e1c062da63660b9a8fa046c6f66c2e85bea6fbd",
+  "claims": [
+    {
+      "id": "claim_c137c107b779466fa46b1d9f35494800",
+      "statement": "sync_project_deps reads dependency URLs from game.project, downloads each archive with PK magic verification, unpacks into .deps/<name>/, fetches builtins.zip by engine sha1 (GitHub-release fallback without one) into .deps/builtins/, and repairs the ignore files, returning the dependency names and repair status.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/deps.py#L157-L235",
+          "version": "repo-lines-v1:sha256:e4a0804c6ea156625a5dee347bae39320b514c1da1067ae4a5fdc8920eb430ae:eyJzZWxlY3RlZExpbmVDb3VudCI6NzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU4MmU4MDc0YzkyMDg1ZmMwYjc1MjE0Y2M4MjljMjk1NjlmNGQ4NzlhNmNjOWI2OGE1NzU4NjdmZmQyNWNlZjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQzNGZmZGEwNzJiYzhhNjA2ZGZiY2Y1YzcwYWU4MDE5MDY3Mzg5OTgwODIwZDQ1ZjYzYjQ3OTM2ZGEwMDkzYjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJjZmU2OWZiZDkyMGNjMDVjYzVlNDU3ZGUzM2Q3YjMzOTc5OWE1YjYxMDVkMTk1NmMzOThmZjQ0NGIzMDQyNGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5dbd7bf2c4ad4173a0fb0a795647c705",
+      "statement": "Dependency names that are empty, dot, dot-dot, or contain path separators fall back to a 12-character SHA-1 hash of the URL, closing the sandbox escape where a URL ending /.. extracted into the project root (a crafted game.project could previously overwrite .git/hooks).",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/deps.py#L96-L114",
+          "version": "repo-lines-v1:sha256:6a12153d0286559342d48da3d7c4df5fe2965d1d85a239f6d1531411de0e0509:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjExOWEzNzNlZGFkZDUwM2I5MDMyMmI4MmE1YjBlMzdlNmU3YjIzNjQxYWM0MjQzYTU2YzNiNDRjZTJjZWQ0NmQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE5ZjlmMGFjYzNkYjI5YWRlOWZiOGZhODdkMmUwMDFjN2EyMzNjZGQwNGVlMWZmMzA5ZjVjZWMwODI5NzY5NmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE1MjAxOWNhZGEyNTI5ZjExNWE2NGIxYzQ4N2FmZTliODk1ZTBmZWFjNTY5NzcxOTMzY2Q4OTM4MmZhYTI5ZjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA4YzM3MGY3ZTkxNzBmNzQxMWNjODljOTRjOGJiOGZlMTcwMGM2MTJjZmM4ZTE2ZDhjMTkzMjY2ZDJlZDAyZWEifQ"
+        },
+        {
+          "resource": "repo://tests/test_deps_sync.py#L293-L302",
+          "version": "repo-lines-v1:sha256:be22489b2291127b5a49575acb48bf202a7a638bf030291445374e367eedc58e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllNTFjOWI2Njg4N2M3YTRkN2IzOTEyYjUzNzY4MTIzYWIzYTVhOGZmMjZlMTM5MmFjZWM2NzUyNTNhZjE5ZjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyOTc4MWI2MDU2N2IxZjMxM2NkODU3ZmZiYTRkMmRmOTEwY2Y5NGQxYjFiZDRjOGU0MTk1ZDk1MTRjOTcyYjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA3NjFlNTFiMWYxNjhjZWRhMzcxYzU4OTY4YTgzOWJkNWRjMTg5Mzc2MDEzMmQ1YmZmMjA5Yjg1NTU0MGQ1NDUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_0b1cae9873c04f338240a330425bb0af",
+      "statement": "extract_zip validates every member name before writing anything: absolute paths and dot-dot components raise ValueError naming the entry, and each target must resolve inside the destination as a containment backstop; strip_root removes the top-level directory only when every entry shares that exact name.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/deps.py#L27-L93",
+          "version": "repo-lines-v1:sha256:6dc808519c18483292ee1d89dd9c8dd72ae55c484b075d357a9a6c5569b8ea5e:eyJzZWxlY3RlZExpbmVDb3VudCI6NjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhOGMxYjVjNDgyN2QxN2E2MzFiY2I0MTdiMzM3ZmQ3M2EwNzU1N2Q1MDQ2MDkzYWM4MjkxOTMyZWUwOTdiOTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjljZGM3ODI2MmNjMTE3OWMzYWRlZDlkN2VmZThlNTgwMzllZjBhNmI3MTliNGE1NGI2N2E4YjU0ZDFkNmNiNmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg5ZjVkYTJjMjM0NGVjZThlZWQyNTQzMjQ4NmY1MzZlOWU0MDU4MzM4MmQxNWQyNWJlNmI3ZDI3YzdkMThkNmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU5OGRiMmMwZGYxZjlmYzEzNzgzYmU0ZTU1YTU5ZWI0OGVmZGRiNjEwMjMyOTIyYjA0YWMxYjdiZjgzYmFkMDAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8bce441ebf434a8b8702e097d6d3aba4",
+      "statement": "The sync ensures /.deps in both .defignore and .gitignore (creating files as needed) and rewrites exactly the bare 'builtins' line in .gitignore to '/builtins', idempotently.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/deps.py#L117-L154",
+          "version": "repo-lines-v1:sha256:74267af8d620256ba9b42ed22ac0168e68b9222fd91fc50d40c45a315430af61:eyJzZWxlY3RlZExpbmVDb3VudCI6MzgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjljNGIwYjUyMWFlNmQ2MDRjOTc2ZmQxY2QyOTE4NTFmMWI2ZjhjMWU5YTI2Mzc0OGM3MTZmNWU4MDliYTNmMzUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM0N2NhZjZhODRkZmM5MmJjZDRkMWFiZDBkYWFiNmNlZWY0MWY5MGY0MWU5NTM1OWI0MTE1NDZhZmQxYWE0MmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFkNzAzYTJkODdkYzExNDY4MDNiMmJiZDM0YTIzYzRmMDliYzlmNzc1MDEyM2RjODI2ZTQ2Yjk3OTUxMjg3NzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjlhNjljYWU3YzVmYTJhMDc0NzIxYTJiYzk0YzNmNzVjZWM2ZjRlMTA3YTIzN2I4OGMzMDJmMmMzZjRjMDQyOTUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T01:05:39.762Z"
+  }
+}

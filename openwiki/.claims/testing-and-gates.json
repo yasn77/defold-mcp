@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:5e4aa934520541385502f6781dc1fac326c53b3dcc70d3fa6ee43b2d47aaa367",
+  "claims": [
+    {
+      "id": "claim_20c01b8cf15e4ca79ab56290b86eb68d",
+      "statement": "The gate chain is defined in mise.toml: setup recreates the venv idempotently (uv venv --python 3.14 --clear plus editable install with dev extras), test runs pytest with -m \"not live\" and depends on setup, and live runs the live-marked tests explicitly.",
+      "evidence": [
+        {
+          "resource": "repo://mise.toml",
+          "version": "repo-file-v1:sha256:9faf378f5b65c1a8cff4507e6e030edecaab7585c86fbf5da232c93e2432ec0c"
+        }
+      ]
+    },
+    {
+      "id": "claim_55b9ee7d6fb447748ef9fa92d6e93c2c",
+      "statement": "pyproject.toml registers the live marker in [tool.pytest.ini_options] and pins asyncio_default_fixture_loop_scope = \"function\", silencing the pytest-asyncio deprecation warning that otherwise fires on every run even with zero async tests.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
+        }
+      ]
+    },
+    {
+      "id": "claim_e73bffaa1ec140b28bda81998581a5a6",
+      "statement": "The unit gate is hermetic: 335 tests across the fourteen suite files cover all landed subsystems, the templates and mutations registry, the real-binary stdio e2e, the live-phase hardening, and the CI/container/CLI configuration pins (workflow YAML/SHA-pins/runner labels, release-please + Renovate shape, Containerfile, de-identification, skill install, integration install) without network beyond loopback or a JVM; the live smoke remains a separate opt-in gate.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_cli.py",
+          "version": "repo-file-v1:sha256:bb6ca44d61c07a5f914c310499fa9d6c9468912095787ec825d3c9e2aee0340e"
+        },
+        {
+          "resource": "repo://tests/test_mcp_stdio_e2e.py",
+          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
+        },
+        {
+          "resource": "repo://tests/test_workflows.py",
+          "version": "repo-file-v1:sha256:4020f32dd94c0d4b1ade271163529a7dea174c629822e7df438f605104473c50"
+        }
+      ]
+    },
+    {
+      "id": "claim_5aba8caf78054152b84f5aad8237ab60",
+      "statement": "Byte-level assertions using write_bytes/read_bytes are used for the CRLF fidelity test on both fixture setup and assertion, because Path.read_text applies universal-newline conversion that would mask newline corruption.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_project_ini.py#L239-L267",
+          "version": "repo-lines-v1:sha256:391cdb12d0ae2021f89ce914dcc9c2b512bc9e32c5a036e90200ff91d7a85f10:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllNjVjYzZjZDE0Mjg1MjEyYmZhOTg3ZWFiM2M5ZGY3MWYzNjZkOTVjZWI2MWVjMzJmMjgxYTM2OTMzYjkzMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ3ZjdkZDk4ZDU2NzMwYjAzNTRmYjAzMjYzZmE5MmY4NDUzZWExYjYwNjhiYjlkMTU0MjUwNTE4NzdlMzZmZDciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhMTgzZWUwNWZkYmM4ODRiNDJlYTg1ZGEwZmYxZGY4OTc3NzBjYjBlNzg5NTg4ZGQ4Nzg4OTNiMmZlZjE5OGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImExOWUwN2JmMDQwODkyZTgyYjRmY2M0YmVlZDQ4OTAyNWU3MzllMDRlMmJiYmZkNDY1ZDUxMWYxNTU1NjNkZDcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1cc7f88cd5a54a85b6a284e367b166c1",
+      "statement": "The textproto round-trip group asserts exact fixture-byte equality for a scalar suite, a full .go with referenced and embedded components, and the double-escaped .collection — including the pin that the inner closing-quote line is exactly the outer-level form.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L271-L312",
+          "version": "repo-lines-v1:sha256:f64082c75090eb2261d9b034c580e9564beaa789f0f35cc7436f8648a8cfe7ad:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1NDQzZWZiZDViZGEyN2ZkY2JmZjU5Yzg1NGE0NjJhODc0YzU0YjM1ZWVhMjdiMjhkMTc4ZWMyNmQ1OTMwZmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3OTkzZTM0Njg0NGRmZWE4N2NhNDlkYjVjMjU2NmYwMDEwNGU1MDRhM2NlMGIyYWM2YmNhMGY4ZWUxYTUyMzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyY2JmMjI1NWIyZjYzMzFkNzgwYTI3ZTFkOGJiMTQ2NzZmYjgyMjZmOWJiMTBmYmE2MDMwOWJmMThiMDM1NjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_eacd68574614403d9ca4221ee3296e54",
+      "statement": "Test style is mixed by design: plain functions for the foundation suites and grouped classes for the textproto Part B groups (TestSerializerRoundTrip, TestMathDefaultOmission, TestGuardrails, TestCollisionFromImage).",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L271-L1332",
+          "version": "repo-lines-v1:sha256:07348389bb9cda740a2d673dabef6d8216430401b86608cbf70642b564096cab:eyJzZWxlY3RlZExpbmVDb3VudCI6MTA2MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTUwMzJlOTY0ZDA5MzIzNTFlNWQxODUyNjkyODFiMTcxYTNhMDliMDhiMjg2ZTY2MWVhNDcwMzIzYzgyZWI0ZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjc5OTNlMzQ2ODQ0ZGZlYTg3Y2E0OWRiNWMyNTY2ZjAwMTA0ZTUwNGEzY2UwYjJhYzZiY2EwZjhlZTFhNTIzNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_81d1573d155f4de7a1aee33b4e4d3ce6",
+      "statement": "The security pinning tests cover the dependency-name sandbox escape (dot-dot URLs extract under hash names), both zip-slip forms, the JDK extractor's backslash and dot-dot traversal rejection with resolved-path containment, and strict asset-feed shape rejection.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_deps_sync.py#L363-L447",
+          "version": "repo-lines-v1:sha256:b4d02054d1621e45c3619ff5c5da0555dc979aa7c0ca7fde3269d4dcfdde925e:eyJzZWxlY3RlZExpbmVDb3VudCI6ODUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5MDlhNTNhNjE4ZDAyOGUxZDMwMDBjMGE3YWJjZWVjYmU1ZmIzN2Y0ZTUxMWVmZTQ2NjQzZmFkNmU2Njg3MmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllNTFjOWI2Njg4N2M3YTRkN2IzOTEyYjUzNzY4MTIzYWIzYTVhOGZmMjZlMTM5MmFjZWM2NzUyNTNhZjE5ZjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJhYWMxMzlhNDJjNGI5ZDM3Njc5NTI0MzQ4MGYzZjJlM2UzZjNhNzliY2EzYTQwN2Q4YzkzNjJmYTI0NTQ2MWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA3NjFlNTFiMWYxNjhjZWRhMzcxYzU4OTY4YTgzOWJkNWRjMTg5Mzc2MDEzMmQ1YmZmMjA5Yjg1NTU0MGQ1NDUifQ"
+        },
+        {
+          "resource": "repo://tests/test_deps_sync.py#L583-L702",
+          "version": "repo-lines-v1:sha256:36d06ea531bbcc9fe556758fa8bc8f842a48eae00ceae1cd9f50d9dcb7669785:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJiZGZlM2E5MTZkNWIwZmJhNzlmZjE3Nzc3MGRjMzBkYTI5MWM5OTA2ZDgyODkzNGExYzNkNjRhMjk0Y2E1YjE1IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIzMTY4NmIzODhmMTc3ZGJkN2E5ZjY3NDY4MGI4ZWI2OGNhZTY3OTNkNGU2YmNmMmJlZWMyMWE4YzgwNzRmZDU5IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4NWQ4YjdlOWY4M2M1ODY0M2E4MjgyZjFiMGY5MWY1ZjBiMzMxZTE5YjM0MGY3MGZjMDhmZmJjYzdkYjY1YWMxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIwMzRjNjQyMjUxNTUxZTE2ZDc0MWI4M2Y2YzczNWMzMWRkNTViNGJmMjZiMjAzNGZjNGQyYTc3ZjQzMmEzMTM3In0"
+        },
+        {
+          "resource": "repo://tests/test_docs_fts.py#L481-L485",
+          "version": "repo-lines-v1:sha256:295f7889532cb4fb198f26c5ef0afbd247cb618bcb91e837412f631ab43ae9a6:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2JjNmQ0MDA0ZTlhYWU5ZDBhMjI0NDA1YWI2NzIwNGYwMjk2MjY0MWJhMGMwZmY3ZmVhZjIzN2YwOTI1NDgzMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDczN2E2N2Q4N2MzODhjYTcwZjBlMTAzMzIwODJmZThkYTJlMzRmN2QxNzFiYTRjNTg5YWVmODAxZGI4MWQ0MiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDgyNjc2Yzg4OGMxYTRkOWZhNzcyZmNkYzMwMmY3NzNiYzcyOTBlZWJmZjlkYTM2YTM5ZjQ0YzMyMTE5ODM4NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2FjMzlkNTViMWM0MDlhZWU3YzMxOGFlOGZlZTRmMTI5ZWU4MzU5ZWIyNzM2NTc1YmViYjgwNzE3YTUzOTY5ZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_adab83e809874b67a7d2f13a18bfba1c",
+      "statement": "Process-facing tests use a fake-executable pattern: small POSIX shell scripts standing in for java and dmengine_headless (writing argv to files, emitting canned diagnostic or TEST lines, or sleeping past a timeout), so timeout-kill and argv claims are asserted against real child processes without a JVM or engine.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py#L30-L56",
+          "version": "repo-lines-v1:sha256:52b1880ee65982b5d21aa40c749ccd1c47b5fec553857e198a5d5eed38886f32:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxYWJiNzQ5MGQ1YTM0MDA0YTcxZDc0OTc3MGIzMWJjNjQ3YzE5MWQ4OTkwMGRlMDFmZThmNjI3OTBlZGJjYzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkyYzMwNDRmMjhkNThhM2RmZWE2YjZmMDQ4MzAzNDQwOTY4MzY2Yzk1ODg1MTdiZTEwOTRjMjE3YmI2NmVkMzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIyOWIzODIzZDcxNzQyNTNmZmE2NzJiNTExMjYxZjU1ZDE5NTMwOTI4YmMwMmM0NDRkMjE1NDRjOWFjMjNiOGIifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T16:38:15.389Z"
+  }
+}

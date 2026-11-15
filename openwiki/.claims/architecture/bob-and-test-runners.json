@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:6a97f8d627da5c7fb814eaaebefbfc47fc2dce8c4673ae0c95e2741e93f39892",
+  "claims": [
+    {
+      "id": "claim_b3465063ecdc4eb49e46a1bd35ed4b98",
+      "statement": "run_bob resolves Java as explicit override, then toolchain.java_executable(), then raises RuntimeError naming the JDK 25 requirement and defold_setup_toolchain(install_jdk25=True); it builds the argv with -jar, the bob.jar path, commands, a --resource-cache-local cache path and an optional --settings file, and runs with cwd at the project root.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bob_runner.py#L200-L320",
+          "version": "repo-lines-v1:sha256:5a8ae0374e05cabb612e0f4bdb99a423a0bdfb94b1e369df18c1fe7d95c7284c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJhZTdlZjBjOTAwNmM0OTJmMmExYzRmNjI5NTM5ZjMyZDE2YTE4YzFiMzg4NTU2Yzc1NjZmOWY5Y2FlMmUyNTMwIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI5ZjI3YWIwOWMwZWRlZTE4OTQ2ZWFlZDJjZDE3ZWMyMmI2MTVhOTFjNzVkMDI0NzBiN2ExYmNkOGJlNzA3OWM4IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI0MjYyYjBmMmNjYzY3OWZjZjk3Yjc3MTc4ZTMwYTU4ZGJlMGNkMWUxNDRiMjE4YWIwNmY2NDU3NDk0NzNhODlhIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI3NTgwNThmMzY4Yzc1MTY4N2U1ZjRlMzAxZTllYTgzNjliNTljYTU4Yzg0MWU1YTlkZTczM2E2OTdiMzllZTYwIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_c90a63c0ea174abeb683f0b0d635678e",
+      "statement": "parse_bob_diagnostics extracts severity/resource/1-based-line/message tolerating both 'ERROR ' and 'ERROR: ' prefixes plus bob's log4j SEVERE hard-failure lines (severity error, resource and line None) while ignoring the JDK restricted-method warning block, and run_bob threads a settings file through bob's --settings flag.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bob_runner.py#L52-L143",
+          "version": "repo-lines-v1:sha256:71408d167c7dfaee049cf52adc9f2bfd50fe895a4d672354cc7ee52f7f932a88:eyJzZWxlY3RlZExpbmVDb3VudCI6OTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3NmQ5ZGQ2YzBhZDI2ZThjMjliZjMyMTNhNDRjZjE3NzM5NTUwNzgxMWM3MDhmMTZlNTRiNzIyNjFlZjA0MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4YTNkNzljMTJlNGZmNDFlYThhY2QxYWM4ZGJlM2JkMmY2MmUwM2ZmMDZjMzk0MTZiYTVmYjk5ZWIyYjBkMGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlZDQ4YjE5OWQ0ODVkY2ZjZWE4Mjc0NTc2NWViYjhhNDhmYjk4YTU0M2MwN2JjOTZiNDU1YWMyMGJkNjgwZTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU0MTA1NDNmYzgxZDIwM2ViM2RlNjZhMTJlMGQ0ZTQ1YjNiZTNiNzM3NTA2ZjM5NjNkZWI5YjYyZTVjY2NjMzgifQ"
+        },
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py#L96-L130",
+          "version": "repo-lines-v1:sha256:2c8a17b0cab42ba1b5ee95e28a268b1d51b700220b9045818b5a517d70e9a553:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI1OTg4ZTM5NjJmMmY0NjRkOGM3ZDg2Y2UyOTFhNmFhMzBkZDYyMGZiZWFhN2ZmYWMxYjhiYjY5ODY5ZDg3MDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhODJlYmU5ZWQ0MDdjM2E2YmE0YjAwMzQyOTJiYWE1MmMxMWNlNWFlMjg2MTA3NDAyZGU0NzkyZWVlY2FjZmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI0N2Y2NDA3MDAzMWU5MTEzYTQ2ZTU2NGNiNDcwODE2NzA3YWE4MzlkZTkyNmIwZTVhYmExMTI4NWJhMmUxY2EifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3a2ecf3095a34972b553de4f15efc2f6",
+      "statement": "Both runners guarantee the child process is killed and waited before a timeout exception raises, and their _to_text normaliser handles the raw-bytes TimeoutExpired payload that subprocess produces on the timeout path (text decoding happens only on the success path) — verified against the installed CPython 3.14.10 source and pinned by live-process tests.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bob_runner.py#L300-L340",
+          "version": "repo-lines-v1:sha256:4a178e292e9dd0f964b2921e825865bfbe6c80d22469359137376c12fa95c5dc:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZiNTc2MTQ3OTBjZjJlMDFhZGVkYTE3YzQ2OWQ0NDY2NWY1NjAzZjNjODg3MTAyMWQzZTViY2YwNTkzNzA3MTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI1NjljYjA5MjgwZWUwNzgxOTQ1ZTQ4ZDQwNDFiZDJkZmFhZTY5MWFkMmVhYmY1ZDNjYmEwODQ2YzcyMTZjYWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRjOTQ1N2VmODhmYjE2MjYzZGYwMTkxZTYwNjk4ZGU1MDY1OWM5MWVhNTA5ZmVmNWI0NzQ2OWVjYTFiMjJjMDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJhZTlhY2MyYzNjY2UzOTM3MGVmYWJlOTkzNzIwY2JmMDM3ODg5NDQ4Y2Q4Njk1YzFmYjUwZGRmNmExM2YzYmYifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/test_runner.py#L230-L290",
+          "version": "repo-lines-v1:sha256:03a6c98a1556e1a1349e9800f513485ff7fbefc2dbc40e3eb9437927230da1dc:eyJzZWxlY3RlZExpbmVDb3VudCI6NjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3MmYxMDYxOGY2MmFlM2EzNDE1YmEyMjM2OTZhOTdjYmQ0Nzg1OTY4NDBhYmNlMTg2MDZhNTcxY2IxYjJlODciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA3N2RkZDk5NmY2OWJiZmI3NDIyYjJmMjEwYjA3OTEyMjYyN2EyMDA2ZGM1ZWFlODgwNjcyMzZhOWI0YWQ3OTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVmY2I2NjVmMTRkZTNiZjAyMDk4YzhkODk0YTliMjMwY2JjYzZlOGVhMWVlMmFlZTIwMzhkMWFjY2FlMWYxNTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4473eb9b67b049e1b170cffa8570a060",
+      "statement": "The test path builds the collection as the archive bootstrap first (build_test_collection writes a private mkdtemp settings file with the compiled main_collection and runs bob with --settings, cleaning up in finally) because subcollections are flattened and never archived; run_headless_tests then runs the engine with the --config bootstrap override and lowercased boolean config flags, never mutating game.project, and the tool response carries run/status/exit_code/rejected_events.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/test_runner.py#L160-L300",
+          "version": "repo-lines-v1:sha256:d330c34097c851290422f73fd113ab17535d17c474f8cfa0d574b3c8a372ea81:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIyMTU4N2Q5M2U3ZjRmMjZmMDQ3ZGUzYzFhM2YzNGY5ZDVjZDBjMzFiNjI1ZTljZTVjN2NkZTViMmEzNTRkODdhIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIzYjQxNTNjNzYwNzA3MTA0ZDc3NTJkZWFmNWY2YWRmMDhhMjg0NmQ3NDc0NDI5NmVlMDEzYTlkY2VjNDRkMThjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJjYWMxMzVmMWJjYTFjNWIyZWZiNmY3YzYzODc1MTU5NTEzNjg3ODU4ZTFiZDg5ZjEzMTQ1NDc2NTg3NDM4YjIzIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI3OWM2M2QxNDVkMGJjMGY0NDQ0MWE0ZjY2YmQ5YmJkZmVmZmZkYjkzZWZjYzUzNzkxMzFkNjAyNmI2MGViMzdmIn0"
+        },
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py",
+          "version": "repo-file-v1:sha256:d3446ea35e21df3c60e010fd67273b89ae0de368b8c4a4bb085c605f7361d9e0"
+        }
+      ]
+    },
+    {
+      "id": "claim_a5e76bf9ba5c4dbbbee4aa48e24eeefe",
+      "statement": "parse_test_stream gates TEST events by run id (first event carrying a run id fixes it; different or runless events thereafter are rejected and counted) and strips exactly one LEVEL:DOMAIN: log prefix (e.g. DEBUG:SCRIPT:) from each line before TEST and DefTest matching, because the engine routes print() through its logger.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/test_runner.py#L60-L160",
+          "version": "repo-lines-v1:sha256:eac3b68889b9eb193abdc4c5be46063d6d4aa3738b1d281c4ea428f56e2dd671:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJkZWUyZmRhMjY4ODg0YmI0NDAxNTlkN2RiYmRkODYyYjIwOGE3NzBkYzEyMmY4ZjY5ZDYxNGZiZjNjMTIxNjc0IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIyMTU4N2Q5M2U3ZjRmMjZmMDQ3ZGUzYzFhM2YzNGY5ZDVjZDBjMzFiNjI1ZTljZTVjN2NkZTViMmEzNTRkODdhIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4YjJhMDc5ZWM0MzU2YzM4ZDc4ZmIwNGY4NTc5NmI5Y2MwMGYxYTg1ZDYxNjE5Y2RkZGMwYzc4MGJhM2IxN2VjIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJjYjEyNzQ1ZDVjOWMyY2I1NzI4NDM1MWI2ZmYyZjFiMDQ1ZDQ3MjVhODlmZTFlODZkNWJmYWY5MDRlMjFiOWE4In0"
+        },
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py#L250-L330",
+          "version": "repo-lines-v1:sha256:283355c32b16d277c43e431626fadc19dcd4b32e1b63851b022bf2d81d0a3dca:eyJzZWxlY3RlZExpbmVDb3VudCI6ODEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZjMzJjZDM3ZWY3NGI2ZTAzZWVhMDFmNGY4ZmMzOTU1NDRlZTVmNzBhNzUyZjIxMzdhZDhiZDdiYzk0Nzg2ODgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFhMmQxY2QwOGEyYTFjMDgxY2FhMThiY2NlNDc3ZTc0NWNlMjlkNDE3ZjBlODAzYjkzZjcwYjE1YWQ3MjdjNmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZiYzMwYjM5OWU0OWI1ZTZkM2RlNDAyNTBmN2ViNDVjZDU1MTNhZjA3ZjdiMWY0ODU3ZjMxMzg5NWJjOTYzMTEifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T14:41:05.547Z"
+  }
+}

@@ -1,0 +1,180 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+# Least privilege: no job here writes to the repository.
+permissions:
+  contents: read
+
+# A new push to a pull request supersedes its previous run. Master runs are
+# never cancelled, so merging cannot abort the gate the merge just started.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  unit:
+    name: Unit tests
+    # 2 vCPU / 8 GB: the hermetic suite is CPU-light and needs no JVM.
+    runs-on: ubicloud-standard-2
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install the pinned toolchain
+        # Installs python 3.14.10 and uv 0.13.7 from mise.toml. `install` is
+        # mise-action's default; it is stated here so the dependency on the
+        # repository's tool pins is explicit.
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        with:
+          install: true
+
+      - name: Run the hermetic unit suite
+        run: mise run test
+
+  handshake:
+    name: Stdio handshake
+    runs-on: ubicloud-standard-2
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install the pinned toolchain
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        with:
+          install: true
+
+      # Spawns the server over raw stdio JSON-RPC with a sanitised
+      # environment and asserts the 20-tool listing.
+      - name: Probe the MCP server over stdio
+        run: mise run handshake
+
+  live:
+    name: Live Defold smoke
+    # The only heavier job: a JVM 25 build (bob.jar) and a wasm-web bundle
+    # beside the ~428 MB toolchain cache, so it gets 4 vCPU rather than 2.
+    runs-on: ubicloud-standard-4
+    timeout-minutes: 60
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The live smoke downloads the real Defold 1.14.1 toolchain (bob.jar,
+      # Temurin JDK 25, the headless engine, builtins, the ref-doc and the
+      # ingested docs.db) into the default cache dir. Restoring it turns a
+      # cold ~10+ minute run into ~10 seconds. The key pins the version
+      # literally and deliberately has no fallback: builtins.zip and
+      # ref-doc.zip sit at flat, version-agnostic paths and are reused on a
+      # magic-byte check, so a cross-version restore would serve the old
+      # version's zips permanently. Bump this with the live smoke's spec.
+      - name: Restore the Defold toolchain cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/defold-mcp
+          key: defold-toolchain-1.14.1-${{ runner.os }}
+
+      - name: Install the pinned toolchain
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        with:
+          install: true
+
+      # `dmengine_headless` is headless only in the display sense: the 1.14.1
+      # x86_64-linux binary dynamically links libX11, libXext, libXi, libxcb,
+      # libXau, libXdmcp and libopenal, and the GitHub-hosted runner image is a
+      # server image with none of them. Without them the dynamic loader refuses
+      # the engine, so it exits non-zero before printing a single TEST event
+      # and `defold_test_run` answers `{ok: False, run: None, passed: 0}` —
+      # the first live run failed exactly this way. A desktop host has the
+      # libraries already, which is why it passes there. The runner user has
+      # passwordless sudo.
+      - name: Install the engine's runtime libraries
+        run: >-
+          sudo apt-get update &&
+          sudo apt-get install --yes --no-install-recommends
+          libx11-6 libxext6 libxi6 libxcb1 libxau6 libxdmcp6 libopenal1
+
+      # Real downloads, a real bob build under JDK 25, a real headless TEST
+      # run and a real wasm-web bundle against Defold 1.14.1.
+      - name: Run the live Defold smoke
+        run: mise run live
+
+  container:
+    name: Container image
+    # The image is a Chainguard-based two-stage build, and the proof is the
+    # repository's own stdio probe driving the containerised binary, so a
+    # broken image or lost tool fails the gate rather than drifting silently
+    # in the Containerfile. Ubicloud runners are GitHub-compatible and run
+    # GitHub's runner images, so the Docker CLI and daemon are preinstalled;
+    # no daemon bootstrap is needed.
+    runs-on: ubicloud-standard-2
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install the pinned toolchain
+        # Only the probe needs an interpreter here; the image brings its own.
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        with:
+          install: true
+
+      # Buildx provisions the builder the build step uses; without it the
+      # action falls back to the daemon's default builder.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      # Network at build time only: the dependencies (`mcp`, `httpx`,
+      # `pillow`) and the Chainguard base layers are fetched here, never when
+      # the container starts. `push: false` keeps everything local, and
+      # `load: true` (= `--output=type=docker`) puts the tagged image in the
+      # daemon, which is what the `docker run` probes below need.
+      - name: Build the image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: Containerfile
+          push: false
+          load: true
+          tags: defold-mcp:ci
+
+      # Proves the seeded cache directory is writable by uid 65532. The default
+      # `DEFOLD_MCP_CACHE_DIR` must survive a real write, because the first
+      # toolchain download lands there; the check needs no shell, only the
+      # image's own interpreter.
+      - name: Prove the default cache directory is writable
+        run: >-
+          docker run --rm --entrypoint /usr/bin/python defold-mcp:ci -c
+          "import os, pathlib; p = pathlib.Path(os.environ['DEFOLD_MCP_CACHE_DIR']);
+          p.mkdir(parents=True, exist_ok=True); (p / 'write-probe').write_text('ok');
+          print('writable', p, 'as uid', os.getuid())"
+
+      # The probe spawns whatever path it is given, so a three-line shim makes
+      # that path `docker run -i --rm`: initialize, the twenty-tool listing, a
+      # `defold_doctor` call, stdout purity, then SIGTERM. `--init` supplies a
+      # real init as PID 1, because PID 1 does not receive default signal
+      # actions and a bare Python PID 1 would ignore the probe's SIGTERM;
+      # tini forwards it and the server exits inside the five-second limit.
+      # The cache dir moves to /tmp so `defold_doctor` never trips over an
+      # unwritable home directory.
+      - name: Probe the containerised server over stdio
+        run: |
+          shim="$RUNNER_TEMP/defold-mcp-container"
+          cat > "$shim" <<'SHIM'
+          #!/bin/sh
+          exec docker run -i --rm --init \
+            --env DEFOLD_MCP_CACHE_DIR=/tmp/defold-mcp-cache \
+            defold-mcp:ci "$@"
+          SHIM
+          chmod +x "$shim"
+          python scripts/mcp_handshake_test.py "$shim"
+
+      # A killed CLI does not necessarily stop its container; make the runner
+      # clean regardless of how the probe ended.
+      - name: Remove any container left behind
+        if: always()
+        run: docker ps --all --quiet --filter ancestor=defold-mcp:ci | xargs --no-run-if-empty docker rm --force

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "defold-mcp"
+version = "0.1.0"
+description = "Dual-mode Model Context Protocol server for the Defold game engine"
+requires-python = ">=3.14"
+dependencies = [
+    "mcp>=1.6.0",
+    "httpx>=0.27.0",
+    "pillow>=10.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+defold-mcp = "defold_mcp.__main__:main"
+
+# The canonical skill lives at the repository root (skill/defold). The wheel
+# force-includes that tree so `defold-mcp skill install` works from a pip,
+# uvx or container install, where no checkout exists.
+[tool.hatch.build.targets.wheel.force-include]
+"skill/defold" = "defold_mcp/skill/defold"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "live: downloads real Defold artifacts and runs minutes-long builds; deselect with -m \"not live\"",
+]

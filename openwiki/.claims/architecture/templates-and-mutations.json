@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:eb52411afca332f88944f51a911bdb1e951530f565015bd9ee69dfa739804ab3",
+  "claims": [
+    {
+      "id": "claim_6d746b098b0545b3969d0c1f5d3f90e8",
+      "statement": "render_project writes a minimal valid project for four profiles with the plan-pinned defaults (2D physics scale 0.01/gravity -1000/velocity threshold 100/fixed timestep with engine.fixed_update_frequency 60, 3D type and scale 1.0, HTML5 Stretch/64/1000) and the live-verified bob rules: no comment lines, input.game_binding defaulting to the builtins binding, no debug_init_script (path does not ship), and c-suffixed resource values throughout.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/templates/__init__.py#L100-L210",
+          "version": "repo-lines-v1:sha256:efd5a230daad6c944ab23091791734da161a4e9e1fc9138b15995bea058def37:eyJzZWxlY3RlZExpbmVDb3VudCI6MTExLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwNDk3NDEwZDUwMWZmZDIxN2ZmMjk3OTlmMDIwZWFlYmNmNjI4NzBmY2FjMzgyYjBkODA3NDZlMWNjOTVhZmE0IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI1OWM3MTQ5N2NmYzgyZTZmZTBmZmZmMGIwNjIzNjVlZjQ5NzE1Mzg4YTY1NDdiOTdhMTMwMGY3ZWVhMjhmMDJkIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4ZjAzODNmOTY0N2YzNTA3ZDgxMTc4MmJiNzJhMzVkM2M0YmQ5MmRlYTBmYjM1ZmY0ZGQ3YzUzNjg3Njc0MzE2IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIzMWM4MzA5OGQ3YTNmNGU2OGM3ZjZiZjJjMmU3ODFjMTFiZmY4NjkzN2JkY2M1ZDU3MGNkNmQxOTFiZmZlYjI1In0"
+        },
+        {
+          "resource": "repo://tests/test_templates.py#L65-L165",
+          "version": "repo-lines-v1:sha256:ded505e98e522bc7dfbccd3b4cf7409cdb08071edc9aac925a7d442efbf5b394:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJiNGNkYzZmMWQ0NDVkZDg2MTQ0ZDllYWVhMzBkN2IwODkyMTdkYjYyMWZmZTk2MDY0OGQ4YjNkMjhmZDI1Zjk5IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIwMWJhNDcxOWM4MGI2ZmU5MTFiMDkxYTdjMDUxMjRiNjRlZWVjZTk2NGUwOWMwNThlZjhmOTgwNWRhY2E1NDZiIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJiZmRiYWI5NDc3OGVmMmU0NTllYWYyM2UwOTg0NmVkOTFhM2JkM2M1M2EwYzM0ODgyNTBhMjdjNTZhMmEwNDAxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIwYzNkOTQ2MGY5OGNkYWY0NWI4YTFmMGQwZDE4ZDI0YjA1NzUyNmMwNDQ4YjVhZmVmMDg2YTdjZmY3Mjc5NTFkIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_03d6c7c0f0164683992534bf65532e6d",
+      "statement": "The rendered main.collection is built through serialize_textproto from the parse-shaped tree and round-trips byte-exactly; all four profiles mount the referenced main.script so the Defold licence attribution module prints at runtime, titles are Lua-escaped into the generated print literal, and add_subcollection stores the SOURCE collection path per Defold's own fixture convention.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/templates/__init__.py#L212-L340",
+          "version": "repo-lines-v1:sha256:f45dc965028d0b9bbaf0c76bf71acce5155bec154980a048565e968bee841521:eyJzZWxlY3RlZExpbmVDb3VudCI6MTI5LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI0MTlhOWRlODkzNjQ3NGU1ZDM4ZTMyNDhjYmM4OGQ2MTYwM2RjZTI2ZDRlMTFiMTMxYTE5NDJiZjQ1NzE0NTY0IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJhN2EzZDliZGI1NzhlM2UxYTg0ZGQ3Y2Y2YTkwNmM5YThhOGZmZDUzMTc0NWJiZDQwNzUxYzMyNjBlZjJjNjA2IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI0MmExODliZGY4ZmY3NTFlNTQ2MTljZDE0NmNkOWMwZjhmMTk3YmFmMDYwNzMwOTAyMDVmZjA4Mjc5YTc1Y2E1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI0ZTc3YTFhNGEwMWU3ZjQ0MWVkOTQxYTI1ODQ0ZGJiMmVlZTJmZjhmZjZlNjlmOWEzODVmNThjOThkZGQxNDQ2In0"
+        },
+        {
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L400-L406",
+          "version": "repo-lines-v1:sha256:e5afa016ef8ae7adbe827ca8bce26ee53abb68e7c851e0e0c461b19ad9cf4218:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQ3MmVkMTdiYjM4YmQxYTZlMjI3OWJmMWVjOWQzYTA0YzYyNDRkZjE3M2QwNTE0ZTY0MDNiMWJiMTY4MGM2YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2M0YTFkOGI2OTNjM2VmYzM4OTIzNWExMDI5M2FiZmU0MDAyZDZmYmMxNjA3ODhlMjRkMzk0NDllYTY0NjRmMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNWQ0NzAwN2ExMTc1YmZiNDZkNTJmNWRmZTkwZjY4MzgwMTE5ZDU1ZTkyNzFhZjA4NzZkYmUwOWUxNzU1YTk4NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDk1MTgxNDAyOGYxMzViMzFmOTNmMTgzYmIxNjk2OGNlOTZkZTA5MmE3MGRhOGZlMGRhYWY0MWE0YTA4YzQzNyJ9"
+        },
+        {
+          "resource": "repo://tests/test_templates.py#L107-L165",
+          "version": "repo-lines-v1:sha256:8232fa023a8dc1ba6c3559046674b150d80024d07c752effa12adec777e6d76f:eyJzZWxlY3RlZExpbmVDb3VudCI6NTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUzNjQ4NmE5MTNkNmQ5N2RmMGFjZDY0MjU5Yjc3YWJhYmM3YTMzMWM2MmRkNDcwZjAyZWI4ZTFlMGM2OTc2NmQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ2NDAwZjg5MTI3YjY4OWJmNWE2ODZiZTMxNzNmODYwMWI5ZjBlNTZkYmY1OGVjYTkzOWIyOTVlM2QwMDk4OGMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBjM2Q5NDYwZjk4Y2RhZjQ1YjhhMWYwZDBkMThkMjRiMDU3NTI2YzA0NDhiNWFmZWYwODZhN2NmZjcyNzk1MWQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5b20053a56374baea0407b6805d67cc8",
+      "statement": "KNOWN_LIBRARY_URLS maps deftest, monarch, druid and automation_bridge to their GitHub master archives with a documented obligation to pin release tags in the live phase.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/templates/__init__.py#L41-L61",
+          "version": "repo-lines-v1:sha256:0661fae2f83d29ba85630bb262625db9d0fa852e0c11b19b1befe3379f28b71b:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc3MWVlMTZiZWNjYWU1NTZlODU1NjgwMzBmZTFhMTdmZGI3NTA4NjM0NmQwMzQ3NmM3MDZhNGMwYjQ0MmNhNzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM0MmFhYWVhZGE3MWVhZDRiMGZjZjlkZDhkYTAxMzk1ZjAxYjcyYzkxMDdkNzc3ZTk3ZGY4NDc3NTNlNTAyNzYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE2ZDIxMjUwM2MzOWFkNWYwZWZkYjcwYTZmNGNiNzY1M2I1OWVmNjMzYjkyYmMyZGY2ODk4MWM2ODdlNWQzN2YiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFiMDQyYTY3MWJkZjRmMDBkYThmMWY4OTNkMWYzZWMzMjMxYWVhMTYwMTQyYWIwODI4MDQxNDFhYzdiMDIwYmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_fb263b41c06d40cf929cb61daa1fd41f",
+      "statement": "apply_operations dispatches the plan's fourteen mutation ops with indexed ValueErrors, deep-copied input, single-line string guards matching add_component's, and results normalised through decode_embedded_data for byte-exact fresh-resource round-trips; the serializer's extension parameter provides opt-in canonical field ordering while the default preserves byte-exactness.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/textproto/mutations.py#L240-L406",
+          "version": "repo-lines-v1:sha256:29ac6a35ed0354787b1da533cbafeefc8ad1984e83328b18bf076d74efe64964:eyJzZWxlY3RlZExpbmVDb3VudCI6MTY3LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwMWJhNDcxOWM4MGI2ZmU5MTFiMDkxYTdjMDUxMjRiNjRlZWVjZTk2NGUwOWMwNThlZjhmOTgwNWRhY2E1NDZiIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJjYzRhMWQ4YjY5M2MzZWZjMzg5MjM1YTEwMjkzYWJmZTQwMDJkNmZiYzE2MDc4OGUyNGQzOTQ0OWVhNjQ2NGYzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI4NWZiOGM5Y2JjM2FjNTA0MjMyYzk1OWE0MjUwY2M0MDVjZmYyOTk1ZjYyYTZiYjlmYTYwOWVhODA2OTU1ZjMwIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI0OTUxODE0MDI4ZjEzNWIzMWY5M2YxODNiYjE2OTY4Y2U5NmRlMDkyYTcwZGE4ZmUwZGFhZjQxYTRhMDhjNDM3In0"
+        },
+        {
+          "resource": "repo://src/defold_mcp/textproto/serializer.py#L297-L311",
+          "version": "repo-lines-v1:sha256:90368853a0f5079a6a47c9c9039af2057cb1e867e1645dcde82e7d8789232e61:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUxYWQ2NzJmMjQ3Yzg1NDkzMjhjZTQ2MzgyMDcxMjEyYTUzMjVmODliYWNhYTc3YmViYjdlY2Q3ODE3YzFlOTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1MTc3ODFlZjRiMmI0ZjdmNzNmMjVmOTRlZjk0YWUwMjlkMGQyYzk4NDI1MDE1ZmVmOWM1NjZjMDUyYzcxM2UiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk4MTRlNWVhNDk5YjU2MmU4YTA2NzJjYjA0NTExZjk3ZDY1MDhlMWRjN2EzYjY2ZDhkODA5YjgwMmU1ODFlYWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk3Y2IxYzMyMzViNjA4NThiNmI2NzE3ODA4NjczZDZiOTVjMjlkZDUwNDQ2M2JmNjQ5ZGZiOTZkODE0M2RjMDEifQ"
+        },
+        {
+          "resource": "repo://tests/test_textproto_roundtrip.py#L1162-L1306",
+          "version": "repo-lines-v1:sha256:a8f9644b2c3ec1274a3bcd7106c9bcdfd33bcafe85cd3f97d30ef1075bccfc89:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQ1LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJiMjhiOWJjNjkxOTk4M2U0MTAzODUxYWQ4ZDZmMTM4NzRhZTVmOTNlYTVlMWUyMTVkMDFlNDc4ZTMzNWRkNjg5IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJiNzkzMWZmOGI0OWEyOWI4YzJmNzAyOTJiOTliNjY2NTc5YTI1ZDk0Mzc5YzlhYTlkZWE0N2JkNmE1MWQ3YTRjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJhNGFhNjAxMzU0OWM0NTU1MDIxMTM2OTI0M2YzMTNlYjgxMzkyZmViMTJlNzM0ZTllOTBiOTU0MGE5MTIxZmNkIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI2YWQ5NDdjYzkwOTM3MDM4ZDhjZjEwYjZjMTg3ODg3Y2EzNzMzZDFkOGVmYjg1Zjc0MzI1MzliMGU4NjkyMDcyIn0"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T14:41:05.547Z"
+  }
+}

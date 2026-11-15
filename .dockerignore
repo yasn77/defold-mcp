@@ -1,0 +1,35 @@
+# Build context for the Containerfile. The wheel is built from
+# `pyproject.toml`, `src/` and `README.md`, and its skill payload is
+# force-included from `skill/` (see the wheel target below), so anything a
+# developer machine carries beyond those only bloats the context or, worse,
+# leaks foreign binaries into the image.
+
+# Virtualenv and Python caches: a host venv holds a host-architecture
+# interpreter that must never reach the image.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Everything the wheel does not need. The build reads `pyproject.toml`, `src/`,
+# `README.md` and `skill/`: the last because
+# [tool.hatch.build.targets.wheel.force-include] maps `skill/defold` into the
+# package and hatchling resolves that source from the build context, so
+# excluding it fails the build. The rest of the repository is documentation,
+# tests and tooling that would only bloat the context.
+tests/
+docs/
+openwiki/
+.github/
+
+# Version control and generated documentation state.
+.git/
+.gitignore
+
+# Build outputs.
+build/
+dist/
+*.egg-info/
+
+# Local planning notes, if present.
+IMPLEMENTATION_PLAN.md

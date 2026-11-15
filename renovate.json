@@ -1,0 +1,63 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)"
+  ],
+  "description": [
+    "Automerge every non-major grouped update as soon as the PR's own checks pass. Renovate's automerge is used rather than GitHub's native auto-merge (platformAutomerge: false) because native auto-merge needs branch-protection required checks, which this repository does not rely on.",
+    "Major updates and vulnerability alerts are never automerged: a major bump carries the major-update label and a security fix carries the security label, and both wait for a human.",
+    "lockFileMaintenance is intentionally absent: no lockfile is tracked (uv.lock is git-ignored) and dependencies are >= bounds resolved fresh on every run, so there is nothing to maintain."
+  ],
+  "labels": ["renovate", "dependencies"],
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": false,
+  "rebaseWhen": "behind-base-branch",
+  "schedule": ["at any time"],
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 3,
+  "dependencyDashboard": {
+    "enabled": true,
+    "autoclose": true
+  },
+  "packageRules": [
+    {
+      "description": "Python dependencies from pyproject.toml (pep621) and any pip requirements files",
+      "matchCategories": ["python"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Python dependencies"
+    },
+    {
+      "description": "GitHub Actions runs; every action is SHA-pinned, so keep the digests refreshed too",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "groupName": "GitHub Actions",
+      "pinDigests": true
+    },
+    {
+      "description": "The python and uv pins in mise.toml [tools]",
+      "matchManagers": ["mise"],
+      "groupName": "mise toolchain"
+    },
+    {
+      "description": "Container base images; the Containerfile's base images",
+      "matchManagers": ["dockerfile"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "groupName": "Container base images"
+    },
+    {
+      "description": "Never automerge a major update; it needs a human read",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "addLabels": ["major-update"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "automerge": false
+  }
+}

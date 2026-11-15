@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:3bc62962313759ed2ec5cc6c7820be1fec39bbffa502d303bfede35bd93d4e39",
+  "claims": [
+    {
+      "id": "claim_b28783c919a74bdb8e2f674cee04de65",
+      "statement": "resolve_version raises on any non-200 for channel specs and on a 200 missing the version key; the default client follows redirects (every host 301/302/307); pinned specs resolve by probing channels in stable-over-beta preference order and adopting the matching sha1 (cached under the pin, beta never consulted when stable matches), falling back to GitHub-release sha1-None mode only when no channel carries the pin; failures are never cached.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py#L100-L230",
+          "version": "repo-lines-v1:sha256:0cad75e1a7798d0fce05e4a5edfccde4c9bc05dd546686abcdff84df8d72c32f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJkMGU4MTI4NmVjZTZjZTE3OTBiNDJlOGI2MDI1YzA2ODAwZDAzNmUwNzQwYjBhZGIxNDA1Mjg3NWI3YTRiN2MzIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI2NGMzZDYxOWJlMGQyY2E2MjZmNmI0ODg3MWYwYzQyY2Y0NWE4NDY5MWNjOWRiMDczZTk3ZTUyNjExOTU1MDhjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIyNTA1OTE5MzUyYmIzNjUxMDY2MmRlZjczYWQzOTc2YTc0OTEwMGVhY2UxYjFmMzcxYzYzZWFkYjE5NTc3YjUxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJhNjJhNDBjZDA5NjBlNjNmZWU5ODk4NmI4YzQwNGZkNmM1OWI0Y2JjZDM1ODhkNzY3NjVmZjFiNmJlOTJiMWU0In0"
+        },
+        {
+          "resource": "repo://tests/test_deps_sync.py#L137-L238",
+          "version": "repo-lines-v1:sha256:0011f9d0ec5c8b078a60275d6c65011428efeea78f7d7da1d6a6be882a382d09:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAyLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwMmUyNTM3YWI3MWVmYmU3OWI2ZTYyZGNkZWNkZDI0ZmEyNjg4MzVmYmIyOTk1YjQ4ZDBkMzg0Yjc5NGIzZjViIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJjM2VmZjQyN2EyZDMxM2U3NjNiZDU4ZGMwMzYwNGRlMzM5YzQ1M2IwM2JjMzI0ZDMxOTkzNjlmODU5ZmZiZTUyIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlNjg4NDBlOTQyMjdiZWJkMzQ0OTYzYmZmNDRlN2M0ZjkyZDFlYWMxNzcyZmFhYzdiYTA5NGQzMGM3NTU1MTA3IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI0OGM1MWIyZGM3NmI5MmExMDMzOTNkZTI5YjdlOGJlNGUxMjA1YjZkNGQ1YjNkYzgzMGM4ODg0NWQ2YmNlMjBiIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_df486d0bf22f48219de9c966f8efff6b",
+      "statement": "check_java probes candidates in order (portable cache JDK, JAVA_HOME, PATH), returns the first qualifying (major >= 25) one, reports the first existing failure only when none qualify, and its diagnostic names both defold_setup_toolchain(install_jdk25=True) and the Editor /bob route; a broken candidate cannot shadow a working one, and check_java agrees with java_executable in all cases.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py#L256-L337",
+          "version": "repo-lines-v1:sha256:26f5306fbdd9e3c57c0e8c46a67ae68fba86d44927296667051997d7a5932b11:eyJzZWxlY3RlZExpbmVDb3VudCI6ODIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNkM2QyYzU4YTdhMDViNjAzYjU2NDc4NGM4ODc3MjZmN2FkZDc5NDEwOWIzMmQ3YjdmZjdjMWUzY2QxOTA3OTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3ZDgyMzczOTBkN2ZhOTkwZDQxOTRhY2QwMTBjMzY1Y2NiM2ZkN2EwMzJkMDBiZmNhMzFhNTMwZGYxYjgxNzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjhjYzRhN2QxY2M3OTZhYmEzZTQ2NzIzMzI3ZjUxN2U5ZjgxMTk4MmQyNTBmMDcwMjk4NmU0YjU3NjRhZDk1ODkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNiMjRmN2E0OTg2ZjY0YzlhNmU1ZWFkMWE1YTRjNTY2N2IwZDM0NTI0YjMzNGI0ZDA3YzhmMTAyODIxYzEyNzMifQ"
+        },
+        {
+          "resource": "repo://tests/test_deps_sync.py#L296-L330",
+          "version": "repo-lines-v1:sha256:999814f2d097db7f56b5ee866881a19190d0434e675815e4447212ccd12b5e12:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5Njk1NWMxNTdkYzNmOTMxZTAxZGUwZWMxMjEwNTk2Mjk1ZmExNzk3NmMzOWFkM2E0ZjM2NGU0NzI3NWQyZGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI0NjMzZmM0ZmFiZjY5NjBlNjI5MTA5OTJiZjVlYmExY2I0YzMwMDE0ZTM5YjAwMTA3YzM4ZGQyYTc2Zjg4ZGUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJjM2E4YWE0YzhlNzhkNWUzNjU2YTc2OTA5YTYyZTE5YzQ2OGU1NDVjNjU2ODJhMjUzZTA2MGVkMmM4NWZhZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQwOGFjMTE0YmE0ZWRlYjFkNzlmNmZhZWIwNTJhNDIxZGExN2QyYzdiODJkNDhmOTY3N2M3MGI4NmE4YWZlNTIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_0affa02149ab428894264b2219a11fe5",
+      "statement": "download_artifact is atomic (.tmp plus os.replace) with optional magic-byte verification that raises ValueError naming expected versus actual on mismatch; cached artifacts are reused with magic re-verification (PK for jars and zips, ELF for Linux engines) so a corrupt cache entry is re-downloaded.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py#L262-L340",
+          "version": "repo-lines-v1:sha256:531b01947832610c1f0249a1050baab27e358f71aae22232eb5d449a738435ce:eyJzZWxlY3RlZExpbmVDb3VudCI6NzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNlN2I1N2I2MDRmNjcxZTI2YTZiOWNjZmNhOGM4MmQ4OTk4OThhMzExMTk0MjZlNDZlYWVmYmRmYTJiMzZiZDciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcyNTBjMTk1YTc4YTFhMDRjYzY4MjY1OTIwOTdlNDIyNGRlYTAxNzE4Yjc1MGIyNmRkMGIzZjA4YmVhYzc0NzciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVhZDM0NGViYTYyZmRiOGQwMTM3MTJiNTlhOTkxMmZkYWUwYmY0NmI4ZjUwZDM4NjUwMjQyZmZmZDYwZmE3NjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNlMTZiMzA2NzhmYzZkMWUxZDgyZDQxNjA5M2VlODJkYTUxZmI5OWYxNjhhZTI2OTIzYzVjNDVmZWQ0NTZlY2IifQ"
+        },
+        {
+          "resource": "repo://tests/test_deps_sync.py#L734-L775",
+          "version": "repo-lines-v1:sha256:3e6e0973d6a26a5daa2b429baa8b5661dafb98169f89291588f4aad0b3bce89d:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjYjlkM2EyZjEwMjc0YjNmNWU1NTliNjRhZWMzYmZhODRmYmU2ODU0Mzk3ZTEzMDBhNGQ2NjMwOWI4YmU1NmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5ZGQ5YjM3MjY4NzU3ZjI1ZjgzOTIzZTAxNzNlODkwNzU5ZjZkNGJhN2JiNmUwOTIzZjEyMjE1NjAwNGQyYjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUwOWEyZWEyYWY4NDMyNDRmMmMzYzU2M2QwMjUyY2NkMWNlNTk1MWIxY2Y2MGNhNDI2NGJhYWIyM2U2OWFjYzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI0YjBhMTNmMGM1OTlkYjE1OGQ2MzcxNTc2Yzc2MGZlYTc2NWQ5MGMyMWM2MWY4N2YwZWI4YmJkNGFkMzk5NGUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1dd332d3ee5a4164b041c026f9f74582",
+      "statement": "install_jdk25 validates all archive members before writing (absolute paths, dot-dot components and any backslash rejected), enforces a resolved-path containment backstop per written member in both zip and tar branches, guards the zip branch with a single-root check, skips symlink members, checks the extracted layout for bin/java — and, per the live finding, preserves archive permission bits (_apply_mode) so the extracted java is executable, treating a non-executable bin/java as not-installed and re-installing.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py#L330-L450",
+          "version": "repo-lines-v1:sha256:7c2fa5768efd9ed246c1af1f30f8ac21c5f317c9cf841412f8c526fcf118a7fe:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI2ZGViMmJkMWFiNzdhYWNlZTg1MjkzYjZkZGVkZjMxZjgxNzNkNDI0Mjk3Zjc4ZWI5NGQzNmE0YTJlMzRjYzVhIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIwMWJhNDcxOWM4MGI2ZmU5MTFiMDkxYTdjMDUxMjRiNjRlZWVjZTk2NGUwOWMwNThlZjhmOTgwNWRhY2E1NDZiIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJkNzAxNDllMDY5YWQ2N2VjY2Y0NzM2NDZmZjFjNzUwMDUwZDMyOWQxMTAwMThkYzU3NjY4NzhlYWZhMWQ2MDdkIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI2YmUxYTg3NGRkMGUxNjgxOGQ0ZDA4NWI4YTNjNTUxNTY5MDFjMTZjN2M0MTcxMDk0NDU5ZTJiOGZmNmVmYTMyIn0"
+        },
+        {
+          "resource": "repo://tests/test_deps_sync.py#L438-L517",
+          "version": "repo-lines-v1:sha256:fc92c180fd90990f4f6ff27327eafd41a0ce94d0c7a6eefef1bb761bbc3cedbd:eyJzZWxlY3RlZExpbmVDb3VudCI6ODAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI2ZWNiYWQwZWRmOTRiY2RjZDViYjUxZTRiMjE3Y2Y1M2VmYTUzYThkNzliN2IxMzQ2NWI0MTc1YTJjZTc1NGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyOTc4MWI2MDU2N2IxZjMxM2NkODU3ZmZiYTRkMmRmOTEwY2Y5NGQxYjFiZDRjOGU0MTk1ZDk1MTRjOTcyYjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE4ZjllZGU2MTc0MjNkMjM2YmZhMDViMWZlMTVkNGQzOWFmMjJkNzBlNDg1NzdkOGJkOGI2YjE4MDA3NWUzYTkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5276d582b1324637bd6d94b71f93a392",
+      "statement": "ensure_toolchain reuses cached artifacts (magic re-verified) rather than re-downloading on every call; download_artifact buffers whole bodies in memory (around 200 MB peak for the JDK); macOS and Windows engines have no cheap magic check on reuse.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py#L600-L680",
+          "version": "repo-lines-v1:sha256:7caeea4cf67f7d881295f098178aea3e83ddbd5c1dc7e43b3adab27b47e1d393:eyJzZWxlY3RlZExpbmVDb3VudCI6ODEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZlZWRlZjQ2MjEwNjA0YjgyZjMwODg4MTg2M2ZiYWU3NzZlMWU5NmI2ZGUxODhlYTA5MzhlZDBiZDY5NmVjMjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVhZWEwY2JhZmI4MTM1ZTJjZDYwMTY4Y2I3Y2QwNjgxYWI5ZDMyYmM1NzA1OWFiODFmNWY5OTk0ODVmNDVjZWQifQ"
+        },
+        {
+          "resource": "repo://tests/test_deps_sync.py#L734-L759",
+          "version": "repo-lines-v1:sha256:de848660c57a17ed39631a2806d94f9dc84fead6b7e4dbc7397b3d17c3d0549e:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjYjlkM2EyZjEwMjc0YjNmNWU1NTliNjRhZWMzYmZhODRmYmU2ODU0Mzk3ZTEzMDBhNGQ2NjMwOWI4YmU1NmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2NDJjYTI4Y2QyMGU1ZGFmNTY5YWUxNTVlOTk5Y2JhZmM5MDc2ZjA3N2UyODFkNjc5NjRiZmY4NTVmZDVkYWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUwOWEyZWEyYWY4NDMyNDRmMmMzYzU2M2QwMjUyY2NkMWNlNTk1MWIxY2Y2MGNhNDI2NGJhYWIyM2U2OWFjYzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI5NmQ0ZmYwOGQyMjJjZjBiODc1OGNmYmM4NTAzNGYyYWY0YmM4YThhZWVlNDA5ZmYwN2EyNDkwMWZmZjc0ZTQifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T14:41:05.547Z"
+  }
+}
