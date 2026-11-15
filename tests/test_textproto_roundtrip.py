@@ -738,3 +738,599 @@ class TestCollisionFromImage:
         img.save(buf, format="PNG")
         with pytest.raises(ValueError, match="collinear"):
             collision_from_image(buf.getvalue(), mode="convex_hull")
+
+
+
+
+# ---------------------------------------------------------------------------
+# Part C: apply_operations registry
+#
+# Every op deep-copies its input and returns a NEW tree, so a failed batch
+# never leaves a half-mutated resource behind. Unknown ops raise a ValueError
+# naming the offending operation index.
+# ---------------------------------------------------------------------------
+
+import base64  # noqa: E402
+
+from defold_mcp.textproto.mutations import apply_operations  # noqa: E402
+from defold_mcp.textproto.schemas import ALWAYS_LIST_FIELDS  # noqa: E402
+
+
+def _png_base64(png: bytes) -> str:
+    return base64.b64encode(png).decode("ascii")
+
+
+def _as_entries(value):
+    """Normalise a repeated field the decoder may leave as a single dict."""
+    return [value] if isinstance(value, dict) else value
+
+
+class TestApplyOperations:
+    # -- create -------------------------------------------------------------
+
+    def test_create_go_seeds_component_lists(self):
+        tree = apply_operations({}, [{"op": "create", "resource_type": "go"}])
+        assert tree == {"components": [], "embedded_components": []}
+
+    def test_create_other_type_is_an_empty_tree(self):
+        tree = apply_operations(
+            {}, [{"op": "create", "resource_type": "collection"}]
+        )
+        assert tree == {}
+
+    def test_create_on_an_existing_tree_raises(self):
+        with pytest.raises(ValueError, match="operation 0"):
+            apply_operations(
+                {"name": "x"}, [{"op": "create", "resource_type": "go"}]
+            )
+
+    # -- add_instance -------------------------------------------------------
+
+    def test_add_instance(self):
+        tree = apply_operations(
+            {},
+            [{"op": "add_instance", "id": "hero", "prototype": "/main/hero.go"}],
+            extension=".collection",
+        )
+        assert tree["instances"] == [
+            {"id": "hero", "prototype": "/main/hero.go"}
+        ]
+
+    def test_add_instance_with_transform(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "add_instance",
+                    "id": "hero",
+                    "prototype": "/main/hero.go",
+                    "position": {"x": 1.0, "y": 2.0, "z": 0.0},
+                    "scale": {"x": 2.0, "y": 2.0, "z": 1.0},
+                }
+            ],
+            extension=".collection",
+        )
+        instance = tree["instances"][0]
+        assert instance["position"] == {"x": 1.0, "y": 2.0, "z": 0.0}
+        assert instance["scale"] == {"x": 2.0, "y": 2.0, "z": 1.0}
+
+    # -- add_embedded_instance ---------------------------------------------
+
+    def test_add_embedded_instance(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "add_embedded_instance",
+                    "id": "hero",
+                    "components": [
+                        {
+                            "id": "sprite",
+                            "type": "sprite",
+                            "data": 'default_animation: "idle"\n',
+                        },
+                        {"id": "script", "component": "/main/main.script"},
+                    ],
+                }
+            ],
+            extension=".collection",
+        )
+        entry = tree["embedded_instances"][0]
+        assert entry["id"] == "hero"
+        assert entry["data_ast"]["embedded_components"][0]["type"] == "sprite"
+        assert (
+            _as_entries(entry["data_ast"]["components"])[0]["component"]
+            == "/main/main.script"
+        )
+
+    # -- add_subcollection --------------------------------------------------
+
+    def test_add_subcollection_enforces_c_suffix(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "add_subcollection",
+                    "id": "room",
+                    "collection": "/main/room.collection",
+                }
+            ],
+            extension=".collection",
+        )
+        assert tree["collection_instances"] == [
+            {"id": "room", "collection": "/main/room.collectionc"}
+        ]
+
+    def test_add_subcollection_c_suffix_is_idempotent(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "add_subcollection",
+                    "id": "room",
+                    "collection": "/main/room.collectionc",
+                }
+            ],
+            extension=".collection",
+        )
+        assert (
+            tree["collection_instances"][0]["collection"]
+            == "/main/room.collectionc"
+        )
+
+    # -- add_component ------------------------------------------------------
+
+    def test_add_component_embedded_and_referenced(self):
+        tree = apply_operations(
+            {"components": [], "embedded_components": []},
+            [
+                {
+                    "op": "add_component",
+                    "id": "sprite",
+                    "type": "sprite",
+                    "embedded": True,
+                    "data": 'material: "/m.material"\n',
+                },
+                {
+                    "op": "add_component",
+                    "id": "script",
+                    "component": "/main/main.script",
+                },
+            ],
+            extension=".go",
+        )
+        assert tree["embedded_components"][0]["id"] == "sprite"
+        assert tree["components"][0] == {
+            "id": "script",
+            "component": "/main/main.script",
+        }
+
+    def test_add_component_non_embeddable_raises(self):
+        with pytest.raises(ValueError, match="operation 0"):
+            apply_operations(
+                {"components": [], "embedded_components": []},
+                [
+                    {
+                        "op": "add_component",
+                        "id": "hud",
+                        "type": "gui",
+                        "embedded": True,
+                        "data": "nodes {\n}\n",
+                    }
+                ],
+                extension=".go",
+            )
+
+    # -- set_property -------------------------------------------------------
+
+    def test_set_property_root_scalar(self):
+        tree = apply_operations(
+            {"name": "old"},
+            [{"op": "set_property", "parent": "", "key": "name", "value": "new"}],
+            extension=".collection",
+        )
+        assert tree["name"] == "new"
+
+    def test_set_property_nested_dot_path(self):
+        tree = apply_operations(
+            {
+                "embedded_components": [
+                    {"id": "sprite", "data_ast": {"material": "/a.material"}}
+                ]
+            },
+            [
+                {
+                    "op": "set_property",
+                    "parent": "embedded_components.0.data_ast",
+                    "key": "material",
+                    "value": "/b.material",
+                }
+            ],
+            extension=".go",
+        )
+        assert (
+            tree["embedded_components"][0]["data_ast"]["material"]
+            == "/b.material"
+        )
+
+    def test_set_property_rejects_message_values(self):
+        with pytest.raises(ValueError, match="operation 0"):
+            apply_operations(
+                {},
+                [
+                    {
+                        "op": "set_property",
+                        "parent": "",
+                        "key": "position",
+                        "value": {"x": 1.0},
+                    }
+                ],
+                extension=".collection",
+            )
+
+    # -- remove_child -------------------------------------------------------
+
+    def test_remove_child_removes_the_first_match(self):
+        tree = apply_operations(
+            {"instances": [{"id": "a"}, {"id": "b"}, {"id": "a"}]},
+            [
+                {
+                    "op": "remove_child",
+                    "parent": "instances",
+                    "match": {"key": "id", "value": "a"},
+                }
+            ],
+            extension=".collection",
+        )
+        assert tree["instances"] == [{"id": "b"}, {"id": "a"}]
+
+    def test_remove_child_without_a_match_raises(self):
+        with pytest.raises(ValueError, match="operation 0"):
+            apply_operations(
+                {"instances": []},
+                [
+                    {
+                        "op": "remove_child",
+                        "parent": "instances",
+                        "match": {"key": "id", "value": "nope"},
+                    }
+                ],
+                extension=".collection",
+            )
+
+    # -- atlas --------------------------------------------------------------
+
+    def test_atlas_add_images(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "atlas_add_images",
+                    "images": ["/main/a.png", "/main/b.png"],
+                }
+            ],
+            extension=".atlas",
+        )
+        assert tree["images"] == [
+            {"image": "/main/a.png"},
+            {"image": "/main/b.png"},
+        ]
+
+    def test_atlas_set_animation(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "atlas_set_animation",
+                    "animation": {
+                        "id": "idle",
+                        "playback": "PLAYBACK_LOOP_FORWARD",
+                        "fps": 12,
+                    },
+                }
+            ],
+            extension=".atlas",
+        )
+        assert tree["animations"] == [
+            {"id": "idle", "playback": "PLAYBACK_LOOP_FORWARD", "fps": 12}
+        ]
+
+    # -- tilesource ---------------------------------------------------------
+
+    def test_tilesource_configure(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "tilesource_configure",
+                    "keys": {
+                        "image": "/main/tiles.png",
+                        "tile_width": 16,
+                        "tile_height": 16,
+                        "margin": 0,
+                        "spacing": 0,
+                    },
+                }
+            ],
+            extension=".tilesource",
+        )
+        assert tree["tile_width"] == 16
+        assert tree["image"] == "/main/tiles.png"
+
+    # -- tilemap ------------------------------------------------------------
+
+    def test_tilemap_set_tiles_by_layer_id(self):
+        tree = apply_operations(
+            {"layer_grids": [{"id": "layer1"}]},
+            [
+                {
+                    "op": "tilemap_set_tiles",
+                    "layer": "layer1",
+                    "rows": [["1,2,0"], ["3,4,0"]],
+                }
+            ],
+            extension=".tilemap",
+        )
+        assert tree["layer_grids"][0]["data"] == [[1, 2, 0], [3, 4, 0]]
+
+    # -- gui ----------------------------------------------------------------
+
+    def test_gui_add_node(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "gui_add_node",
+                    "node": {
+                        "id": "label",
+                        "position": {"x": 10.0, "y": 10.0, "z": 0.0},
+                        "size": {"x": 100.0, "y": 40.0, "z": 0.0},
+                        "text": "hello",
+                    },
+                }
+            ],
+            extension=".gui",
+        )
+        node = tree["nodes"][0]
+        assert node["id"] == "label"
+        assert node["text"] == "hello"
+
+    def test_gui_set_layout_property_on_existing_node(self):
+        tree = apply_operations(
+            {"layouts": [{"id": "landscape", "nodes": [{"id": "label"}]}]},
+            [
+                {
+                    "op": "gui_set_layout_property",
+                    "layout_id": "landscape",
+                    "node_id": "label",
+                    "key": "x",
+                    "value": 5.0,
+                }
+            ],
+            extension=".gui",
+        )
+        assert tree["layouts"][0]["nodes"][0]["x"] == 5.0
+
+    def test_gui_set_layout_property_appends_missing_entries(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "gui_set_layout_property",
+                    "layout_id": "portrait",
+                    "node_id": "label",
+                    "key": "x",
+                    "value": 1.0,
+                }
+            ],
+            extension=".gui",
+        )
+        assert tree["layouts"][0]["id"] == "portrait"
+        assert tree["layouts"][0]["nodes"][0] == {"id": "label", "x": 1.0}
+
+    # -- collision ----------------------------------------------------------
+
+    def test_collision_add_shape_explicit(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "collision_add_shape",
+                    "shape": {
+                        "shape_type": "TYPE_BOX",
+                        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+                    },
+                }
+            ],
+            extension=".collisionobject",
+        )
+        assert tree["shapes"][0]["type"] == "TYPE_BOX"
+
+    def test_collision_add_shape_from_image(self):
+        png = _make_rect_png(100, 60, 21, 11, 10, 20)
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "collision_add_shape",
+                    "image_png_base64": _png_base64(png),
+                    "mode": "box",
+                }
+            ],
+            extension=".collisionobject",
+        )
+        assert tree["shapes"][0]["type"] == "TYPE_BOX"
+
+    # -- guards -------------------------------------------------------------
+
+    def test_unknown_op_names_the_index(self):
+        with pytest.raises(ValueError, match="operation 0"):
+            apply_operations({}, [{"op": "bogus"}], extension=".collection")
+
+    def test_unknown_op_at_a_later_index(self):
+        with pytest.raises(ValueError, match="operation 1"):
+            apply_operations(
+                {},
+                [{"op": "atlas_add_images", "images": []}, {"op": "bogus"}],
+                extension=".atlas",
+            )
+
+    def test_input_tree_is_not_mutated(self):
+        original = {"instances": []}
+        apply_operations(
+            original,
+            [{"op": "add_instance", "id": "x", "prototype": "/x.go"}],
+            extension=".collection",
+        )
+        assert original == {"instances": []}
+
+    def test_multiline_string_argument_is_rejected(self):
+        with pytest.raises(ValueError, match="operation 0"):
+            apply_operations(
+                {},
+                [
+                    {
+                        "op": "add_instance",
+                        "id": "bad\nid",
+                        "prototype": "/x.go",
+                    }
+                ],
+                extension=".collection",
+            )
+
+    # -- end to end ---------------------------------------------------------
+
+    def test_end_to_end_go_and_collection_round_trip(self):
+        go_tree = apply_operations(
+            {},
+            [
+                {"op": "create", "resource_type": "go"},
+                {
+                    "op": "add_component",
+                    "id": "sprite",
+                    "type": "sprite",
+                    "embedded": True,
+                    "data": (
+                        'default_animation: "idle"\n'
+                        'material: "/builtins/materials/sprite.material"\n'
+                    ),
+                },
+                {
+                    "op": "add_component",
+                    "id": "script",
+                    "component": "/main/main.script",
+                },
+            ],
+            extension=".go",
+        )
+        go_text = serialize_textproto(go_tree)
+        go_reparsed = parse_textproto(go_text, schema=ALWAYS_LIST_FIELDS)
+        assert (
+            serialize_textproto(decode_embedded_data(go_reparsed)) == go_text
+        )
+        assert go_reparsed["embedded_components"][0]["id"] == "sprite"
+        assert (
+            go_reparsed["components"][0]["component"] == "/main/main.script"
+        )
+
+        collection_tree = apply_operations(
+            {"name": "main", "scale_along_z": 0},
+            [{"op": "add_instance", "id": "hero", "prototype": "/main/hero.go"}],
+            extension=".collection",
+        )
+        collection_text = serialize_textproto(collection_tree)
+        collection_reparsed = parse_textproto(
+            collection_text, schema=ALWAYS_LIST_FIELDS
+        )
+        assert (
+            serialize_textproto(decode_embedded_data(collection_reparsed))
+            == collection_text
+        )
+        assert (
+            collection_reparsed["instances"][0]["prototype"] == "/main/hero.go"
+        )
+
+
+class TestSchemaOrderedSerialisation:
+    """``extension=`` reorders top-level keys; the default preserves order."""
+
+    def test_extension_emits_canonical_top_level_order(self):
+        tree = {
+            "embedded_instances": [{"id": "hero", "data": "a: 1\n"}],
+            "scale_along_z": 0,
+            "name": "main",
+        }
+        text = serialize_textproto(tree, extension=".collection")
+        # COLLECTION_FIELDS order is name, instances, collection_instances,
+        # scale_along_z, embedded_instances, embedded_components.
+        assert text.index("name:") < text.index("scale_along_z:")
+        assert text.index("scale_along_z:") < text.index("embedded_instances")
+
+    def test_unknown_extension_leaves_the_order_alone(self):
+        tree = {"scale_along_z": 0, "name": "main"}
+        text = serialize_textproto(tree, extension=".nonsense")
+        assert text.index("scale_along_z:") < text.index("name:")
+
+    def test_default_extension_preserves_insertion_order(self):
+        tree = {"scale_along_z": 0, "name": "main"}
+        text = serialize_textproto(tree)
+        assert text.index("scale_along_z:") < text.index("name:")
+
+    def test_phase2_fixture_round_trips_without_extension(self):
+        tree = parse_textproto(GO_FIXTURE, schema=ALWAYS_LIST_FIELDS)
+        assert serialize_textproto(decode_embedded_data(tree)) == GO_FIXTURE
+
+    def test_phase2_collection_fixture_round_trips_without_extension(self):
+        tree = parse_textproto(COLLECTION_FIXTURE, schema=ALWAYS_LIST_FIELDS)
+        assert (
+            serialize_textproto(decode_embedded_data(tree))
+            == COLLECTION_FIXTURE
+        )
+
+
+class TestApplyOperationsGuards:
+    """String-argument guards that every op must apply uniformly."""
+
+    def test_atlas_set_animation_rejects_a_multiline_image(self):
+        with pytest.raises(ValueError, match="operation 0"):
+            apply_operations(
+                {},
+                [
+                    {
+                        "op": "atlas_set_animation",
+                        "animation": {
+                            "id": "idle",
+                            "images": ["ok", "bad\nimage"],
+                        },
+                    }
+                ],
+                extension=".atlas",
+            )
+
+    def test_atlas_set_animation_accepts_plain_images(self):
+        tree = apply_operations(
+            {},
+            [
+                {
+                    "op": "atlas_set_animation",
+                    "animation": {"id": "idle", "images": ["a", "b"]},
+                }
+            ],
+            extension=".atlas",
+        )
+        assert tree["animations"][0]["images"] == ["a", "b"]
+
+    def test_add_component_embedded_requires_a_type(self):
+        with pytest.raises(ValueError, match="operation 0"):
+            apply_operations(
+                {"components": [], "embedded_components": []},
+                [
+                    {
+                        "op": "add_component",
+                        "id": "sprite",
+                        "embedded": True,
+                        "data": 'material: "/m.material"\n',
+                    }
+                ],
+                extension=".go",
+            )

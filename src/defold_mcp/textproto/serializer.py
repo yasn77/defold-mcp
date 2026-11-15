@@ -294,14 +294,34 @@ def _top_lines(node: dict, indent: int, lines: list[str]) -> None:
             lines.append(f"{prefix}{key}: {_format_scalar(value)}")
 
 
-def serialize_textproto(tree: dict) -> str:
+def _ordered_keys(node: dict, extension: str | None) -> list[str]:
+    """Top-level keys in canonical order for ``extension``.
+
+    Keys listed in :data:`~defold_mcp.textproto.schemas.SCHEMA_BY_EXTENSION`
+    are emitted in the Defold Editor's own write order; any remaining key
+    keeps its existing position after them (``sorted`` is stable). Without
+    an extension the tree's own order is preserved, which is what the
+    byte-exact round-trip contract relies on.
+    """
+    keys = list(node)
+    order = schemas.SCHEMA_BY_EXTENSION.get(extension) if extension else None
+    if order is None:
+        return keys
+    rank = {name: index for index, name in enumerate(order)}
+    return sorted(keys, key=lambda key: rank.get(key, len(rank)))
+
+
+def serialize_textproto(tree: dict, *, extension: str | None = None) -> str:
     """Serialise a parsed (and optionally decoded) tree to Defold textproto.
 
     Field order follows the dict insertion order (i.e. the parse / file
-    order).  Math-default omission, float ``.0`` formatting, and
+    order) unless ``extension`` is given, in which case the top-level keys
+    are re-ordered into the canonical Defold write order for that resource
+    type.  Math-default omission, float ``.0`` formatting, and
     ``data:``-as-adjacent-literals are applied.  The result ends with a
     trailing newline when non-empty.
     """
+    ordered = {key: tree[key] for key in _ordered_keys(tree, extension)}
     lines: list[str] = []
-    _top_lines(tree, 0, lines)
+    _top_lines(ordered, 0, lines)
     return "\n".join(lines) + "\n" if lines else ""

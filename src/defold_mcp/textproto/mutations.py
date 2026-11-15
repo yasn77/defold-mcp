@@ -1,19 +1,26 @@
 """Resource mutators for Defold textproto trees.
 
-Provides ``add_component`` (with guardrails for non-embeddable types) and
-``collision_from_image`` (box and convex-hull collision shapes from a PNG).
+Provides ``add_component`` (with guardrails for non-embeddable types),
+``collision_from_image`` (box and convex-hull collision shapes from a PNG),
+and the :func:`apply_operations` registry the ``defold_mutate_resource``
+tool dispatches through.
 """
 
 from __future__ import annotations
 
+import base64
+import copy
 import io
 import math
+from typing import Any
 
 from PIL import Image
 
+from .parser import decode_embedded_data, parse_textproto
 from .schemas import EMBED_TYPE_NORMALISATION, NON_EMBEDDABLE_TYPES
+from .serializer import serialize_textproto
 
-__all__ = ["add_component", "collision_from_image"]
+__all__ = ["add_component", "apply_operations", "collision_from_image"]
 
 # Fixed half-depth (z) for every generated collision box.
 _BOX_HALF_DEPTH = 10.0
@@ -221,3 +228,396 @@ def _perp_distance(a, b, c) -> float:
     if length == 0.0:
         return 0.0
     return abs(dy * b[0] - dx * b[1] + c[0] * a[1] - c[1] * a[0]) / length
+
+
+# ---------------------------------------------------------------------------
+# apply_operations registry
+#
+# Every op is a plain function ``(tree, op, extension) -> None`` registered
+# in :data:`_OP_REGISTRY`. The tree is deep-copied on entry, so a batch is
+# atomic: a failure part-way through leaves the caller's tree untouched.
+# ---------------------------------------------------------------------------
+
+# Path segments in a ``set_property`` / ``remove_child`` ``parent`` are
+# separated by dots; a segment that is all digits indexes a list.
+_MATH_KEYS = ("position", "rotation", "scale")
+
+
+def apply_operations(
+    tree: dict,
+    operations: list[dict],
+    *,
+    extension: str | None = None,
+) -> dict:
+    """Apply a batch of mutation ops to a parsed textproto tree.
+
+    ``tree`` is the current tree of the target resource (``{}`` when the
+    resource does not exist yet). ``operations`` is a list of op dicts, each
+    naming its action in the ``"op"`` key; ``extension`` is the resource's
+    file extension (e.g. ``".collection"``) and selects the fresh-tree shape
+    for ``create``.
+
+    The input tree is never mutated: ops run against a deep copy which is
+    returned. The result is passed through ``decode_embedded_data`` so that
+    a freshly built resource is already in the canonical parsed shape (every
+    embedded ``data`` payload carries its ``data_ast``), which is what makes
+    a freshly written resource round-trip byte-exactly. Any failure raises
+    ``ValueError`` naming the offending operation index, so a bad batch
+    cannot half-apply.
+
+    Supported ops: ``create``, ``add_instance``, ``add_embedded_instance``,
+    ``add_subcollection``, ``add_component``, ``set_property``,
+    ``remove_child``, ``atlas_add_images``, ``atlas_set_animation``,
+    ``tilesource_configure``, ``tilemap_set_tiles``, ``gui_add_node``,
+    ``gui_set_layout_property``, ``collision_add_shape``.
+    """
+    result = copy.deepcopy(tree)
+    for index, op in enumerate(operations):
+        name = op.get("op") if isinstance(op, dict) else None
+        handler = _OP_REGISTRY.get(name) if isinstance(name, str) else None
+        if handler is None:
+            raise ValueError(f"operation {index}: unknown op {name!r}")
+        try:
+            handler(result, op, extension)
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(f"operation {index} ({name}): {exc}") from exc
+    return decode_embedded_data(result)
+
+
+# -- shared helpers ---------------------------------------------------------
+
+
+def _single_line(value: object, label: str) -> str:
+    """Return ``value`` as a single-line string or raise ``ValueError``."""
+    if not isinstance(value, str):
+        raise ValueError(f"{label} must be a string")
+    if "\n" in value or "\r" in value:
+        raise ValueError(f"{label} must not contain a newline")
+    return value
+
+
+def _scalar(value: object, label: str) -> object:
+    """Reject message (dict/list) values; validate string values."""
+    if isinstance(value, (dict, list, tuple)):
+        raise ValueError(
+            f"{label} must be a scalar (message values need their own op)"
+        )
+    if isinstance(value, str):
+        _single_line(value, label)
+    return value
+
+
+def _as_list(node: dict, key: str) -> list:
+    """Return ``node[key]`` as a list, creating it when absent."""
+    value = node.get(key)
+    if value is None:
+        value = []
+        node[key] = value
+    elif not isinstance(value, list):
+        value = [value]
+        node[key] = value
+    return value
+
+
+def _math(op: dict, key: str) -> dict | None:
+    """Extract an optional transform block (``position``/``rotation``/``scale``)."""
+    if key not in op:
+        return None
+    value = op[key]
+    if not isinstance(value, dict):
+        raise ValueError(f"{key} must be a message with x/y/z (and w) fields")
+    return value
+
+
+def _navigate(tree: dict, parent: str) -> object:
+    """Resolve a dotted ``parent`` path (``""`` = the tree root)."""
+    node: object = tree
+    if not parent:
+        return node
+    for segment in parent.split("."):
+        if isinstance(node, dict):
+            if segment not in node:
+                raise ValueError(f"parent path {parent!r} has no {segment!r}")
+            node = node[segment]
+        elif isinstance(node, list):
+            if not segment.isdigit() or int(segment) >= len(node):
+                raise ValueError(
+                    f"parent path {parent!r}: {segment!r} is not a valid index"
+                )
+            node = node[int(segment)]
+        else:
+            raise ValueError(
+                f"parent path {parent!r} descends into a scalar at {segment!r}"
+            )
+    return node
+
+
+# -- op handlers ------------------------------------------------------------
+
+
+def _op_create(tree: dict, op: dict, extension: str | None) -> None:
+    if tree:
+        raise ValueError(
+            "create: the resource already exists (tree is not empty)"
+        )
+    resource_type = op.get("resource_type") or (
+        extension.lstrip(".") if extension else ""
+    )
+    if resource_type == "go":
+        tree["components"] = []
+        tree["embedded_components"] = []
+
+
+def _op_add_instance(tree: dict, op: dict, extension: str | None) -> None:
+    entry: dict = {
+        "id": _single_line(op["id"], "id"),
+        "prototype": _single_line(op["prototype"], "prototype"),
+    }
+    for key in _MATH_KEYS:
+        block = _math(op, key)
+        if block is not None:
+            entry[key] = block
+    _as_list(tree, "instances").append(entry)
+
+
+def _op_add_embedded_instance(
+    tree: dict, op: dict, extension: str | None
+) -> None:
+    inner: dict = {"components": [], "embedded_components": []}
+    for component in op.get("components") or []:
+        component_id = _single_line(component["id"], "component id")
+        if component.get("type"):
+            inner["embedded_components"].append(
+                {
+                    "id": component_id,
+                    "type": _single_line(component["type"], "component type"),
+                    "data": component.get("data", ""),
+                }
+            )
+        else:
+            inner["components"].append(
+                {
+                    "id": component_id,
+                    "component": _single_line(
+                        component["component"], "component path"
+                    ),
+                }
+            )
+    entry: dict = {
+        "id": _single_line(op["id"], "id"),
+        "data": serialize_textproto(inner),
+        "data_ast": inner,
+    }
+    block = _math(op, "position")
+    if block is not None:
+        entry["position"] = block
+    _as_list(tree, "embedded_instances").append(entry)
+
+
+def _op_add_subcollection(
+    tree: dict, op: dict, extension: str | None
+) -> None:
+    collection = _single_line(op["collection"], "collection")
+    if collection.endswith(".collection"):
+        collection += "c"
+    entry: dict = {
+        "id": _single_line(op["id"], "id"),
+        "collection": collection,
+    }
+    block = _math(op, "position")
+    if block is not None:
+        entry["position"] = block
+    _as_list(tree, "collection_instances").append(entry)
+
+
+def _op_add_component(tree: dict, op: dict, extension: str | None) -> None:
+    embedded = bool(op.get("embedded", False))
+    if embedded:
+        component_type = op.get("type")
+        if not component_type:
+            raise ValueError(
+                "embedded add_component requires a non-empty 'type'"
+            )
+        add_component(
+            tree,
+            component_id=_single_line(op["id"], "id"),
+            component_type=_single_line(component_type, "type"),
+            embedded=True,
+            data=op.get("data", ""),
+        )
+    else:
+        add_component(
+            tree,
+            component_id=_single_line(op["id"], "id"),
+            component_type="",
+            embedded=False,
+            data=_single_line(op["component"], "component"),
+        )
+
+
+def _op_set_property(tree: dict, op: dict, extension: str | None) -> None:
+    target = _navigate(tree, op.get("parent", ""))
+    if not isinstance(target, dict):
+        raise ValueError("parent must resolve to a message, not a list")
+    key = _single_line(op["key"], "key")
+    target[key] = _scalar(op["value"], "value")
+
+
+def _op_remove_child(tree: dict, op: dict, extension: str | None) -> None:
+    target = _navigate(tree, op.get("parent", ""))
+    if not isinstance(target, list):
+        raise ValueError("parent must resolve to a repeated field (a list)")
+    match = op["match"]
+    match_key = _single_line(match["key"], "match key")
+    match_value = match["value"]
+    for index, item in enumerate(target):
+        if isinstance(item, dict) and item.get(match_key) == match_value:
+            del target[index]
+            return
+    raise ValueError(
+        f"no child matching {match_key}={match_value!r} under "
+        f"{op.get('parent', '')!r}"
+    )
+
+
+def _op_atlas_add_images(tree: dict, op: dict, extension: str | None) -> None:
+    images = _as_list(tree, "images")
+    for path in op["images"]:
+        images.append({"image": _single_line(path, "image")})
+
+
+def _op_atlas_set_animation(
+    tree: dict, op: dict, extension: str | None
+) -> None:
+    animation = op["animation"]
+    entry: dict = {"id": _single_line(animation["id"], "animation id")}
+    if "playback" in animation:
+        entry["playback"] = _single_line(
+            animation["playback"], "playback"
+        )
+    if "images" in animation:
+        entry["images"] = [
+            _single_line(image, "animation image")
+            for image in animation["images"]
+        ]
+    if "fps" in animation:
+        entry["fps"] = animation["fps"]
+    _as_list(tree, "animations").append(entry)
+
+
+def _op_tilesource_configure(
+    tree: dict, op: dict, extension: str | None
+) -> None:
+    for key, value in op["keys"].items():
+        tree[_single_line(key, "key")] = _scalar(value, f"keys.{key}")
+
+
+def _op_tilemap_set_tiles(
+    tree: dict, op: dict, extension: str | None
+) -> None:
+    field = "layer_grids" if "layer_grids" in tree else "layers"
+    entries = _as_list(tree, field)
+    layer = op["layer"]
+    target: dict | None = None
+    if isinstance(layer, int) and not isinstance(layer, bool):
+        if 0 <= layer < len(entries) and isinstance(entries[layer], dict):
+            target = entries[layer]
+    else:
+        layer_id = _single_line(layer, "layer")
+        for entry in entries:
+            if isinstance(entry, dict) and entry.get("id") == layer_id:
+                target = entry
+                break
+    if target is None:
+        target = {} if isinstance(layer, int) else {"id": layer}
+        entries.append(target)
+    target["data"] = [_row_to_ints(row) for row in op["rows"]]
+
+
+def _row_to_ints(row: object) -> list[int]:
+    """Flatten one tilemap row (``["1,2,0"]``) into a list of ints."""
+    if not isinstance(row, (list, tuple)):
+        raise ValueError("each row must be a list of comma-separated cells")
+    cells: list[int] = []
+    for cell in row:
+        for part in str(cell).split(","):
+            part = part.strip()
+            if part:
+                cells.append(int(part))
+    return cells
+
+
+def _op_gui_add_node(tree: dict, op: dict, extension: str | None) -> None:
+    node = op["node"]
+    entry: dict = {"id": _single_line(node["id"], "node id")}
+    for key in ("position", "size", "text"):
+        if key in node:
+            entry[key] = node[key]
+    _as_list(tree, "nodes").append(entry)
+
+
+def _op_gui_set_layout_property(
+    tree: dict, op: dict, extension: str | None
+) -> None:
+    layout_id = _single_line(op["layout_id"], "layout_id")
+    node_id = _single_line(op["node_id"], "node_id")
+    key = _single_line(op["key"], "key")
+
+    layout: dict | None = None
+    for candidate in _as_list(tree, "layouts"):
+        if isinstance(candidate, dict) and candidate.get("id") == layout_id:
+            layout = candidate
+            break
+    if layout is None:
+        layout = {"id": layout_id, "nodes": []}
+        tree.setdefault("layouts", []).append(layout)
+
+    nodes = _as_list(layout, "nodes")
+    target: dict | None = None
+    for candidate in nodes:
+        if isinstance(candidate, dict) and candidate.get("id") == node_id:
+            target = candidate
+            break
+    if target is None:
+        target = {"id": node_id}
+        nodes.append(target)
+    target[key] = _scalar(op["value"], "value")
+
+
+def _op_collision_add_shape(
+    tree: dict, op: dict, extension: str | None
+) -> None:
+    shapes = _as_list(tree, "shapes")
+    if "shape" in op:
+        shape = op["shape"]
+        entry: dict = {
+            # The op names the field ``shape_type``; Defold's proto field is
+            # ``type`` inside a ``shapes`` entry.
+            "type": _single_line(shape["shape_type"], "shape_type"),
+        }
+        for key in ("position", "vertices"):
+            if key in shape:
+                entry[key] = shape[key]
+        shapes.append(entry)
+        return
+    png = base64.b64decode(op["image_png_base64"])
+    fragment = collision_from_image(png, mode=op.get("mode", "box"))
+    shapes.append(parse_textproto(fragment))
+
+
+_OP_REGISTRY = {
+    "create": _op_create,
+    "add_instance": _op_add_instance,
+    "add_embedded_instance": _op_add_embedded_instance,
+    "add_subcollection": _op_add_subcollection,
+    "add_component": _op_add_component,
+    "set_property": _op_set_property,
+    "remove_child": _op_remove_child,
+    "atlas_add_images": _op_atlas_add_images,
+    "atlas_set_animation": _op_atlas_set_animation,
+    "tilesource_configure": _op_tilesource_configure,
+    "tilemap_set_tiles": _op_tilemap_set_tiles,
+    "gui_add_node": _op_gui_add_node,
+    "gui_set_layout_property": _op_gui_set_layout_property,
+    "collision_add_shape": _op_collision_add_shape,
+}
