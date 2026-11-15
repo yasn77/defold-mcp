@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:1d37c5494c9c38236dc68351aaf5aebcb9a0f8ab4d84daa8a1aa400041b958a2",
+  "claims": [
+    {
+      "id": "claim_7526da79d0fd4c84ae0a9898ca941290",
+      "statement": "The index uses the pinned FTS5 virtual table docs_fts with porter unicode61 tokenising, doc_id/scope/title/namespace/tags/summary/body/stars/url columns, and the indexed searchable text in title, summary and body.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/docs_index.py#L80-L95",
+          "version": "repo-lines-v1:sha256:164e911a4c68628fffac52648d1568278f02573c44c85f09cd9a3fbb75f155e1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1OWNiN2ZjMjMwMjJjZTM0YzhlM2Y3NWRlOTAzM2MyMDQwMjMwNTRiYTU5NjMzMmU0ZGMwOWI2ZjRiMjk5OWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgzNmZmYWQyYWY4YzY3MDYzNzNhMzQ1YjI1ZDFiNzNiYTZkMDMwNDc4ODFlNDNiNmE0MWIzNzk3NjAxMTA3MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjcxMzIyOTY5MzkzMTlhZTZjODRkODk0ZDcwNjQ2ZDQyZGE5NDMwZDA1MzAyMDZjNGYyMWU4Y2M0ZTkzNmI5NDAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIyMDJmMmNiZWQ2YWVkMTgyNmQ3Yjc5MGM3OThmMTlhOGNkNDcwM2ZhMGRmODg3ZmMwMjg0NzljNGNhM2VhMDgifQ"
+        },
+        {
+          "resource": "repo://tests/test_docs_fts.py#L159-L168",
+          "version": "repo-lines-v1:sha256:a76f1ea7f1815f893c1f92841b1174b3a806274954765173f71dbe4cc0e83759:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE2NWEwZjczMmI0MjUzODVjZTQwMmVhYWQ4YjcwZTM4NWQyYjc2NmQyMTJhOWU0ZDZkMzU4NTk4NjhjMWExMzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjMTFmZGY4MDFkNWQ0NGU0OTM1MjM4ZTdiYjM0MzMyYzVlODIzNWRhZWE5ZmIzYjUwYzBmN2IyMzEyNWUyNTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA4MjY3NmM4ODhjMWE0ZDlmYTc3MmZjZGMzMDJmNzczYmM3MjkwZWViZmY5ZGEzNmEzOWY0NGMzMjExOTgzODUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI2MmE5MmMwZTIzZjExMDU5MGNjZWJmZGMyMzYyZjhiYjc1NjAwYTY0MGJmN2Q1OTc2M2QwYTQ4Mzg2NWUyY2UifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_fcf945d9371b4090af279e0abea5b5fb",
+      "statement": "Ingestion contracts follow the plan-verified real formats: ref-doc namespace documents ({info: {namespace, language}, elements: [...]}) produce one doc per element with lua/cpp scoping by language, and the asset feed must be an items list (any other shape raises ValueError); unlisted items and the scene3d id are excluded at ingestion time.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/docs_index.py#L142-L200",
+          "version": "repo-lines-v1:sha256:285d521e3946e49fa6c276e366c7858bd3ec2382b1e21b1abda49ba756fde08e:eyJzZWxlY3RlZExpbmVDb3VudCI6NTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjEyM2FiNTJiMWIzMTk1OWU5MzYzY2JmYjE0ZDkyNGUyZmNjNzRhZmU4M2VkMDE5YmQ5MmRhYWVkYmJhZTg3YzAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5MWQzMGYwY2MxZTE4NTM5ZmE3OWYxZDU2MmFmZGExMmIzMDhkNDFiOWRjZTBiNjFmNDM0ZjRhMzczZjNkOTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJlNGQ1YTY2MTVmMzczNGRjOGI5OTk5OWI3NGI2ODIyMmQxZWE4MWUwN2FhMTUxNWVlNTNkOGJlNDExNGI4YTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk4MGRmYTJhNWE3ZjJjYTA1NjNmMTU3ZjQ0ZjdlNWQzNmU0OTE5NTQ2ZmUxZjg3OWQ1OGM3NWYwNzExZjBjNTQifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/docs_index.py#L324-L360",
+          "version": "repo-lines-v1:sha256:6ceb8b9b3acb68bb9ca25b475b9812904d73c3b09b5b40a20b4d232a590ebe9c:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRjYmVjNTRhNzRjMmYyNDE3YTc2YjA5MWM2NjA0MGI5NzBkYzhlMDVmODYwYTQ5MjMxMWY1YzcwOTdhOTExZDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdlNjViOWZhMTM0NDM1ZGIxYTU0MWEzMmM5ODk0ZGNhZDZkYTI0MTBjODYyMWQ1OWFmMDllMTJmMzUxNzQzZTQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjY0YzdhMTUwOTc2NGMzYTBmZTgxOWFjYzcwMzg4YWM3NWFlMmFjZGQ0NTJjMDcyODNkZTUxMTg5Y2I1ZjdkNTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3ZDc0MjhmZmNmM2QxOGQ5YjcxYjllNmU4NzllZThlNDg0MDc2N2NlNzQ2YTA3NTAyMWU5Nzk3MGYzNGU2M2MifQ"
+        },
+        {
+          "resource": "repo://tests/test_docs_fts.py#L481-L485",
+          "version": "repo-lines-v1:sha256:295f7889532cb4fb198f26c5ef0afbd247cb618bcb91e837412f631ab43ae9a6:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2JjNmQ0MDA0ZTlhYWU5ZDBhMjI0NDA1YWI2NzIwNGYwMjk2MjY0MWJhMGMwZmY3ZmVhZjIzN2YwOTI1NDgzMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDczN2E2N2Q4N2MzODhjYTcwZjBlMTAzMzIwODJmZThkYTJlMzRmN2QxNzFiYTRjNTg5YWVmODAxZGI4MWQ0MiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDgyNjc2Yzg4OGMxYTRkOWZhNzcyZmNkYzMwMmY3NzNiYzcyOTBlZWJmZjlkYTM2YTM5ZjQ0YzMyMTE5ODM4NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2FjMzlkNTViMWM0MDlhZWU3YzMxOGFlOGZlZTRmMTI5ZWU4MzU5ZWIyNzM2NTc1YmViYjgwNzE3YTUzOTY5ZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_494a425dc4ff4c1e940d37f2b612d72f",
+      "statement": "Search passes queries as quoted phrases to FTS5 MATCH (hostile input cannot raise or inject), ranks by bm25 with an exact-title boost so a qualified name like go.animate ranks first in its scope, and orders asset-scope results by stars descending with bm25 as tiebreak.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/docs_index.py#L400-L443",
+          "version": "repo-lines-v1:sha256:ba51360a12e1fd13f2734248732e37919c32a46bb9ab0298fd52132a713f29ad:eyJzZWxlY3RlZExpbmVDb3VudCI6NDQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJhYWU4YTBjYTc2Zjk4ZjdiN2RjNzk4NDk1MWQ2M2U1N2RiM2M2NDU1NzljYTUxYmFkNmE1MzlkNjE0ZWRiYmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNjN2Q1ZTdjZjExMmY0MzFmODk2M2E3NjFmM2JlNDAzNzdkY2ZhMDA4YjVhZTkwNDgwNWU3OWY0NjUwNDkxMzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFjMDgwNjljOTA1OTJkOThjZjMyOGQyZDYwZGM1ZGU4NTI5MWQ1NThiODhlNTJmZDBhN2NmYTg3MjNlYjA3ZmYifQ"
+        },
+        {
+          "resource": "repo://tests/test_docs_fts.py#L236-L258",
+          "version": "repo-lines-v1:sha256:6d93f842dbf70ae9590032f5b8b71b23da69e99da0074a5b539d71034f765961:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNhOGYxOGZkNzUyNWY1YTUzMTdkMjk2MzkzZTQwODIwOTFiMzUxMTQ0NjUyM2RhZWFlNGQzOGQwMDdmOWMxNWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI4M2VlNDhjY2FmYWVlZTViZTBiOGFhODY1YzA0NzA3YTljNWIxYjM2NWRiY2Y3NjhlZGYyMGRlYjU1YzVlNmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM1Y2Q3OWE2MjE1NGExY2JiNDcxNWEwOTkxZmZmN2I1OTI2OGM5YTQwMTg0NTRkZjIyNjBmZmI0ZGE1ZTk2MGUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_0a2d1cca038f49a883f64d7112c776ce",
+      "statement": "get_doc caps content at 25,000 characters with offset pagination and a truncated flag, clamps negative offsets and non-positive limits, and raises KeyError on unknown ids; doc_ids are deterministic scope-prefixed identities whose re-ingestion upserts rather than duplicates.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/docs_index.py#L445-L472",
+          "version": "repo-lines-v1:sha256:3d55239e62314a1f11eb286b5eb8f430442bee2998261fdf660bf84658fa38d9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZlZDVmMmMwYWU0NjFiMDRlOWYyZGM3MjdhZWE1MDlmYzQ2NmVmMTQyNTZjOWI5ODk3NjRkZjE4OWZmNDgyNDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBkZTg0NGY1YzRhMjEwMGVhOGFjYzIxMTUzZTQ2ZjQ0OTcwMDdkNGVmOTAwN2IwMGRlN2VmZGYyMzg5MTYwMjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJlN2VmOTQzMWRmOWQ3NTYzNDcyNTI0OGI1YWRjYzViMjRhMjNkZTJmOWQ0NTU4YjUzMmIxZTQ3MmE0NWJhODYifQ"
+        },
+        {
+          "resource": "repo://tests/test_docs_fts.py#L493-L516",
+          "version": "repo-lines-v1:sha256:82786eeb4b05320349cadd6b103d8278d7a917ebcccc1f41491040b7afa24a65:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNhMDhkMmNiYzVlZjI3ZGRhODlkOWNhMThhNWZhZjg5ZTg3ZTUzZDc0MDRlMmM0NWQwMjUyMzhiYjM3MDAwZmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk5YzVhYzkyNTZmYjQxYWY5NDQzY2EzZGNlYTE0NTc3ZmJmMGZjMjA3MjM4NTgxMjEzMzJhODM0OWVkMjM1ZTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA4MjY3NmM4ODhjMWE0ZDlmYTc3MmZjZGMzMDJmNzczYmM3MjkwZWViZmY5ZGEzNmEzOWY0NGMzMjExOTgzODUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFiOTE5ZGU3NWNmMTZlNjg3OWIzNWRmNDY2OWIxNDE5YTgwYzMwYTA3MGRmNjliYWE1OGZmNzgzNjNjZGY0YzAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_369c0dac970f46febee04a5785bd694b",
+      "statement": "ingest_llms_tarball streams the codeload GitHub tarball through tarfile consuming only */llms/* members without disk extraction or a git subprocess, and skips members whose slug contains a dot-dot path component.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/docs_index.py#L363-L410",
+          "version": "repo-lines-v1:sha256:340317a8a518394da48b26d94bf219b32d8639470386734c08fd68e44f811982:eyJzZWxlY3RlZExpbmVDb3VudCI6NDgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgwNGRmYjk2YWYzYjA5NjhlNjkzN2IyOTk1MzM5OTJkZGUxYjhiMTIyYTA5YWZkNzcyNmE0MDFhNTQ2YTM3ZmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2MzhmMTg1N2ViNTU2ZjViZjY1NDQ4Y2E4ZGQ5Yjc2YTg5MWY5OTVhNGE3ZjdiOWFiMWU2NGFlNDFkYzBkNzciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjY0YzdhMTUwOTc2NGMzYTBmZTgxOWFjYzcwMzg4YWM3NWFlMmFjZGQ0NTJjMDcyODNkZTUxMTg5Y2I1ZjdkNTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVhYWI0ZWZjM2YyYWM0MjgzODhlYzcyYWQyZDk2ZDExODM4ZTY3MWYyNTU2YmVhYjQwNzFiODYyZTY0Y2ExNDEifQ"
+        },
+        {
+          "resource": "repo://tests/test_docs_fts.py#L338-L364",
+          "version": "repo-lines-v1:sha256:7fbb970391fed0ef5e4b24b7d28c68645e10c426c5c676f5041e1e7bd28aa2f4:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI4YmIyYTM5MzBiYmE0YjcyNDQyMmZhZmUzMzQzOTBiNTI0NWM3NzE5MjRmMzBhNzc2Yzg2ZWJiYTFlNDM5M2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlMzYxODRlZTcyMjg2YjlkZWEzZjM1ZTM2NzZmNTY4NjdkMjJlNWU1NmE2ZjQwNGUxYjljNjA4YWI5NTNjYzEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlNDRjMDc3Mjc1ODI1MjVmNjdhNjI1N2VlMzJjNWQ2OGFkNGJiN2Q5YjRiZDUzZmUwNGYwM2JkNmNmZTU4OWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImIzMWYwMzc1OWEyZmI0NjI3YzMxY2Y1YThkOWU4MzZiZmI4NGZiZTRlMDkxOWQxNDY0YjQ4YTMzNjk5NzJlMzAifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T01:05:39.762Z"
+  }
+}

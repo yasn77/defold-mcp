@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:a627a626c739fae7f0cf197a43c013d585ca86e82007799ea849acb29ae3159b",
+  "pageVersion": "sha256:2c515f1abf394af88b4d53dd2a42f7760930e29cce3a11f1bc89f9220a865f33",
   "claims": [
     {
       "id": "claim_e8d9095eb07f49daa4286b0a85aa31d7",
@@ -62,7 +62,7 @@
     },
     {
       "id": "claim_b25ded6e891e4e7a9ea90a77788830d0",
-      "statement": "The src/defold_mcp package currently contains the three landed layers (config, project, and the textproto package with parser, serializer, schemas and mutations) plus the package marker, with their tests under tests/; the wider server (FastMCP tool wiring, dual-mode editor/headless mutation routing, toolchain downloads, docs index, and the editor/engine/bridge clients) is planned but not yet implemented.",
+      "statement": "The src/defold_mcp package currently contains six landed subsystems (config constants, the game.project editor, the textproto package with parser/serializer/schemas/mutations, the toolchain manager, the deps syncer, and the docs FTS index) plus the package marker, with their tests under tests/; the wider server (FastMCP tool wiring, dual-mode editor/headless mutation routing, the editor/engine/bridge clients, bob runner and test runner) is planned but not yet implemented.",
       "evidence": [
         {
           "resource": "repo://src/defold_mcp/__init__.py",
@@ -73,12 +73,24 @@
           "version": "repo-file-v1:sha256:440035b40a0ff1d3d4143458f303952a8b163339d9754a70324be71c55073288"
         },
         {
+          "resource": "repo://src/defold_mcp/deps.py",
+          "version": "repo-file-v1:sha256:8b4215639b27f7f19c28d7de2813248d1417d537445dadddab7dbab0f610cfd3"
+        },
+        {
+          "resource": "repo://src/defold_mcp/docs_index.py",
+          "version": "repo-file-v1:sha256:851321311bc7d1ca1371c1eade811eb4d0ea755dc0eb84e39e3190b09797d86c"
+        },
+        {
           "resource": "repo://src/defold_mcp/project.py",
           "version": "repo-file-v1:sha256:957611a69af70723497c4f5d8a78f2be673bd754915f1208388ea8cd4599f65b"
         },
         {
           "resource": "repo://src/defold_mcp/textproto/__init__.py",
           "version": "repo-file-v1:sha256:bc6dddd7021668620a9a880113ed75546a10173cd85eb5066be38b68b089e982"
+        },
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py",
+          "version": "repo-file-v1:sha256:80b7e0835b996fbd0b221abedb2b33393fdcec0ad51c6adfb7509aef35b95659"
         }
       ]
     },
@@ -95,10 +107,28 @@
           "version": "repo-file-v1:sha256:68c07be3afacef5f77847336bc31947b408c42cfea9b51835b8f8280e7778d46"
         }
       ]
+    },
+    {
+      "id": "claim_c4ab1b608c05448f862a4cf5978a61cf",
+      "statement": "The toolchain, deps and docs_index modules follow the downward-only layering rule: they import config (and deps imports toolchain) but never each other's internals nor any layer above them; the future FastMCP server layer will sit on top and own the clients.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/deps.py#L17-L21",
+          "version": "repo-lines-v1:sha256:0bcc80240e57a99033be3b78982b0c7d817c1410f16a5338188ddd2e070a8054:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmQxYzUwMGUzMWI2ODZiZjdjYjczOTg3ODVhZTc3YmUzYjVmMTlmOTJmZDU3YWFjNThhMjcxZTJlOWMxYWMwMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMWI2NjJjOWU3NjdhZjM1NDg1ZjczMjNhNWQ4YzM3MGFmOWM1Mjg2ZTM1NzUxOTZhNTNiNDhkYTc4OTk5MzgxZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODhmNzA4MGZhMWUwMDA4MmEwYWRiY2QzODQzNzAzNTZiMzVhOGVhODQ2Yzg0M2E3YTFhZTI4N2JkYzE3YTI5NCJ9"
+        },
+        {
+          "resource": "repo://src/defold_mcp/docs_index.py#L1-L40",
+          "version": "repo-lines-v1:sha256:4132f6d2561bc35849e9a3093f17703ef3cee59a9d432e08a501077f0c5d4f47:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRlMzBhOWZlNjIxOWExYjVmM2QzODk5ZjgyNDczZmU4ZWZmZWY2NWEzNTU0ZmRhNTdlODllMGY4YWU5ZjllODEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhZmJhMDUyN2MzOTUzYzRiNmUwZTViNTczOWJhODM2MTJmODA1M2JjZGM5NDY2NzMwMTkzY2QxZDU5MGI0MDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjUyNmFhNDlmNjQyYzk3N2VkNzNjY2JlMTc5YmQ1YmJjYjRiZGJiMjZlOWZjYzJhMTA5Y2I0MmNhMmJkMDljODcifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/toolchain.py#L1-L40",
+          "version": "repo-lines-v1:sha256:fbc264ba185059357ccbd6b6c54f784190188aa42cbbea5d8421b8208ba92534:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdhNWVhNzdmZmY3MzdjYmU2Nzg3MzJhYjM3Y2M5NDYwMWZkNWVjNTY4Y2FlNTkyMGI4MjZlODQ4NjQ5YWE2YWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZhNmI5ZTZjZGI2Nzc4YjdmODg3NDBjZjlhYTUwYTM4MDYzNDhiMzdkMTg5Mjk0ZDExYzdhNWM1Y2NiYTg4MmMifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-14T22:05:56.160Z"
+    "at": "2026-11-15T01:05:39.762Z"
   }
 }

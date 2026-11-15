@@ -1,11 +1,11 @@
 ---
 type: testing
 title: Testing and gates
-description: How defold-mcp is tested — the mise setup/test/live task chain, the pytest live-marker separation, the asyncio fixture loop pin, and what the current 70-test suite covers thematically.
+description: How defold-mcp is tested — the mise setup/test/live task chain, the pytest live-marker separation, the asyncio fixture loop pin, and what the current 106-test suite covers thematically.
 tags: [defold, testing, pytest, mise, gates]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-14T22:05:56.160Z
+    at: 2026-11-15T01:05:39.762Z
 sources:
   - id: openwiki-source-72b5d686f860ea86c8592080
     resource: repo://mise.toml
@@ -13,11 +13,15 @@ sources:
     resource: repo://pyproject.toml
   - id: openwiki-source-81af13fa7982f0b3becf1286
     resource: repo://tests/test_config.py
+  - id: openwiki-source-aa918e62d579257ce43a1ddf
+    resource: repo://tests/test_deps_sync.py
+  - id: openwiki-source-4100c25666ae22e213937002
+    resource: repo://tests/test_docs_fts.py
   - id: openwiki-source-d0ba0764c79275c3c198800b
     resource: repo://tests/test_project_ini.py
   - id: openwiki-source-c7f35c27a3e804b5af2c8277
     resource: repo://tests/test_textproto_roundtrip.py
-generated: { by: "opencode", at: "2026-11-14T22:05:56.160Z" }
+generated: { by: "opencode", at: "2026-11-15T01:05:39.762Z" }
 ---
 
 # Testing and gates
@@ -35,19 +39,22 @@ The gates are intentionally split: unit tests stay fast and hermetic (no network
 
 ## pytest configuration
 
-`[tool.pytest.ini_options]` in `pyproject.toml` registers the `live` marker (with a description telling how to deselect it) and pins `asyncio_default_fixture_loop_scope = "function"`. The pin silences the pytest-asyncio deprecation warning that otherwise fires on every run even with zero async tests, and fixes the fixture loop scope before async tests arrive in later phases. Failing to register the marker would make `-m` selection raise an error under strict-marker behaviour, so the marker description doubles as documentation.
+`[tool.pytest.ini_options]` in `pyproject.toml` registers the `live` marker (with a description telling how to deselect it) and pins `asyncio_default_fixture_loop_scope = "function"`. The pin silences the pytest-asyncio deprecation warning that otherwise fires on every run even with zero async tests, and fixes the fixture loop scope before async tests arrive in later phases.
 
 ## What the current suite covers
 
-70 tests, thematically:
+106 tests, thematically:
 
-- **Config (6, in `tests/test_config.py`):** cache-dir resolution via the `DEFOLD_MCP_CACHE_DIR` override and the `HOME`-based default; the exact six-entry ordered `COMPILED_SETTING_KEYS` tuple asserted with `==` (order-sensitive, no extras); the three hard constants (Java 25, 1024-byte POST ceiling, default engine port 8001); the host-platform shape for x86_64-Linux hosts (guarded with `skipif` so the suite stays portable); and the `ValueError` path for unsupported platform/machine pairs, monkeypatching `platform.system`/`platform.machine` and asserting the message names the offending pair and the supported combinations.
-- **game.project editor (18, in `tests/test_project_ini.py`):** project-root resolution (upward walk, env var, and the eight-parent cap raising `FileNotFoundError`); the compiled-path `c` suffix and its idempotency; dependencies in both modern indexed (`dependencies#N`, numeric ordering, indexed-beats-legacy precedence) and legacy comma-separated forms, plus the rewrite to gap-free sequential keys on add/remove (including legacy-only files and end-of-file section insertion); `include_dirs` splitting on mixed separators; line preservation on save (comments, blank lines, trailing newline, missing-section creation, blank-line-aware insertion position); CRLF byte-fidelity (fixture written with `write_bytes`, assertion reads bytes back); values containing `=` round-tripping; `get()` defaults; `delete`/`delete_section`; and the mutator injection guards rejecting newline/CR and `]` in sections without touching file state.
-- **Textproto engine (46, in `tests/test_textproto_roundtrip.py`):** parser behaviour (scalar forms, adjacent-literal concatenation, double-escaped `.collection` decoding into nested `data_ast`, always-list schema normalisation, exact uint64 preservation, non-proto `data` tolerance, error line numbers, comment/blank handling, colon-brace form, `max_depth` overflow, hex/octal escapes); the byte-exact round-trip group (scalar suite, the full `.go` fixture with referenced+embedded components, and the double-escaped `.collection` fixture — including the pin that the inner closing-quote line is exactly `"\"\n"` and never `"\"\\n"`); `BareIdent` quoting (`id: "HUD"` stays quoted, `TYPE_BOX` stays unquoted, an invalid-charset `BareIdent` degrades to quoted); math default omission (position/size/scale/rotation rules, `.0` floats, bare ints); mutator guardrails (the exact gui rejection message, `tilemap`→`tilegrid` normalisation, embedded/referenced tree shapes surviving round-trip, newline/CR injection rejections); and collision shapes (opaque-bounds box with partial-transparency fixtures, non-square boxes, convex-hull vertex counts and CCW ordering, empty-image and collinear rejections).
+- **Config (6, in `tests/test_config.py`):** cache-dir resolution; the exact six-entry ordered `COMPILED_SETTING_KEYS` tuple; the hard constants (Java 25, 1024-byte POST ceiling, default engine port); host-platform shape (skipif-guarded) and the unsupported-pair `ValueError` message.
+- **game.project editor (18, in `tests/test_project_ini.py`):** root resolution (walk, env var, eight-parent cap); compiled-path `c` suffix idempotency; indexed and legacy dependency forms and gap-free rewrites; `include_dirs` splitting; line preservation, CRLF byte-fidelity, missing-section creation, blank-line-aware insertion; values containing `=`; `get()` defaults; `delete`/`delete_section`; injection guards.
+- **Textproto engine (46, in `tests/test_textproto_roundtrip.py`):** parser behaviour (scalar forms, adjacent-literal concatenation, double-escaped `.collection` decoding, always-list schema, exact uint64, error line numbers, colon-brace form, `max_depth`, hex/octal escapes); byte-exact round-trips over the three verified fixtures (scalar, `.go`, `.collection` with the inner closing-quote pin); `BareIdent` quoting both directions; math default omission; mutator guardrails; collision shapes (opaque-bounds box, CCW hulls, empty/collinear rejections).
+- **Toolchain + deps (22, in `tests/test_deps_sync.py`):** version resolution (TTL cache with request counting, channel non-200 raises, pinned-404 fallback, malformed-200 raises, nothing cached on failure); `check_java` (fake Java 21/25/missing, portable-first, broken-portable fallback to a working JAVA_HOME); `download_artifact` magic checks and atomicity; `install_jdk25` idempotence and extraction hardening (`..` tar escape end-to-end, backslash traversal, multi-root zip, layout check); `extract_zip` zip-slip in both forms (`../` and absolute entries); **the sandbox-escape regression** (dependency URLs ending `/..` and `/.` extract under hash names, project root untouched); end-to-end `.deps` sync over `httpx.MockTransport` with in-memory zips; ignore-file repair.
+- **Docs FTS index (14, in `tests/test_docs_fts.py`):** the pinned FTS5 schema and porter stemming (behavioural, bidirectional); manual/example ingestion; the **real-format regressions** (ref-doc namespace-document shape ranking `go.animate` #1; the `{"items": […]}` asset feed with strict rejection of other shapes); asset stars ranking with `unlisted`/`scene3d` excluded from the DB entirely; hostile FTS query handling; `get_doc` 25k cap, pagination and clamps; the codeload tarball ingestion with scope classification and `..`-slug skipping; re-ingestion idempotency.
 
 ## Conventions
 
-- Plain pytest functions for the foundation suites; task-4's textproto Part B uses grouped test classes (`TestSerializerRoundTrip`, `TestMathDefaultOmission`, `TestGuardrails`, `TestCollisionFromImage`) — both styles are accepted, grouping preferred when a fixture serves many small cases.
-- Byte-level assertions (`read_bytes`) wherever newline translation could mask a bug; fixture bytes for round-trip tests are the verified Defold 1.14.1 output, asserted with exact string equality.
+- Plain pytest functions for the foundation suites; grouped classes for the textproto Part B groups — both styles accepted, grouping preferred when one fixture serves many small cases.
+- Byte-level assertions wherever newline translation could mask a bug; fixture bytes for round-trip tests are the verified Defold 1.14.1 output, asserted with exact string equality.
+- All HTTP through `httpx.MockTransport`; all archives in-memory (`zipfile`/`tarfile` over `BytesIO`); all filesystem state in `tmp_path` or monkeypatched `DEFOLD_MCP_CACHE_DIR`.
 - `pytest.raises(..., match=...)` for exception-contract tests, asserting distinguishing substrings rather than whole messages.
-- One suite-level rule from the repo's wider process: strict red → green TDD, with the gate re-run (`mise run test`) after every task.
+- Strict red → green TDD, with the gate re-run (`mise run test`) after every task.
