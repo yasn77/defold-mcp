@@ -22,6 +22,20 @@ work. Every response reports which one answered, as `"backend": "editor"` or
 All four serve the same stdio transport by default; `--transport
 streamable-http` serves the same tools over HTTP.
 
+Two subcommands set a harness up from the installed package, with no manual
+editing:
+
+```bash
+defold-mcp skill install                  # copy the skill into detected harness dirs
+defold-mcp integration install opencode   # register the server (backed up, validated)
+```
+
+`skill install` writes into every detected harness skill directory and takes
+`--target DIR` for one explicit directory. `integration install` merges the
+`defold` entry into the harness configuration, keeps a `.bak-defold-mcp` copy,
+and round-trip validates the file before writing; add `--dry-run` to preview and
+`all` in place of a harness name to attempt every config that exists.
+
 ## Quick start
 
 ```bash
