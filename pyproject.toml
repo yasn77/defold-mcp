@@ -23,6 +23,12 @@ dev = [
 [project.scripts]
 defold-mcp = "defold_mcp.__main__:main"
 
+# The canonical skill lives at the repository root (skill/defold). The wheel
+# force-includes that tree so `defold-mcp skill install` works from a pip,
+# uvx or container install, where no checkout exists.
+[tool.hatch.build.targets.wheel.force-include]
+"skill/defold" = "defold_mcp/skill/defold"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_default_fixture_loop_scope = "function"

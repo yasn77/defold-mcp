@@ -319,6 +319,12 @@ not a server problem — which halves the search space.
 
 ## Registration per harness
 
+Or register automatically: `defold-mcp integration install <harness>` merges the
+same entry into the harness configuration, backs the file up to
+`<config>.bak-defold-mcp`, and round-trip validates the JSON, TOML or YAML
+before writing. Add `--dry-run` to see the edit without touching the file, and
+use `all` in place of a harness name to attempt every config that exists.
+
 | Harness | Where | Shape |
 |---|---|---|
 | Claude Code | `claude mcp add`, or `.mcp.json` | `mcpServers` |
@@ -458,7 +464,10 @@ ln -sfn <repo>/skill/defold ~/.config/opencode/skills/defold
 ```
 
 A symlink is intentional: the repository stays the single source of truth, so a
-`git pull` updates the skill in place.
+`git pull` updates the skill in place. For an installed package — where no
+checkout exists — `defold-mcp skill install` copies the same tree instead
+(`--target DIR` for one explicit directory); it installs into every detected
+harness skill directory and reports each one.
 
 ### Windsurf
 
@@ -575,8 +584,9 @@ Diagnostic habits that save time:
 
 ## Uninstalling
 
-Remove the `defold` entry from the client configuration, delete the skill symlink
-(`rm ~/.config/opencode/skills/defold`), and delete the cache
+Remove the `defold` entry from the client configuration, delete the installed
+skill (`rm -rf ~/.config/opencode/skills/defold`; it is a symlink or a copied
+tree depending on how it was installed), and delete the cache
 (`rm -rf ~/.cache/defold-mcp`). Nothing is installed outside the checkout and the
 cache directory.
 
