@@ -149,6 +149,28 @@ images. The result carries Python, the package and its three dependencies, and
 nothing else: no shell, no package manager, and the server runs as uid 65532
 (`nonroot`). Docker and Podman are both fine; the examples use `docker`.
 
+### Use the published image
+
+Every semantic release publishes the image to the GitHub Container Registry, so
+no build is needed to run it:
+
+```bash
+docker run -i --rm --init \
+  -v defold-mcp-cache:/home/nonroot/.cache/defold-mcp \
+  ghcr.io/<owner>/defold-mcp
+```
+
+A `vX.Y.Z` tag yields `ghcr.io/<owner>/defold-mcp:X.Y.Z`, the raw tag
+`ghcr.io/<owner>/defold-mcp:vX.Y.Z`, and `ghcr.io/<owner>/defold-mcp:latest`.
+Pin the version tag in anything you care about: `latest` moves with every
+release, while `X.Y.Z` is immutable. Each image is built from its release's
+commit, so the tag, the `CHANGELOG.md` entry and the source tree it was built
+from always agree. The `publish-image` job in `.github/workflows/release.yml`
+does the push in the same run that cuts the release, authenticated with the
+run's own `GITHUB_TOKEN`, so publishing needs no personal access token.
+Authenticate with `docker login ghcr.io` if your pull is rate-limited or the
+package is private.
+
 ### Build the image
 
 ```bash
@@ -244,11 +266,14 @@ proxy.
   unaffected.
 
 CI proves the image end to end: the `container` job in
-`.github/workflows/ci.yml` builds it, writes into the default cache directory as
-uid 65532, and runs `scripts/mcp_handshake_test.py` against `docker run -i
---rm`, so the initialize handshake, the twenty-tool listing, a `defold_doctor`
-call and a clean SIGTERM exit are all verified inside the container on every
-push.
+`.github/workflows/ci.yml` builds it through Docker Buildx
+(`docker/build-push-action`), writes into the default cache directory as uid
+65532, and runs `scripts/mcp_handshake_test.py` against `docker run -i --rm`, so
+the initialize handshake, the twenty-tool listing, a `defold_doctor` call and a
+clean SIGTERM exit are all verified inside the container on every push. The
+release run then rebuilds the same `Containerfile` and pushes it to
+`ghcr.io/<owner>/defold-mcp`, so the image a release publishes is one CI has
+already exercised.
 
 ## The canonical stdio configuration
 
