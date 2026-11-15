@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+# release-please writes the release PR, the tag, the GitHub release and the
+# changelog, so this workflow is the only one with write access.
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+# Releases must be serialised, never cancelled: an interrupted run can leave
+# the release PR half-updated.
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: Release please
+    runs-on: ubicloud-standard-2
+    timeout-minutes: 10
+    steps:
+      # No checkout: the action works through the GitHub API. On every push to
+      # master it either opens/refreshes the release PR (bumping
+      # `pyproject.toml` `[project] version`, `src/defold_mcp/__init__.py`
+      # `__version__` and `CHANGELOG.md` via the `python` strategy) or,
+      # once that PR is merged, tags the release and publishes it.
+      - name: Create or update the release pull request
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json
+          # `token` is left at its default, the workflow's `GITHUB_TOKEN`.
+          # Releases and release PRs it creates do not trigger other workflows
+          # (GitHub suppresses the recursion), so a later publishing phase
+          # needs a PAT in that input instead.
+
+      # Publishing (PyPI, a container image) belongs to a later phase. Wire it
+      # as a second job gated on the conventional action outputs, for example:
+      #
+      #   publish:
+      #     needs: release-please
+      #     if: ${{ needs.release-please.outputs.releases_created == 'true' }}
+      #     ...
+      #
+      # `steps.release.outputs.paths_released` is a JSON array of the paths
+      # released in this run, and `steps.release.outputs.prs_created` /
+      # `steps.release.outputs.pr` describe the release PR.

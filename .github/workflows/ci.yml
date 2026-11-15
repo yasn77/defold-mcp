@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+# Least privilege: no job here writes to the repository.
+permissions:
+  contents: read
+
+# A new push to a pull request supersedes its previous run. Master runs are
+# never cancelled, so merging cannot abort the gate the merge just started.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  unit:
+    name: Unit tests
+    # 2 vCPU / 8 GB: the hermetic suite is CPU-light and needs no JVM.
+    runs-on: ubicloud-standard-2
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install the pinned toolchain
+        # Installs python 3.14.10 and uv 0.13.7 from mise.toml. `install` is
+        # mise-action's default; it is stated here so the dependency on the
+        # repository's tool pins is explicit.
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        with:
+          install: true
+
+      - name: Run the hermetic unit suite
+        run: mise run test
+
+  handshake:
+    name: Stdio handshake
+    runs-on: ubicloud-standard-2
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install the pinned toolchain
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        with:
+          install: true
+
+      # Spawns the server over raw stdio JSON-RPC with a sanitised
+      # environment and asserts the 20-tool listing.
+      - name: Probe the MCP server over stdio
+        run: mise run handshake
+
+  live:
+    name: Live Defold smoke
+    # The only heavier job: a JVM 25 build (bob.jar) and a wasm-web bundle
+    # beside the ~428 MB toolchain cache, so it gets 4 vCPU rather than 2.
+    runs-on: ubicloud-standard-4
+    timeout-minutes: 60
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The live smoke downloads the real Defold 1.14.1 toolchain (bob.jar,
+      # Temurin JDK 25, the headless engine, builtins, the ref-doc and the
+      # ingested docs.db) into the default cache dir. Restoring it turns a
+      # cold ~10+ minute run into ~10 seconds. The key pins the version
+      # literally and deliberately has no fallback: builtins.zip and
+      # ref-doc.zip sit at flat, version-agnostic paths and are reused on a
+      # magic-byte check, so a cross-version restore would serve the old
+      # version's zips permanently. Bump this with the live smoke's spec.
+      - name: Restore the Defold toolchain cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/defold-mcp
+          key: defold-toolchain-1.14.1-${{ runner.os }}
+
+      - name: Install the pinned toolchain
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+        with:
+          install: true
+
+      # Real downloads, a real bob build under JDK 25, a real headless TEST
+      # run and a real wasm-web bundle against Defold 1.14.1.
+      - name: Run the live Defold smoke
+        run: mise run live
