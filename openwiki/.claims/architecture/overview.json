@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:1952e3bd960b1a30cabeab1bdc3d67918e614917a01bc6f1d024b4d6c5e3199b",
+  "pageVersion": "sha256:bd4cc700edaf6c4de5fae4034f81e654a8496f012e4e4dd3e42efd0fa0108ad5",
   "claims": [
     {
       "id": "claim_e8d9095eb07f49daa4286b0a85aa31d7",
@@ -38,43 +38,43 @@
     },
     {
       "id": "claim_b5e7b01962614172a9af814450142980",
-      "statement": "pyproject.toml declares the console script defold-mcp = \"defold_mcp.__main__:main\" while the __main__ module is not yet implemented; it is the only declared-but-absent symbol, reserved for later server-wiring tasks.",
+      "statement": "pyproject.toml declares the console script defold-mcp = \"defold_mcp.__main__:main\", and __main__ is implemented — it serves stdio (default) or streamable-http and exposes the skill install and integration install subcommands.",
       "evidence": [
         {
           "resource": "repo://pyproject.toml",
-          "version": "repo-file-v1:sha256:38b46bf1d1248c02b1d6ab13e3bcfb8433ebfabbfbcc306a9b88b38c4a12514e"
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
         },
         {
-          "resource": "repo://src/defold_mcp/__init__.py",
-          "version": "repo-file-v1:sha256:5e3d506e3254779b75aef97842ba2f7cddb59c2ec350561c7d1339630b59a8bf"
+          "resource": "repo://src/defold_mcp/__main__.py",
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
         }
       ]
     },
     {
       "id": "claim_b92ba7ba290e4ac99e7dae6454a0dbf9",
-      "statement": "The package targets Python >= 3.14 with runtime dependencies mcp>=1.6.0, httpx>=0.27.0 and pillow>=10.0.0, dev extras pytest and pytest-asyncio, and a hatchling build backend.",
+      "statement": "The package targets Python >= 3.14 with runtime dependencies mcp>=1.6.0, httpx>=0.27.0 and pillow>=10.0.0, dev extras pytest, pytest-asyncio and pyyaml, and a hatchling build backend with the skill force-included into the wheel.",
       "evidence": [
         {
           "resource": "repo://pyproject.toml",
-          "version": "repo-file-v1:sha256:38b46bf1d1248c02b1d6ab13e3bcfb8433ebfabbfbcc306a9b88b38c4a12514e"
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
         }
       ]
     },
     {
       "id": "claim_b25ded6e891e4e7a9ea90a77788830d0",
-      "statement": "The commissioned plan is fully delivered: the src/defold_mcp package contains twelve landed pieces (config, project, textproto with the 14-op registry, toolchain, deps, docs index, editor/engine/bridge clients, runners, the twenty-tool server, templates) plus the package marker, and the repo additionally ships the portable agent skill (SKILL.md + four references), the sanitised-env handshake probe and the per-harness install guide — all live-verified against real Defold 1.14.1.",
+      "statement": "The commissioned plan is fully delivered: the src/defold_mcp package contains twelve landed subsystems (config, project, textproto with the 14-op registry, toolchain, deps, docs index, editor/engine/bridge clients, runners, the twenty-tool server, templates) plus the package marker, and the repo additionally ships the portable agent skill, the sanitised-env handshake probe, the per-harness install guide, the skill/integration CLI subcommands, the Chainguard container, and the CI/release/Renovate automation — all live-verified against real Defold 1.14.1.",
       "evidence": [
         {
-          "resource": "repo://docs/INSTALL.md",
-          "version": "repo-file-v1:sha256:25f9b3744309cbf9ac2770a06d455b7693f04d25049c9d799acda94c02b3f245"
+          "resource": "repo://.github/workflows/ci.yml",
+          "version": "repo-file-v1:sha256:8f73b280c8cd68658dd89f1b92f4495bef21297656cb1b8ce5345768dcfacfe9"
         },
         {
-          "resource": "repo://scripts/mcp_handshake_test.py",
-          "version": "repo-file-v1:sha256:e0fcfe0d71f08a136f2e2922c90785145c7a6fb1c918bdac91773be2bc1f4627"
+          "resource": "repo://Containerfile",
+          "version": "repo-file-v1:sha256:fa9f472e538ea3064a8c57444344adfb91ee1f3df68d458dc8705c78b16c32a6"
         },
         {
-          "resource": "repo://skill/defold/SKILL.md",
-          "version": "repo-file-v1:sha256:0ea4ce9f5d06a878667e414c9a021ca552a4d0ce9aba5e782f0d8d6c08163f8d"
+          "resource": "repo://src/defold_mcp/__init__.py",
+          "version": "repo-file-v1:sha256:5e3d506e3254779b75aef97842ba2f7cddb59c2ec350561c7d1339630b59a8bf"
         }
       ]
     },
@@ -117,6 +117,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T15:05:00.624Z"
+    "at": "2026-11-15T16:38:15.389Z"
   }
 }

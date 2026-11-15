@@ -1,11 +1,11 @@
 ---
 type: testing
 title: Testing and gates
-description: How defold-mcp is tested — the mise setup/test/live task chain, the pytest live-marker separation, the asyncio fixture loop pin, and what the current 294-test suite plus the live gate covers thematically.
+description: How defold-mcp is tested — the mise setup/test/live task chain, the pytest live-marker separation, the asyncio fixture loop pin, and what the current 335-test suite plus the live gate covers thematically.
 tags: [defold, testing, pytest, mise, gates]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-15T14:41:05.547Z
+    at: 2026-11-15T16:38:15.389Z
 sources:
   - id: openwiki-source-72b5d686f860ea86c8592080
     resource: repo://mise.toml
@@ -13,6 +13,8 @@ sources:
     resource: repo://pyproject.toml
   - id: openwiki-source-e200d53fe0347c46249510fb
     resource: repo://tests/test_bob_diagnostics.py
+  - id: openwiki-source-9ec6473d05fcc2cd40915af2
+    resource: repo://tests/test_cli.py
   - id: openwiki-source-aa918e62d579257ce43a1ddf
     resource: repo://tests/test_deps_sync.py
   - id: openwiki-source-4100c25666ae22e213937002
@@ -23,7 +25,9 @@ sources:
     resource: repo://tests/test_project_ini.py
   - id: openwiki-source-c7f35c27a3e804b5af2c8277
     resource: repo://tests/test_textproto_roundtrip.py
-generated: { by: "opencode", at: "2026-11-15T14:41:05.547Z" }
+  - id: openwiki-source-90b1741ee7f58a19f59c234d
+    resource: repo://tests/test_workflows.py
+generated: { by: "opencode", at: "2026-11-15T16:38:15.389Z" }
 ---
 
 # Testing and gates
@@ -45,7 +49,7 @@ The gates are intentionally split: unit tests stay fast and hermetic (no network
 
 ## What the current suite covers
 
-294 tests plus one live smoke, thematically:
+335 tests plus one live smoke, thematically:
 
 - **Config (6, in `tests/test_config.py`):** cache-dir resolution; the exact six-entry ordered `COMPILED_SETTING_KEYS` tuple; the hard constants (Java 25, 1024-byte POST ceiling, default engine port); host-platform shape (skipif-guarded) and the unsupported-pair `ValueError` message.
 - **game.project editor (18, in `tests/test_project_ini.py`):** root resolution (walk, env var, eight-parent cap); compiled-path `c` suffix idempotency; indexed and legacy dependency forms and gap-free rewrites; `include_dirs` splitting; line preservation, CRLF byte-fidelity, missing-section creation, blank-line-aware insertion; values containing `=`; `get()` defaults; `delete`/`delete_section`; injection guards.
@@ -60,7 +64,9 @@ The gates are intentionally split: unit tests stay fast and hermetic (no network
 - **Mutations registry Part C (29, in `tests/test_textproto_roundtrip.py`):** one test per registry op (create, add_instance, add_embedded_instance, add_subcollection, add_component, set_property, remove_child, atlas ops, tilesource/tilemap, gui ops, collision_add_shape both variants) plus guard rejections (multiline strings, missing types), unknown-op indexed errors, and the end-to-end create→add_component→add_instance→serialize→re-parse byte-exact chain; TestSchemaOrderedSerialisation pins the extension= canonical ordering and the default's byte-exactness.
 - **Stdio e2e (14, in `tests/test_mcp_stdio_e2e.py`):** drives the REAL defold-mcp binary over newline-delimited JSON-RPC — the handshake and exact-20-tools list in order; the project_init → info → mutate → inspect workflow over real files with byte-exact assertions; **traversal containment over the live server** (`..`, normalised, symlink escapes rejected; inside-root allowed); the 25k cap on escaping-heavy payloads; payload-dialect editor routing with a stubbed probe; double-run orphan prevention; filtered process-log paging (disjoint, monotone, eviction-safe); backend-key honesty; stdout purity (every frame parses as JSON); clean SIGTERM.
 
-**Live-phase suite additions** (the gate moved 265 → 294, all hermetic): channel-matched pinned-spec resolution with the stable-over-beta preference lock; redirect-following clients; JDK exec-bit preservation and executable-aware re-install; artifact-cache reuse with magic re-verification (corrupt engine re-fetch); docs-db self-heal (missing/malformed/empty); the SEVERE diagnostics and compile/bundle `stdout_tail` on failure; the `--settings` test-build route (private temp dir, failure cleanup); the `LEVEL:DOMAIN:` log-prefix stripping; source-path `add_subcollection`; template `game.project` bob-parsing guards (no comment lines, required `input.game_binding`, c-suffixed values).
+**CI, CLI and container suite additions** (gate 320 → 335 across phases 10–12): the workflow-pinning tests (Ubicloud runner labels, SHA-pin + `# vN` convention across all workflows, version-literal cache key with the two-place spec pin, release-please config, Renovate grouping/automerge shape), the Containerfile shape + container CI job, the de-identification guard (scanning `docs/`, `skill/`, `openwiki/` and root `*.md` for personal paths), the CLI tests (skill install copy/autodetect, per-harness registration incl. idempotency, backup preservation, dry-run no-write, TOML emitter hostile scalars, exit codes), and the workflow-removal guard (`openwiki-update.yml` absent).
+
+**Live-phase suite additions****Live-phase suite additions** (the gate moved 265 → 294, all hermetic): channel-matched pinned-spec resolution with the stable-over-beta preference lock; redirect-following clients; JDK exec-bit preservation and executable-aware re-install; artifact-cache reuse with magic re-verification (corrupt engine re-fetch); docs-db self-heal (missing/malformed/empty); the SEVERE diagnostics and compile/bundle `stdout_tail` on failure; the `--settings` test-build route (private temp dir, failure cleanup); the `LEVEL:DOMAIN:` log-prefix stripping; source-path `add_subcollection`; template `game.project` bob-parsing guards (no comment lines, required `input.game_binding`, c-suffixed values).
 
 - **The live smoke (`@pytest.mark.live test_live_defold_1_14_1_build_and_headless_test`, in `tests/test_mcp_stdio_e2e.py`):** drives the REAL server over stdio against the REAL toolchain — `defold_setup_toolchain("1.14.1", install_jdk25=True)` with all artifacts asserted on disk, `defold_docs_search("go.animate")` returning the real signature, a scaffolded project + test collection compiled by real bob under JDK 25, a real headless `dmengine_headless` run (`run="smoke1"`, passed 2 / failed 0, exit 0) and a real wasm-web bundle (index.html + non-empty .wasm + non-empty game.arcd). Excluded from the default gate; `mise run live` runs it alone.
 

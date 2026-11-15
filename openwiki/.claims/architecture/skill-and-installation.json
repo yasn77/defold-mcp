@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:0f73c5f25174e0ad8c9789775af4c3b3c6723ef69264a7172d1ab437f88d6e6d",
+  "pageVersion": "sha256:ba0c048141501ccabbdfef4963615a6461d34d007d1e033da8306de52c4dcc28",
   "claims": [
     {
       "id": "claim_ea082c9c2d384f479480e944daab42ce",
@@ -36,15 +36,15 @@
     },
     {
       "id": "claim_df77c89747e043c0b41bd33b685d04dc",
-      "statement": "docs/INSTALL.md is the canonical per-harness registration guide with unit-correct per-tool timeout guidance (OpenCode and Claude Code in milliseconds, Codex in seconds, VS Code and Cursor with no knob documented honestly), grounded troubleshooting, and the OpenCode registration performed with a backup and a single-insertion diff validated by JSON round-trip.",
+      "statement": "docs/INSTALL.md is the canonical per-harness registration guide with unit-correct per-tool timeout guidance (OpenCode and Claude Code in milliseconds, Codex in seconds, VS Code and Cursor with no knob documented honestly), grounded troubleshooting, run modes including uvx and the published container image, and the registration is now automatable via the defold-mcp skill install and integration install CLI subcommands.",
       "evidence": [
         {
           "resource": "repo://docs/INSTALL.md",
-          "version": "repo-file-v1:sha256:25f9b3744309cbf9ac2770a06d455b7693f04d25049c9d799acda94c02b3f245"
+          "version": "repo-file-v1:sha256:a8c4bf03835ce484c4406c75320fe11768029404b7169e4208fd1ebaca45972e"
         },
         {
-          "resource": "repo://docs/INSTALL.md#L1-L60",
-          "version": "repo-lines-v1:sha256:211cbf678635da03747720ba6892c0f077d85352f2d8639954845883cda8cfb1:eyJzZWxlY3RlZExpbmVDb3VudCI6NjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFhMjQ2MDE4Mjk1M2ZmMTVhYzBmNGEwNDRkNTVmNjRlZDgyNjA0ODliOTg4MTQyM2QxMGE1MWRkMGQyNmYxZTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVmNGFjZDY3ZTBjZTI2MTFiNThiNDIxMjc0NTkwZWExOWNlMzk0MDQyYTRiYWM0NDI1MDk1OWZkMDVhZDkyZWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdkNmM4OWJkY2NiMDFiNGE5ZGYxZDRiMzFkN2Q5ZGFmY2Q4YzdhZDQ0NWJkYTM2OTBlYjFhYzBiOTU3MWE3MmQifQ"
+          "resource": "repo://src/defold_mcp/__main__.py",
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
         }
       ]
     },
@@ -61,6 +61,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T15:05:00.624Z"
+    "at": "2026-11-15T16:38:15.389Z"
   }
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:81dea37c92b6a4aa1533a51c49129b10bdc37ea13c9830b6e2f8bea9b432a9e9",
+  "pageVersion": "sha256:ef73e6dcff50302bcfc95c1ff6424d28491019e89a8422e686f0a48d9757cd70",
   "claims": [
     {
       "id": "claim_fa554fb7886548fdb0e9e7a44d4d69ec",
@@ -74,11 +74,11 @@
     },
     {
       "id": "claim_196c27d5a6a34d3faab9a5e6d2acbf13",
-      "statement": "__main__ runs the server with stdio as the default transport (streamable-http optional) and routes all logging to stderr; the installed mcp 2.3.0 renamed FastMCP to MCPServer, which the server imports.",
+      "statement": "__main__ runs the server with stdio as the default transport (streamable-http optional) and routes all logging to stderr; the installed mcp 2.3.0 renamed FastMCP to MCPServer, which the server imports — and __main__ additionally exposes the skill install and integration install subcommands via argparse.",
       "evidence": [
         {
           "resource": "repo://src/defold_mcp/__main__.py",
-          "version": "repo-file-v1:sha256:be5809fe0648ce16686722dd44e5372139e2be48d624f9e8d2437b32b42c90c2"
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
         },
         {
           "resource": "repo://src/defold_mcp/server.py#L30-L70",
@@ -107,6 +107,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T14:41:05.547Z"
+    "at": "2026-11-15T16:38:15.389Z"
   }
 }

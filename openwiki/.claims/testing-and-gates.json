@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:eb21e12146a6c77fec2884aa7ea137e4858611a491f191cc91c7faa74ade7a89",
+  "pageVersion": "sha256:5e4aa934520541385502f6781dc1fac326c53b3dcc70d3fa6ee43b2d47aaa367",
   "claims": [
     {
       "id": "claim_20c01b8cf15e4ca79ab56290b86eb68d",
@@ -14,29 +14,29 @@
     },
     {
       "id": "claim_55b9ee7d6fb447748ef9fa92d6e93c2c",
-      "statement": "pyproject.toml registers the live marker in [tool.pytest.ini_options] and pins asyncio_default_fixture_loop_scope = \"function\", silencing the pytest-asyncio deprecation warning that fires on every run even with zero async tests.",
+      "statement": "pyproject.toml registers the live marker in [tool.pytest.ini_options] and pins asyncio_default_fixture_loop_scope = \"function\", silencing the pytest-asyncio deprecation warning that otherwise fires on every run even with zero async tests.",
       "evidence": [
         {
-          "resource": "repo://pyproject.toml#L22-L30",
-          "version": "repo-lines-v1:sha256:f0b905a9c934af5802f97042a9b049e57cdff97b669d1ecdb1419b517c0ea8ed:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGVhYjRlYzYzZGU1MTdkYTRjZDhlNWM4MzA3ZmIyYzc3MzdkMzkxOTBhYjY5ZjMyYTVlOWVmODFlYTQ0MTZkZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjk0MTZlMDlmNzhiYTMxNmMwMzI1NjgyMTNiODU1ZWU3NTZlNDE1NjVkOTE4ZjA5NTE5YzgxZmQ2MjBmNDA2MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzg4NTgxNDliNDM1NmMyYzBlOWUwMWY1MjM0MDA2NjU2OGM4NDVhM2I0NzEzN2Y1MzI3OTI0MzgyZWM4OWQwNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
         }
       ]
     },
     {
       "id": "claim_e73bffaa1ec140b28bda81998581a5a6",
-      "statement": "The unit gate is hermetic: 294 tests across the twelve suite files cover all landed subsystems, the templates and mutations registry, the real-binary stdio e2e and the live-phase hardening (channel preference, redirects, exec bits, cache reuse with magic re-verification, SEVERE diagnostics, docs-db self-heal, the settings build route, log-prefix stripping) without network beyond loopback or a JVM; the live smoke is a separate opt-in gate (mise run live).",
+      "statement": "The unit gate is hermetic: 335 tests across the fourteen suite files cover all landed subsystems, the templates and mutations registry, the real-binary stdio e2e, the live-phase hardening, and the CI/container/CLI configuration pins (workflow YAML/SHA-pins/runner labels, release-please + Renovate shape, Containerfile, de-identification, skill install, integration install) without network beyond loopback or a JVM; the live smoke remains a separate opt-in gate.",
       "evidence": [
         {
-          "resource": "repo://mise.toml",
-          "version": "repo-file-v1:sha256:9faf378f5b65c1a8cff4507e6e030edecaab7585c86fbf5da232c93e2432ec0c"
-        },
-        {
-          "resource": "repo://tests/test_deps_sync.py#L137-L238",
-          "version": "repo-lines-v1:sha256:0011f9d0ec5c8b078a60275d6c65011428efeea78f7d7da1d6a6be882a382d09:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAyLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIwMmUyNTM3YWI3MWVmYmU3OWI2ZTYyZGNkZWNkZDI0ZmEyNjg4MzVmYmIyOTk1YjQ4ZDBkMzg0Yjc5NGIzZjViIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJjM2VmZjQyN2EyZDMxM2U3NjNiZDU4ZGMwMzYwNGRlMzM5YzQ1M2IwM2JjMzI0ZDMxOTkzNjlmODU5ZmZiZTUyIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlNjg4NDBlOTQyMjdiZWJkMzQ0OTYzYmZmNDRlN2M0ZjkyZDFlYWMxNzcyZmFhYzdiYTA5NGQzMGM3NTU1MTA3IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiI0OGM1MWIyZGM3NmI5MmExMDMzOTNkZTI5YjdlOGJlNGUxMjA1YjZkNGQ1YjNkYzgzMGM4ODg0NWQ2YmNlMjBiIn0"
+          "resource": "repo://tests/test_cli.py",
+          "version": "repo-file-v1:sha256:bb6ca44d61c07a5f914c310499fa9d6c9468912095787ec825d3c9e2aee0340e"
         },
         {
           "resource": "repo://tests/test_mcp_stdio_e2e.py",
           "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
+        },
+        {
+          "resource": "repo://tests/test_workflows.py",
+          "version": "repo-file-v1:sha256:4020f32dd94c0d4b1ade271163529a7dea174c629822e7df438f605104473c50"
         }
       ]
     },
@@ -101,6 +101,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T14:41:05.547Z"
+    "at": "2026-11-15T16:38:15.389Z"
   }
 }

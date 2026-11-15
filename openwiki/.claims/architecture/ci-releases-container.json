@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:a4c1d79ee0764897b567016b8a93965db0d391f07929d995c7ea7905b5547560",
+  "claims": [
+    {
+      "id": "claim_4b8c9a476e1741f1b90e8a4aa5fe2c2f",
+      "statement": "CI runs three mise-driven jobs (unit, handshake, live smoke) plus a buildx container job on Ubicloud runners with a version-literal Defold toolchain cache and no cross-version restore-keys fallback.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml",
+          "version": "repo-file-v1:sha256:8f73b280c8cd68658dd89f1b92f4495bef21297656cb1b8ce5345768dcfacfe9"
+        },
+        {
+          "resource": "repo://tests/test_workflows.py",
+          "version": "repo-file-v1:sha256:4020f32dd94c0d4b1ade271163529a7dea174c629822e7df438f605104473c50"
+        }
+      ]
+    },
+    {
+      "id": "claim_8d7b09546edd4088b2c5ed081af7d78c",
+      "statement": "release-please (python strategy) bumps pyproject.toml [project] version and __init__.py __version__ together, maintains CHANGELOG.md, and a same-run publish-image job pushes ghcr.io/<owner>/defold-mcp with :X.Y.Z, :vX.Y.Z and :latest tags from release-please's outputs using GITHUB_TOKEN (no PAT) — avoiding the dormant separate tag-trigger problem.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/release.yml",
+          "version": "repo-file-v1:sha256:db5b310da00ed2b7255c7d3dd2beab032d3e270a2a6b2ca1a083afccb28ada04"
+        },
+        {
+          "resource": "repo://.release-please-config.json",
+          "version": "repo-file-v1:sha256:86b4a39f4848c519ca191f4b43c00f44fe0c6a07bf4f3538761a3c97730a149d"
+        }
+      ]
+    },
+    {
+      "id": "claim_fc687c3c2b9048fd992f32466d6ed13a",
+      "statement": "Renovate uses native automerge (platformAutomerge false, pr/squash) with four logical groups and majors and vulnerability alerts excluded from automerge.",
+      "evidence": [
+        {
+          "resource": "repo://renovate.json",
+          "version": "repo-file-v1:sha256:9f1030c10f4272db299c3c82ae7b1cd116cb980612ad268c92ff63a39fc4641c"
+        }
+      ]
+    },
+    {
+      "id": "claim_fc891261a63542e8a611b654c9522c2c",
+      "statement": "The Chainguard two-stage Containerfile builds a venv in latest-dev and copies it into the minimal nonroot runtime with a seeded cache directory and ENTRYPOINT defold-mcp, and the defold-mcp CLI exposes skill install and integration install subcommands with the skill force-included into the wheel.",
+      "evidence": [
+        {
+          "resource": "repo://Containerfile",
+          "version": "repo-file-v1:sha256:fa9f472e538ea3064a8c57444344adfb91ee1f3df68d458dc8705c78b16c32a6"
+        },
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:41ecd45c90d65fd0c5dc0f9fca40ad1fdb4a632412022470499436a39bf18b85"
+        },
+        {
+          "resource": "repo://src/defold_mcp/__main__.py",
+          "version": "repo-file-v1:sha256:60d3df9b2f369175ce23e06b36e2cf55b1eba1acee03eaaacb92774cf092778c"
+        }
+      ]
+    },
+    {
+      "id": "claim_c75f85d09bcf4682bdfad16ae2b5ef6c",
+      "statement": "The scheduled OpenWiki CI workflow was removed in favour of manual wiki maintenance.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_workflows.py",
+          "version": "repo-file-v1:sha256:4020f32dd94c0d4b1ade271163529a7dea174c629822e7df438f605104473c50"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T16:38:15.389Z"
+  }
+}

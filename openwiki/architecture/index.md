@@ -2,6 +2,7 @@
 
 - [Bob and headless test runners](bob-and-test-runners.md) - How defold-mcp runs bob.jar builds (java resolution, diagnostics parsing, build reports) and dmengine_headless test collections (--config overrides, TEST event parsing, guaranteed timeout kills).
 - [Automation bridge client](bridge-client.md) - The extension-automation-bridge v2 client — DLIB 500 unwrapping into structured errors, FIFO lease auto-renewal, guard-carrying input actions and screenshot capture with sha256 validation.
+- [CI, releases and the container](ci-releases-container.md) - The automation and delivery layer — Ubicloud-run PR checks, release-please semantic releases with GHCR image publication, Renovate native automerge, the Chainguard container and the skill/integration CLI subcommands.
 - [Dependency and builtins sync](deps-sync.md) - How sync_project_deps unpacks dependency zips and builtins.zip into .deps/ with sandbox-escape rejection and zip-slip protection, and repairs .defignore/.gitignore.
 - [Documentation FTS index](docs-index.md) - The SQLite FTS5 index behind defold_docs_search — pinned schema, ingestion of the four corpora in their plan-verified real formats, ranking rules and the doc_id stability contract.
 - [Editor HTTP client](editor-client.md) - The Defold Editor HTTP client — probe-based discovery, OpenAPI negotiation, command/preview routes, the token-isolated /eval bridge with injection-proof Lua quoting, and the /bob route.
@@ -10,7 +11,7 @@
 - [Live toolchain notes (verified against 1.14.1)](live-toolchain-notes.md) - The fifteen real-world findings from the live smoke — d.defold.com channel semantics, redirects, JDK extraction, bob's game.project parsing rules, the c-suffix asymmetry, engine log prefixes and the settings-file build route.
 - [MCP server and the twenty tools](mcp-server.md) - The MCPServer tool layer — twenty defold_* tools, root resolution, the escaping-aware 25k response cap, dialect-safe editor routing, containment and the process registries.
 - [Mutations and collision shapes](mutations-and-collision-shapes.md) - The textproto mutation layer — add_component's embedded/referenced split with guardrails, and PNG-derived box and convex-hull collision shape generation.
-- [Architecture overview](overview.md) - defold-mcp is a dual-mode (Live Editor / headless) MCP server for the Defold game engine; how the landed subsystems (config, game.project editor, textproto engine, toolchain manager, deps syncer, docs index) layer and where the planned pieces will sit.
+- [Architecture overview](overview.md) - defold-mcp is a dual-mode (Live Editor / headless) MCP server for the Defold game engine; how the landed subsystems, the twenty-tool server, the agent skill and the CI/release/container delivery layer fit together.
 - [The agent skill and installation](skill-and-installation.md) - The portable defold skill package (SKILL.md with the 53-char trigger description plus four reference guides) and the harness registration, handshake probe and timeout guidance.
 - [Templates and the mutations registry](templates-and-mutations.md) - The four project scaffolding profiles with the Defold licence attribution module, and the 14-op textproto mutation registry feeding defold_mutate_resource.
 - [Textproto engine](textproto-engine.md)
