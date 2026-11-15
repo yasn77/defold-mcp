@@ -17,13 +17,13 @@ work. Every response reports which one answered, as `"backend": "editor"` or
 | mise + uv | `mise run setup` then `.venv/bin/defold-mcp` | Development and the full test suite |
 | plain pip | `pip install .` then `.venv/bin/defold-mcp` | Hosts without mise |
 | `uvx` | `uvx --from git+https://github.com/yasn77/defold-mcp defold-mcp` | Trying it, or pinning a harness to a revision, with no checkout |
-| published image | `docker run -i --rm --init ghcr.io/<owner>/defold-mcp` | A tagged release with no checkout and no build |
+| published image | `docker run -i --rm --init ghcr.io/yasn77/defold-mcp` | A tagged release with no checkout and no build |
 | container (local build) | `docker build -f Containerfile -t defold-mcp .` | Reproducible, shell-less, non-root deployments from a checkout |
 
 Every entry serves the same stdio transport by default; `--transport
 streamable-http` serves the same tools over HTTP. Each semantic release
 publishes the image to the GitHub Container Registry as
-`ghcr.io/<owner>/defold-mcp:X.Y.Z` (plus `:vX.Y.Z` and `:latest`).
+`ghcr.io/yasn77/defold-mcp:X.Y.Z` (plus `:vX.Y.Z` and `:latest`).
 
 Two subcommands set a harness up from the installed package, with no manual
 editing:

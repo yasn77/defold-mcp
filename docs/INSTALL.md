@@ -17,7 +17,7 @@ timeouts that matter more than anything else here.
 
 ## Prerequisites
 
-* **Python 3.14** — the package declares `requires-python = ">=3.14"`.
+* **Python 3.12+** — the package declares `requires-python = ">=3.12"`.
 * **Network access on first use** — the toolchain cache is roughly 428 MB.
 * **No Node.js.** The server is pure Python, which is deliberate: nothing here
   depends on `npm`, and it runs on hosts where Node is unavailable.
@@ -118,8 +118,8 @@ Two properties are worth knowing before you point a harness at `uvx`:
   ```
 
 * **The interpreter is uv's choice.** uv selects (or downloads) a managed CPython
-  that satisfies `requires-python = ">=3.14"`, so a host with only Python 3.12
-  still works. `--python 3.14` pins the decision.
+  that satisfies `requires-python = ">=3.12"`, so a host with Python 3.12+
+  works directly. `--python 3.14` pins the decision.
 
 For a harness, use `uvx` itself as the command. Most clients take a single
 executable plus an argument list, which fits `uvx` exactly:
@@ -157,11 +157,11 @@ no build is needed to run it:
 ```bash
 docker run -i --rm --init \
   -v defold-mcp-cache:/home/nonroot/.cache/defold-mcp \
-  ghcr.io/<owner>/defold-mcp
+  ghcr.io/yasn77/defold-mcp
 ```
 
-A `vX.Y.Z` tag yields `ghcr.io/<owner>/defold-mcp:X.Y.Z`, the raw tag
-`ghcr.io/<owner>/defold-mcp:vX.Y.Z`, and `ghcr.io/<owner>/defold-mcp:latest`.
+A `vX.Y.Z` tag yields `ghcr.io/yasn77/defold-mcp:X.Y.Z`, the raw tag
+`ghcr.io/yasn77/defold-mcp:vX.Y.Z`, and `ghcr.io/yasn77/defold-mcp:latest`.
 Pin the version tag in anything you care about: `latest` moves with every
 release, while `X.Y.Z` is immutable. Each image is built from its release's
 commit, so the tag, the `CHANGELOG.md` entry and the source tree it was built
@@ -272,7 +272,7 @@ CI proves the image end to end: the `container` job in
 the initialize handshake, the twenty-tool listing, a `defold_doctor` call and a
 clean SIGTERM exit are all verified inside the container on every push. The
 release run then rebuilds the same `Containerfile` and pushes it to
-`ghcr.io/<owner>/defold-mcp`, so the image a release publishes is one CI has
+`ghcr.io/yasn77/defold-mcp`, so the image a release publishes is one CI has
 already exercised.
 
 ## The canonical stdio configuration

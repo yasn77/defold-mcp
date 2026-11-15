@@ -36,19 +36,19 @@ __all__ = ["KNOWN_LIBRARY_URLS", "PROFILES", "render_project"]
 # library's moving default branch; the live phase replaces them with
 # released tag archives.
 KNOWN_LIBRARY_URLS: dict[str, str] = {
-    "defetest": (
+    "deftest": (
         "https://github.com/defold/extension-deftest/"
-        "archive/refs/heads-master.zip"
+        "archive/refs/heads/master.zip"
     ),
     "monarch": (
-        "https://github.com/britzl/monarch/archive/refs/heads-master.zip"
+        "https://github.com/britzl/monarch/archive/refs/heads/master.zip"
     ),
     "druid": (
-        "https://github.com/Insality/druid/archive/refs/heads-master.zip"
+        "https://github.com/Insality/druid/archive/refs/heads/master.zip"
     ),
     "automation_bridge": (
         "https://github.com/defold/extension-automation-bridge/"
-        "archive/refs/heads-master.zip"
+        "archive/refs/heads/master.zip"
     ),
 }
 

@@ -405,14 +405,26 @@ def test_default_http_clients_follow_redirects(monkeypatch):
     class _NoopResponse:
         content = b""
 
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
         def raise_for_status(self) -> None:
             pass
+
+        def iter_bytes(self):
+            return iter(())
 
     class _NoopClient:
         def close(self) -> None:
             pass
 
         def get(self, url):  # noqa: ANN001, ANN201 - stub
+            return _NoopResponse()
+
+        def stream(self, method, url):  # noqa: ANN001, ANN201 - stub
             return _NoopResponse()
 
     def _factory(**kwargs):
@@ -423,7 +435,10 @@ def test_default_http_clients_follow_redirects(monkeypatch):
 
     toolchain._client_or_default(None)
     docs_index.DocsIndex._get_bytes("https://example.com/x", client=None)
-    assert seen == [{"follow_redirects": True}, {"follow_redirects": True}]
+    assert len(seen) == 2
+    for kwargs in seen:
+        assert kwargs["follow_redirects"] is True
+        assert isinstance(kwargs["timeout"], httpx.Timeout)
 
 
 # -- extract_zip -----------------------------------------------------------------
