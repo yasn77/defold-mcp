@@ -158,7 +158,7 @@ def sync_project_deps(
     project_root: Path | str,
     *,
     client: httpx.Client | None = None,
-    spec: str = "stable",
+    spec: str = config.DEFAULT_DEFOLD_VERSION,
     force: bool = False,
 ) -> dict:
     """Sync ``<project_root>/.deps/`` with the project's dependencies.

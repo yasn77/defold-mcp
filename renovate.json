@@ -23,7 +23,31 @@
     "enabled": true,
     "autoclose": true
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track the pinned Defold engine version across config.py, the CI cache key and the live smoke test",
+      "managerFilePatterns": [
+        "/^src/defold_mcp/config\\.py$/",
+        "/^\\.github/workflows/ci\\.yml$/",
+        "/^tests/test_mcp_stdio_e2e\\.py$/"
+      ],
+      "matchStrings": [
+        "DEFAULT_DEFOLD_VERSION\\s*=\\s*\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\"",
+        "defold-toolchain-(?<currentValue>\\d+\\.\\d+\\.\\d+)-",
+        "\"spec\":\\s*\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "defold/defold",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v?(?<version>\\d+\\.\\d+\\.\\d+)$"
+    }
+  ],
   "packageRules": [
+    {
+      "description": "Defold engine version pin across config.py, CI cache key and the live smoke test",
+      "matchDepNames": ["defold/defold"],
+      "groupName": "Defold toolchain"
+    },
     {
       "description": "Python dependencies from pyproject.toml (pep621) and any pip requirements files",
       "matchCategories": ["python"],

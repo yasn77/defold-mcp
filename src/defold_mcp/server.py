@@ -58,7 +58,7 @@ from defold_mcp import (
     test_runner,
     toolchain,
 )
-from defold_mcp.config import get_cache_dir
+from defold_mcp.config import DEFAULT_DEFOLD_VERSION, get_cache_dir
 from defold_mcp.project import GameProject, resolve_project_root
 from defold_mcp.textproto import (
     decode_embedded_data,
@@ -444,7 +444,7 @@ def _dependency_present(url: str, unpacked: list[str]) -> bool:
 
 
 def defold_setup_toolchain(
-    spec: str = "stable",
+    spec: str = DEFAULT_DEFOLD_VERSION,
     install_jdk25: bool = False,
     project_root: str | None = None,
 ) -> str:
@@ -657,7 +657,7 @@ def defold_sync_deps(
     action: str,
     url: str | None = None,
     project_root: str | None = None,
-    spec: str = "stable",
+    spec: str = DEFAULT_DEFOLD_VERSION,
 ) -> str:
     """List, add, remove or sync the project's ``.deps`` archive dependencies."""
     root = _resolve_root(project_root)
@@ -922,6 +922,7 @@ def defold_run(
     config_overrides: dict | None = None,
     xvfb: bool = False,
     compile_first: bool = True,
+    spec: str = DEFAULT_DEFOLD_VERSION,
 ) -> str:
     """Launch the game, through the Editor when open and as a managed headless process otherwise."""
     root = _resolve_root(project_root)
@@ -936,7 +937,9 @@ def defold_run(
         logger.info("replaced the engine already running for %s", root)
 
     if compile_first:
-        compile_result = bob_runner.run_bob(root, ["build"], variant="debug")
+        compile_result = bob_runner.run_bob(
+            root, ["build"], variant="debug", spec=spec
+        )
         if not compile_result.ok:
             return _respond(
                 {
@@ -949,7 +952,7 @@ def defold_run(
             )
 
     toolchain_result = toolchain.ensure_toolchain(
-        "stable", include_editor_binaries=True
+        spec, include_editor_binaries=True
     )
     engine = toolchain_result.get("dmengine")
     if not engine or not Path(engine).is_file():

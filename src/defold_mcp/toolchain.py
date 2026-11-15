@@ -138,7 +138,7 @@ def _match_channel_version(spec: str, http: httpx.Client) -> dict | None:
 
 
 def resolve_version(
-    spec: str = "stable",
+    spec: str = config.DEFAULT_DEFOLD_VERSION,
     *,
     client: httpx.Client | None = None,
     force: bool = False,
@@ -600,7 +600,7 @@ def read_installations() -> list[dict]:
 
 
 def ensure_toolchain(
-    spec: str = "stable",
+    spec: str = config.DEFAULT_DEFOLD_VERSION,
     *,
     client: httpx.Client | None = None,
     force: bool = False,

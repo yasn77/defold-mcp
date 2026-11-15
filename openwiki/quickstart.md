@@ -46,9 +46,9 @@ mise run test         # creates .venv, installs the package editable, runs the s
 
 | Command | What it does |
 |---|---|
-| `mise run test` | The default gate: 335 unit tests, hermetic (no network, no JVM, ~20 seconds). |
+| `mise run test` | The default gate: 336 unit tests, hermetic (no network, no JVM, ~20 seconds). |
 | `mise run live` | The live gate: one real-Defold-1.14.1 smoke (~10 s warm; ~428 MB cached artifacts under `~/.cache/defold-mcp`). |
-| `mise run live` | The live-marked integration tests (real Defold downloads; minutes). |
+| `mise run handshake` | The stdio MCP handshake probe (`scripts/mcp_handshake_test.py`): verifies the 20 tools, stdout purity and clean SIGTERM. |
 | `mise run setup` | Just rebuild `.venv` and reinstall (rarely needed directly). |
 | `.venv/bin/pytest tests/ -v` | Plain pytest when you want verbose single-file runs. |
 
@@ -65,10 +65,10 @@ mise run test         # creates .venv, installs the package editable, runs the s
 - `src/defold_mcp/engine_client.py` — the running-engine protocol stack (binary Protobuf hot-reload, TCP logs, MP4 recording). See [the engine client page](architecture/engine-client.md).
 - `src/defold_mcp/bridge_client.py` — the automation bridge client (live scene, FIFO input, screenshots). See [the automation bridge client page](architecture/bridge-client.md).
 - `.github/workflows/ci.yml` + `release.yml`, `renovate.json`, `Containerfile` — the CI (Ubicloud PR checks), semantic releases with GHCR image publication, Renovate automerge and the Chainguard container. See [CI, releases and the container](architecture/ci-releases-container.md).
-- `src/defold_mcp/server.py` + `__main__.py`- `src/defold_mcp/server.py` + `__main__.py` — the twenty-tool MCP server (stdio default; `defold-mcp --transport streamable-http` for HTTP). See [the MCP server page](architecture/mcp-server.md).
+- `src/defold_mcp/server.py` + `__main__.py` — the twenty-tool MCP server (stdio default; `defold-mcp --transport streamable-http` for HTTP). See [the MCP server page](architecture/mcp-server.md).
 - `src/defold_mcp/templates/` — the four project scaffolding profiles with the Defold licence attribution module. See [templates and the mutations registry](architecture/templates-and-mutations.md).
 - `tests/` — one file per module. The suite is the specification of the modules above, including the verified Defold 1.14.1 fixture bytes for the round-trip contract.
-- `pyproject.toml` — package metadata, the `defold-mcp` console-script entrypoint (not yet implemented — see the [architecture overview](architecture/overview.md) for what is planned) and the pytest configuration (the `live` marker split and the asyncio fixture-loop pin).
+- `pyproject.toml` — package metadata, the `defold-mcp` console-script entrypoint (`defold_mcp.__main__:main`, including `skill install` and `integration install`) and the pytest configuration (the `live` marker split and the asyncio fixture-loop pin).
 
 ## Conventions to follow when changing code
 

@@ -30,6 +30,7 @@ def test_compiled_setting_keys():
 
 
 def test_constants():
+    assert config.DEFAULT_DEFOLD_VERSION == "1.14.1"
     assert config.MIN_BOB_JAVA_MAJOR == 25
     assert config.ENGINE_POST_MAX_BYTES == 1024
     assert config.DEFAULT_ENGINE_PORT == 8001

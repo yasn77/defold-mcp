@@ -21,7 +21,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from defold_mcp.config import get_cache_dir
+from defold_mcp.config import DEFAULT_DEFOLD_VERSION, get_cache_dir
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_DIR = REPO_ROOT / ".github" / "workflows"
@@ -210,12 +210,12 @@ def test_live_job_caches_the_defold_toolchain(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("HOME", str(tmp_path))
     assert Path(settings["path"]).expanduser() == get_cache_dir()
 
-    # The key pins the Defold version in two places that must not drift.
+    # The key pins the Defold version across config.py, ci.yml and the live smoke.
     key = CACHE_KEY.match(settings["key"])
     assert key, settings["key"]
     spec = LIVE_SPEC.search(LIVE_SOURCE.read_text(encoding="utf-8"))
     assert spec, "the live smoke no longer pins a toolchain spec"
-    assert key["version"] == spec["version"]
+    assert key["version"] == spec["version"] == DEFAULT_DEFOLD_VERSION
 
     # A fallback would restore the previous version's builtins/ref-doc zips.
     assert "restore-keys" not in settings
@@ -352,11 +352,19 @@ def test_renovate_groups_are_logical() -> None:
     rules = config["packageRules"]
     groups = {rule["groupName"]: rule for rule in rules if "groupName" in rule}
     assert {
+        "Defold toolchain",
         "Python dependencies",
         "GitHub Actions",
         "mise toolchain",
         "Container base images",
     } <= set(groups)
+
+    assert groups["Defold toolchain"]["matchDepNames"] == ["defold/defold"]
+    custom = config["customManagers"]
+    assert len(custom) == 1
+    assert custom[0]["customType"] == "regex"
+    assert custom[0]["depNameTemplate"] == "defold/defold"
+    assert custom[0]["datasourceTemplate"] == "github-releases"
 
     assert groups["Python dependencies"]["matchCategories"] == ["python"]
     assert groups["Python dependencies"]["matchUpdateTypes"] == ["minor", "patch"]
