@@ -296,8 +296,12 @@ def test_release_config_uses_the_python_strategy() -> None:
 
 
 def test_release_manifest_seeds_the_current_version() -> None:
+    """The manifest's `.` tracks the pyproject version (release-please bumps both)."""
     manifest = json.loads(RELEASE_MANIFEST.read_text(encoding="utf-8"))
-    assert manifest == {".": "0.1.0"}
+    version = tomllib.loads(
+        (REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    )["project"]["version"]
+    assert manifest == {".": version}
 
 
 def test_version_sources_agree() -> None:
