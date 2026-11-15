@@ -22,10 +22,12 @@ Public API:
   guardrails.
 - :func:`collision_from_image` — generate a box or convex-hull collision
   shape from a PNG.
+- :func:`apply_operations` — apply a batch of mutation ops to a parsed tree.
 """
 
 from defold_mcp.textproto.mutations import (
     add_component,
+    apply_operations,
     collision_from_image,
 )
 from defold_mcp.textproto.parser import (
@@ -43,6 +45,7 @@ __all__ = [
     "BareIdent",
     "TextProtoError",
     "add_component",
+    "apply_operations",
     "collision_from_image",
     "decode_embedded_data",
     "escape_proto_multiline",

@@ -13,11 +13,13 @@ from __future__ import annotations
 # ---------------------------------------------------------------------------
 # Canonical field orders (Defold Editor write order per message type)
 #
-# NOTE: These tables and ALWAYS_LIST_FIELDS are NOT yet wired into the
-# serializer (which follows dict insertion order). They MUST be wired in
-# the server-wiring task (Task 11) before any freshly-created resource is
-# serialised. PROTOTYPE_FIELDS' leading-id question (whether ``id`` precedes
-# ``components``) is to be settled from real ``.go`` fixtures then.
+# SCHEMA_BY_EXTENSION drives ``serialize_textproto(tree, extension=...)``,
+# which emits these top-level keys in canonical order; without an extension
+# the tree's own (parse/file) order is preserved so round-trips stay
+# byte-exact. ALWAYS_LIST_FIELDS is applied by ``parse_textproto(schema=...)``
+# and by the mutation registry. PROTOTYPE_FIELDS' leading-id question
+# (whether ``id`` precedes ``components``) is to be settled from real ``.go``
+# fixtures in the live phase.
 # ---------------------------------------------------------------------------
 
 COLLECTION_FIELDS: tuple[str, ...] = (
