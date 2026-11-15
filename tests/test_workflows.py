@@ -55,6 +55,17 @@ CACHE_KEY = re.compile(
 )
 LIVE_SOURCE = REPO_ROOT / "tests" / "test_mcp_stdio_e2e.py"
 LIVE_SPEC = re.compile(r'"spec":\s*"(?P<version>\d+\.\d+\.\d+)"')
+# The Defold 1.14.1 x86_64-linux `dmengine_headless` binary links these even
+# though it opens no window, and a server runner image ships none of them.
+ENGINE_RUNTIME_PACKAGES = (
+    "libx11-6",
+    "libxext6",
+    "libxi6",
+    "libxcb1",
+    "libxau6",
+    "libxdmcp6",
+    "libopenal1",
+)
 
 
 def _load_workflow(path: Path) -> dict:
@@ -209,6 +220,44 @@ def test_live_job_caches_the_defold_toolchain(tmp_path, monkeypatch) -> None:
 
     # A fallback would restore the previous version's builtins/ref-doc zips.
     assert "restore-keys" not in settings
+
+
+def test_live_job_installs_the_engine_runtime_libraries() -> None:
+    """The headless engine still links X11 and OpenAL, so the runner needs them.
+
+    ``dmengine_headless`` is headless only in the display sense: the 1.14.1
+    x86_64-linux binary dynamically links ``libX11``, ``libXext``, ``libXi``,
+    ``libxcb``, ``libXau``, ``libXdmcp`` and ``libopenal``. The GitHub-hosted
+    runner image is a server image without the desktop packages, so an
+    unprovisioned runner makes the engine exit non-zero before it emits a single
+    ``TEST`` event — ``defold_test_run`` then answers
+    ``{ok: False, run: None, passed: 0}``. That failure is invisible to the
+    hermetic suite, so the provisioning step and its package list are pinned
+    here, and it must precede the smoke itself.
+    """
+    steps = _load_workflow(CI_WORKFLOW)["jobs"]["live"]["steps"]
+
+    installs = [
+        (index, step)
+        for index, step in enumerate(steps)
+        if "apt-get install" in _runs(step)
+    ]
+    assert len(installs) == 1, f"{len(installs)} apt-get install steps in live"
+    index, install = installs[0]
+
+    # The index on a fresh runner is stale or absent, so the install needs it.
+    tokens = _runs(install).split()
+    assert "apt-get" in tokens and "update" in tokens, _runs(install)
+    for package in ENGINE_RUNTIME_PACKAGES:
+        assert package in tokens, f"{package} is not installed: {_runs(install)}"
+
+    smoke = [
+        position
+        for position, step in enumerate(steps)
+        if "mise run live" in _runs(step)
+    ]
+    assert smoke, "the live job no longer runs 'mise run live'"
+    assert index < smoke[0], "the libraries must be installed before the smoke"
 
 
 def test_every_job_has_a_timeout() -> None:
