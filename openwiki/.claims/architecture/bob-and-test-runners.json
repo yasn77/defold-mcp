@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:6824aa2b3056053d015780a4bc18b4ab13c5913e641557f25a71b041a534d7f7",
+  "claims": [
+    {
+      "id": "claim_b3465063ecdc4eb49e46a1bd35ed4b98",
+      "statement": "run_bob resolves Java as explicit override, then toolchain.java_executable(), then raises RuntimeError naming the JDK 25 requirement and defold_setup_toolchain(install_jdk25=True); it builds the argv with -jar, the bob.jar path, commands and a --resource-cache-local cache path, and runs with cwd at the project root.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bob_runner.py#L200-L300",
+          "version": "repo-lines-v1:sha256:172a55f393516d41df68fdebb1b371cc1f9d737887bfa37454ee3891ca4417b7:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJlODk2ZDRhZTU4ODBhYTg4ODQxYWIwNmU0MTQ2YzQ3ZDY4NDY0ZjcwYzZiZjUxZGFjOGI1NDk1NTk3MjJmMDllIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI5OTgwMzYwN2E2MDUxNDZmZThlZTg0NWY0YWNjYjgyNjBjMzJlZDI4MTQzMDg3YzE0NDkyZjg1OTk3NDVkODhhIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJjOGYzMjRhMjFlYWNiNjkzNWRiZGVkN2MwYTMwYmYwOGRmNzViMTgxMmRkOGNhMGE3NzMzZGEwYjIwMDA1NzY0IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIzOGFkYWFmNTMwMjc1ZmQ4YTQ5MjZjYzBjMTIyZjBkZGU3ZTBmMzA3MGYyMzNlN2RkNjcwYWY0MzljNzFjYTdmIn0"
+        },
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py#L130-L180",
+          "version": "repo-lines-v1:sha256:5494ebaa57768ae89a9bb845070056393be5dab8ee8a7958d013739be872eec4:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFlNGJlOGM1ZDM2OTRiOGQzYzE3MWQxNWU2NmFlZDkzNGYwMzc5ZTdkZGUwM2U5ZGVkN2IxMGZhNzVmYmQyZjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjgyOTVhMTJhZGZjYzUyZTViYzEwNmVlMWQ3NGRlYmY2Y2RkZGQwYThiYmEzMTllM2Q4MjQzZDM4NGI2ZTEwZjQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY0ZWM3YjNjNzcwZDdmYWVmM2Q4MmYxM2E0ZDZmYzBmZDU2ZjMwNTFiNjlhY2E4NDZlMWYyMGU4ZGQ4ZjkxOTIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c90a63c0ea174abeb683f0b0d635678e",
+      "statement": "parse_bob_diagnostics extracts severity/resource/1-based-line/message tolerating both 'ERROR ' and 'ERROR: ' prefixes while ignoring the JDK 25 restricted-method warning block, and summarize_build_report returns the total size plus the top-10 largest resources with ValueError on shapeless input.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bob_runner.py#L60-L160",
+          "version": "repo-lines-v1:sha256:a9ca927e10bfaa7696d0e555dc8ae7ae3fb2e06db3ed1da84ecf69aa3d0f2eca:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJkNjIxNDQ5MzU3YjliNDM1MzUwNDAxZGE5MTVlYTlhZGRkYjZiYjU4ZDNjNGM2MWVkZDZiNTQwZGI3MjVkMjEwIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJiYmEwMjJmMWEwZTM1OTU3MjdhMGVlNmI4ZjMwOTZjYmE2ZTBhOWZlNDI4NThkMzcxZWVlNzRmNTU1ODVkOThjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJjN2Q3N2JhNjM4OTkzYzBmMTY5MDQ5ZmVlMTZhODhlMjEwZGU3NzgwODQwNTFlNWMyMTg1ODI1MGU0YjRhMjY3IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlNzA4YTczZDRhMDVmOTlmMTdmZDQyZDk4MTQ3NjU1Nzk1ZTNmZTk5MGJiNWUxZjA2ODZmY2Q2MjdjMGUxZmUzIn0"
+        },
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py#L57-L123",
+          "version": "repo-lines-v1:sha256:f5b3cf5868f087df1e386390812b1897776fd98887619e0577ce308078371d4b:eyJzZWxlY3RlZExpbmVDb3VudCI6NjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVmODQ0YzNlM2FlYjlhNjQzOTcxMWUzMTIzZDZmNmMxYzhhYWVkMjVhY2ZiODI3YzdmYTc4NmIzODBlOTcyNjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM0YTliOGNhNTQ5NGU2Y2I5MTA0MzgzM2MzZThmMzE4MjNjZmMyYjc5ZmZjZjlkOGM1N2UyNDIxODQwMGJkNjEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVjOTM4MGRiMDg0YzU3MGNkNjNmZGY3NTIxODVkYWY1MzNhOTUwN2ZhNzA2NmVmZWQwNzFkZjliMGI4MWUxNTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI0NDc4OTcyZTI3MWMwYzZlNTkxNThhOTgzMWJjNTYzNmY2YTQ5NjlkMzIyNjYzNzlkYjNhMzQ2Y2FhOGMzMWYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3a2ecf3095a34972b553de4f15efc2f6",
+      "statement": "Both runners guarantee the child process is killed and waited before a timeout exception raises, and their _to_text normaliser handles the raw-bytes TimeoutExpired payload that subprocess produces on the timeout path (text decoding happens only on the success path) — verified against the installed CPython 3.14.10 source and pinned by live-process tests.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/bob_runner.py#L300-L326",
+          "version": "repo-lines-v1:sha256:09f1fff1228ce1a6af66f1fe00ac98fba49fba7d3dd1c4fd1549021e56b1fb2e:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk5ODAzNjA3YTYwNTE0NmZlOGVlODQ1ZjRhY2NiODI2MGMzMmVkMjgxNDMwODdjMTQ0OTJmODU5OTc0NWQ4OGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMwYzFmMTg4ZjE0MmVkN2E4MjQ2ODBiMjA3MTcyYzU1MTliYzYxNGE0OGZkYTdjZjE2N2VkYjhkZGY3OTk1NmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYyYzk5NDQxOGZlOTllMDBiOTYyMzBiNjZmNGMyZDllOGYwZGI3Zjc4MmI5OTk3Yzc1ZDkxM2JkZmI2ODk0NzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/defold_mcp/test_runner.py#L200-L251",
+          "version": "repo-lines-v1:sha256:eade21e895cb8bd321c8822db3cd49e22266e659da7a837c3d2364b24dca3ae0:eyJzZWxlY3RlZExpbmVDb3VudCI6NTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMzNDE1NDA5MTA5YWFhNTEyZTE3OTU3YWMyMzY4MWNjOTI3ZWFhZmVjMDM4NTMwM2M1Y2NhN2NlNTA5MDBiYjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjViOTI1MDAxZjQ5ODE1OGRhMWI4M2VmMmNmMmI4ZDA3NmQyMzVkZmQ2ZjYzZmE3NDViMDNmMjEzNDc3MjE5MDciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEwNDg0ODMyMzZjMzI3ODcxNmNhNTM0ZWFmYWRlYzZkODI0MWM3NDRkOGZhN2M5MWM4OGU4NmRmNGFlM2EyZDYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py#L202-L230",
+          "version": "repo-lines-v1:sha256:ecfbccacf3744039022650143b865ab220faf59274721f35426a529932e4b05a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc0NjFlNDdlYWIwYWI4YmFhNTg4NzM3ZDEyMDkwZDI0YzBkNjk5Yjk0MTIzY2EzOThlNzJhOWFiYWFmZWFiN2MiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ0NmNmY2I5ZDM3NTBiYWU0OWExODZmYjVmMTE4OTlhZmM1MWE4OGY1ZWZlYTQ4YWM0NWQ0NDU5OTU0N2ZhZWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ5OTllMmIxYjljODhhYzU4NWYwMTUwMGQyN2EwZWJiN2E5YzNjYzIwMzQyMDQwZWYxYzEwNDUzZWZhZjQ1NzIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI2ZmNjZWI2OTI0N2U3NTBmZmFmNGM0MTk2NGEwYTcyYjdmOThjNGQzZmQ5OWVmYjIzNmM3N2IxZTRmYjRmZmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4473eb9b67b049e1b170cffa8570a060",
+      "statement": "run_headless_tests enforces the compiled .collectionc form, passes bootstrap.main_collection and all config overrides only via --config flags with booleans rendered lowercase, and never mutates game.project on disk (pinned by a byte-comparison test).",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/test_runner.py#L160-L230",
+          "version": "repo-lines-v1:sha256:60f88bb961b3a2cdadcbfccf9f89e2db66d26cad66b8ac3e568ee15d0b834c08:eyJzZWxlY3RlZExpbmVDb3VudCI6NzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQwNGJjYzQ5NzAwM2ZjYmM4OWEwYjIyNzUzZDU2NTg1MTNjZWIwNTQ2NDNiMGVkOTA0MzU5ZGI1NzIzYzNmNmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZkODA3YmNmZDYzZTNhYTI4YTk1NmY3MjFjZDI2OGRkYTg3NzhmMzQ5NWFjOTRiNTQxYmE1MzVhODI1NmViMGUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjYWEzZDk5YjdjMTFhNGIzOGE0MjIyMjE5OWQ2MDkzYWIyNmIwZjNhMGU2YzYxYWEyNjMyZmNlOGRjNjJmM2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ3ZjBhNmFiMTk3YmIwZDE0MTU0NTc2MzhkMzIxYTE2NGJhNTFiMzU0Nzg4N2U4ZjRiZDJjOGE1NjM0NTFiODYifQ"
+        },
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py#L275-L331",
+          "version": "repo-lines-v1:sha256:ac448591055ed6a8d61f737d39074bc0d5b4487fbf1bbc8281984dd56b4758d8:eyJzZWxlY3RlZExpbmVDb3VudCI6NTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRmNTU2YWMzYmZjM2E5MTJhYWMxNjQxZjAwNWRlNzZmNWRiOGNkZDIwZTU1ZjUwYzk4NTZhMTUxYTQxOGEzY2QiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjViNWVhNmY4MmQ3OTc2MjNiOTJjZTk5YWQyNDcwOTJmZjFhNzgzOWFkMDM4Y2IxMzZlZTdhN2MwZGI0ODk4NDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhlNDBkZGYwYWIwZDE2ZGYxNDVjYjYwNDE3N2JjZGJmYmEzNDNhYjIzMzJhNjc3Y2ZiMjc3NjI2ZTU5ZjQwM2MifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a5e76bf9ba5c4dbbbee4aa48e24eeefe",
+      "statement": "parse_test_stream gates TEST events by run id: the first event carrying a run id fixes it, later events with a different id or no id are rejected (counted, never folded in), per-test statuses build from test_start/test_end events, suite_end carries totals, and the DefTest Success/Failure text fallback applies only when no TEST events appear.",
+      "evidence": [
+        {
+          "resource": "repo://src/defold_mcp/test_runner.py#L60-L160",
+          "version": "repo-lines-v1:sha256:1cc7ad43108aee27ae8bc4bf53de9182b624fbfdbdf63b377755e22b7647b615:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAxLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI0NGZhZmE3NTExNDQ4ZDVkZTZiNzZkZTAwNmVhNGQ3Mjg4Y2Y0MDUyMzZkNzU3MTkxNmJjNWI5ODRiZmFkMmZhIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJkMDRiY2M0OTcwMDNmY2JjODlhMGIyMjc1M2Q1NjU4NTEzY2ViMDU0NjQzYjBlZDkwNDM1OWRiNTcyM2MzZjZlIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIxN2M0MDI4NTIzYjVhZDcxZWZjYTJmN2I5YWNhMjdkZjk2MTI4MTg3YjY3ZjFjN2EzNGZkNzU5ZGRhMzFiMWZlIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJhZWJlNmJhMjhiOTA1ODg2ZjUyNmI1ZjljMjFmZmI5MDUyNjA5ZmJmNmFlNmY2ZDA4MDEyZjhhNWQ4NDdlYzI0In0"
+        },
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py#L250-L325",
+          "version": "repo-lines-v1:sha256:b791d1c92eb71027d8dd09c6560241c4701648355f931ad0fd0b48334de2b89c:eyJzZWxlY3RlZExpbmVDb3VudCI6NzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk2ZTZkZjBmMzNlODBkYzk4MzI1MWQ0YmQxNGNjODIxYjJjNDcwZGM5ZmJhZGU1ZTZkMWZmOGE0NzY3OWFlYzMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZiNzQ3Zjk2MDBiMTNlZTI5OTRkZDQ1YWMyYjlmZmQ0MzM2OGQ5YjFhNDI1YTFiNGQ3ZmMzMzdmZmMxYWJiMDIifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-15T02:39:02.076Z"
+  }
+}

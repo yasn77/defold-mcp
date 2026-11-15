@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:892a7ece9a2757d0e683e63824450d722b1285c8dac4febc9b9f3ad97368942f",
+  "pageVersion": "sha256:38f027d23d7ca8f7129434c94a46458aaf003f0f028231c995e66e075c6a9c29",
   "claims": [
     {
       "id": "claim_20c01b8cf15e4ca79ab56290b86eb68d",
@@ -24,27 +24,15 @@
     },
     {
       "id": "claim_e73bffaa1ec140b28bda81998581a5a6",
-      "statement": "The unit gate is hermetic: 106 tests across the five suite files cover config constants, the game.project editor contract, the textproto engine, the toolchain and deps modules (TTL cache, JDK discovery, atomic verified downloads, sandbox-escape and zip-slip regressions) and the docs FTS index (real-format regressions, ranking, exclusions) without network access or a JVM.",
+      "statement": "The unit gate is hermetic: 152 tests across the seven suite files cover config constants, the game.project editor contract, the textproto engine, the toolchain and deps modules, the docs FTS index, the Editor HTTP client (probe/routes/retries/lua_quote/token hygiene incl. exception-chain scrubbing) and the bob/test runners (diagnostics, reports, fake-executable argv tests, timeout kills) without network access or a JVM.",
       "evidence": [
         {
-          "resource": "repo://tests/test_config.py",
-          "version": "repo-file-v1:sha256:5e408bc747766304a482085ba47e90ea61781570603291bc4ef65c7412bff7ea"
+          "resource": "repo://tests/test_bob_diagnostics.py",
+          "version": "repo-file-v1:sha256:514a138169c04568e4e4a57ffbd9e32e0235918224ed3eb66af0ff2107d240f2"
         },
         {
-          "resource": "repo://tests/test_deps_sync.py",
-          "version": "repo-file-v1:sha256:880d05ec7875fcfd5682861e2f610232c1f9d3eefaa4c6c804ca7fad788ca75b"
-        },
-        {
-          "resource": "repo://tests/test_docs_fts.py",
-          "version": "repo-file-v1:sha256:954668dee1e416780effb44f95692fa0c60cf59adea4e39158ebc8da9aa72fb8"
-        },
-        {
-          "resource": "repo://tests/test_project_ini.py",
-          "version": "repo-file-v1:sha256:573c55635b068a0da87a567771071bc7201b15abe327b74d34cd8385155a4982"
-        },
-        {
-          "resource": "repo://tests/test_textproto_roundtrip.py",
-          "version": "repo-file-v1:sha256:68c07be3afacef5f77847336bc31947b408c42cfea9b51835b8f8280e7778d46"
+          "resource": "repo://tests/test_editor_client.py",
+          "version": "repo-file-v1:sha256:c4367d092f4f8a299dc3dfbdcfaa952fe1ba013666cf223a3989a7587ca254f8"
         }
       ]
     },
@@ -95,10 +83,20 @@
           "version": "repo-lines-v1:sha256:295f7889532cb4fb198f26c5ef0afbd247cb618bcb91e837412f631ab43ae9a6:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2JjNmQ0MDA0ZTlhYWU5ZDBhMjI0NDA1YWI2NzIwNGYwMjk2MjY0MWJhMGMwZmY3ZmVhZjIzN2YwOTI1NDgzMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDczN2E2N2Q4N2MzODhjYTcwZjBlMTAzMzIwODJmZThkYTJlMzRmN2QxNzFiYTRjNTg5YWVmODAxZGI4MWQ0MiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDgyNjc2Yzg4OGMxYTRkOWZhNzcyZmNkYzMwMmY3NzNiYzcyOTBlZWJmZjlkYTM2YTM5ZjQ0YzMyMTE5ODM4NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2FjMzlkNTViMWM0MDlhZWU3YzMxOGFlOGZlZTRmMTI5ZWU4MzU5ZWIyNzM2NTc1YmViYjgwNzE3YTUzOTY5ZCJ9"
         }
       ]
+    },
+    {
+      "id": "claim_adab83e809874b67a7d2f13a18bfba1c",
+      "statement": "Process-facing tests use a fake-executable pattern: small POSIX shell scripts standing in for java and dmengine_headless (writing argv to files, emitting canned diagnostic or TEST lines, or sleeping past a timeout), so timeout-kill and argv claims are asserted against real child processes without a JVM or engine.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_bob_diagnostics.py#L30-L56",
+          "version": "repo-lines-v1:sha256:52b1880ee65982b5d21aa40c749ccd1c47b5fec553857e198a5d5eed38886f32:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxYWJiNzQ5MGQ1YTM0MDA0YTcxZDc0OTc3MGIzMWJjNjQ3YzE5MWQ4OTkwMGRlMDFmZThmNjI3OTBlZGJjYzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkyYzMwNDRmMjhkNThhM2RmZWE2YjZmMDQ4MzAzNDQwOTY4MzY2Yzk1ODg1MTdiZTEwOTRjMjE3YmI2NmVkMzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIyOWIzODIzZDcxNzQyNTNmZmE2NzJiNTExMjYxZjU1ZDE5NTMwOTI4YmMwMmM0NDRkMjE1NDRjOWFjMjNiOGIifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T01:05:39.762Z"
+    "at": "2026-11-15T02:39:02.076Z"
   }
 }
