@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0](https://github.com/yasn77/defold-mcp/compare/v0.2.0...v0.3.0) (2026-11-15)
+
+
+### Features
+
+* **toolchain:** pin default Defold version to 1.14.1 and track via Renovate ([08b94aa](https://github.com/yasn77/defold-mcp/commit/08b94aac7871749c3dbf5a2b934ee2ac1741e6c2))
+
 ## [0.2.0](https://github.com/yasn77/defold-mcp/compare/v0.1.0...v0.2.0) (2026-11-15)
 
 
