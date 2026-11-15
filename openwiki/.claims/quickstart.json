@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:6a299d3836d77fcad35501abdc869c2a3d6c16ec5b035ba52729d319fdadcfa3",
+  "pageVersion": "sha256:69b04b69d88abdfec05a64ccfa96ffd9fd53b2ac3224b85fa548f66354f6fecb",
   "claims": [
     {
       "id": "claim_b0b9f01199ef441ab2d63ce8d85a6200",
@@ -32,15 +32,19 @@
     },
     {
       "id": "claim_3fb8242c97fa41959ff02a2c0a28ac13",
-      "statement": "The codebase is nearly complete: everything through the twenty-tool MCP server is landed and live-verified against real Defold 1.14.1 (config, project, textproto with the 14-op registry, toolchain, deps, docs index, the three clients, the runners, the server with __main__ and the templates) plus their tests; the remaining work is the portable agent skill and harness registration.",
+      "statement": "The project is complete: everything through the twenty-tool MCP server, the portable defold skill and the harness registration is landed and live-verified against real Defold 1.14.1; the server is registered in OpenCode and the skill is symlinked into the OpenCode skills directory.",
       "evidence": [
+        {
+          "resource": "repo://docs/INSTALL.md",
+          "version": "repo-file-v1:sha256:25f9b3744309cbf9ac2770a06d455b7693f04d25049c9d799acda94c02b3f245"
+        },
+        {
+          "resource": "repo://skill/defold/SKILL.md",
+          "version": "repo-file-v1:sha256:0ea4ce9f5d06a878667e414c9a021ca552a4d0ce9aba5e782f0d8d6c08163f8d"
+        },
         {
           "resource": "repo://src/defold_mcp/server.py",
           "version": "repo-file-v1:sha256:e77c991726fe59373473557e8ef2e765cbd34d858a9b84a5d6cb20c8b2811ccf"
-        },
-        {
-          "resource": "repo://tests/test_mcp_stdio_e2e.py",
-          "version": "repo-file-v1:sha256:ab961f8da5a8e9a5626640cdcda6b424f4bf01a71115707421a9f20276e00b37"
         }
       ]
     },
@@ -61,6 +65,6 @@
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-15T14:41:05.547Z"
+    "at": "2026-11-15T15:05:00.624Z"
   }
 }
